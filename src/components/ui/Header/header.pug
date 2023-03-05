@@ -1,7 +1,7 @@
 mixin UiHeader(headerType, title, messCount)
     case headerType
         when "chat-list__header"
-            div.chat-list__header.flex
+            div.chat-list__header.chat-list__child.flex
                 div.chat-list__header__title__left-side.title__left-side.flex
                     h2.title__left-side__text !{title}
                     span.flex.title__left-side__text__count !{messCount}

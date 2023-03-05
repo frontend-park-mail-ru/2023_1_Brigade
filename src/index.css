@@ -81,6 +81,10 @@ section {
     padding: 0px;
 }
 
+button {
+    cursor: pointer;
+}
+
 .flex {
     display: flex;
 }

@@ -9,7 +9,7 @@ mixin chatList(chatListType)
     section.section-offset.chat-list.flex
         +UiHeader(chatListConfig.headerContainerType, chatListConfig.headerTitle, "+48")
         +getInput("chat-list__search-field")
-        div.chat-list__messages-type.flex
+        div.chat-list__messages-type.chat-list__child.flex
             +getChatType(chatListConfig.section[0], chatListConfig.titles[0], chatListConfig.images[0])
             +getChatType(chatListConfig.section[1], chatListConfig.titles[1], chatListConfig.images[1])
             +getChatType(chatListConfig.section[2], chatListConfig.titles[2], chatListConfig.images[0])
