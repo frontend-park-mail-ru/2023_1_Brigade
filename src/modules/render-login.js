@@ -7,8 +7,6 @@ export default (parent, config) => {
   parent.innerHTML = '';
   parent.innerHTML = auth(); // TODO: лучше переименовать в login
 
-  // checkAuth(parent, config); // проверили куки
-
   document.querySelector('.auth-but').addEventListener('click', (e) => {
     e.preventDefault();
 
