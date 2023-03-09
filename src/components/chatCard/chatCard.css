@@ -1,0 +1,76 @@
+.messages-type__item:hover {
+    background-color: #1B262C;
+}
+
+.messages-type__item:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+.messages-type__item__logo {
+    border-radius: 15px;
+    margin-right: 17px;   
+}
+
+.message-type__item__text {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-right: 118px;
+    padding: 10px;
+}
+
+.message-type__item__username {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+}
+
+.message-type__item__description {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #69686D;
+}
+
+.message-type__item__info-field {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.info-field__status {
+    min-width: 20px;
+    min-height: 20px;
+    background-color:  #3E9AE3;
+    border-radius: 10px;
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    color: #000000;
+    padding: 3px 4px 4px 6px;
+    margin-bottom: 15px;
+}
+
+.info-field__time {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    color: #FFFFFF;
+}
+
+.item-divider {
+    min-width: 100%;
+    max-height: 5px;
+    background-color: #4A4E50;
+    margin-bottom: 10px;
+}

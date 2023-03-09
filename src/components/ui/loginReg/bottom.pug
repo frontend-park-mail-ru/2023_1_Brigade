@@ -1,0 +1,8 @@
+mixin loginRegBottom(type)
+    .login__item.login-reg-bottom
+        if type === 'login'
+            button.login-reg-bottom__button.login-but Login
+            a.login-reg-bottom__question.login-ques(href='/reg') Don't have an account yet? Register
+        else if type === 'reg'
+            button.login-reg-bottom__button.reg-but Sign Up
+            a.login-reg-bottom__question.reg-ques(href='/login') Do already have an account? Login

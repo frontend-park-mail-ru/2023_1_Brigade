@@ -1,0 +1,17 @@
+- const imagePathsConfig = {PIN: "../../../src/assets/img/pinChatsAva.png", GROUPS: "../../../src/assets/img/groupAva.png"}
+
+mixin chatCard(cardType, cardImage, username, textMessage, missedMess, messTime)
+    - console.log(cardType)
+    case cardType
+        when "chatCard"
+            li.messages-type__item.flex
+                if cardImage == imagePathsConfig.PIN
+                    img(src="./assets/img/pinChatsAva.png" alt="Ava").messages-type__item__logo
+                if cardImage == imagePathsConfig.GROUPS
+                    img(src="./assets/img/groupAva.png" alt="Ava").messages-type__item__logo
+                div.message-type__item__text.flex
+                    h4.message-type__item__username !{username}
+                    span.message-type__item__description !{textMessage}
+                div.message-type__item__info-field.flex
+                    span.info-field__status !{missedMess}
+                    span.info-field__time !{messTime}

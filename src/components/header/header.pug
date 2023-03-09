@@ -1,0 +1,46 @@
+include ../profile/profile.pug
+include ../navbar/navbar.pug
+include ../ui/button/button.pug
+
+- const pages = {chatPage: 0}
+- const headers = {viewHeader: 1, errorHeader: 2}
+- const headerConfig = {headerType: ["chatHeader", "viewHeader", "errorHeader"], buttonListTypes: ["change-theme"], imagePaths: ["./assets/img/geva.png"]}
+
+mixin getHeader(headerType)
+    case headerType
+        when headerConfig.headerType[pages.chatPage]
+            +profile(headerConfig.imagePaths[pages.chatPage])
+            +navbar("navbar")
+            +buttonList(headerConfig.buttonListTypes[pages.chatPage])
+        when headerConfig.headerType[headers.viewHeader]
+            div.view-chat__header.flex
+                div.view-chat__header__companion.flex
+                    img(src="./assets/img/iii.png").header__companion__ava
+                    div.header__companion__info.flex
+                        h4.companion__info__title Daniil Zelenko
+                        span.companion__info__time online 20 min ago
+                ul.view-chat__header__icons.flex
+                            li.header__icons__item
+                                <svg class="header__icons__item__color" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.2545 20C6.39526 20 0 13.6047 0 5.74551C0.000391706 4.33992 0.513062 2.98265 1.44203 1.92781C2.37101 0.872963 3.65259 0.192859 5.04686 0.0148178C5.46109 -0.0369869 5.88091 0.0478656 6.2425 0.256478C6.6041 0.465091 6.8877 0.786055 7.05019 1.17059L8.98611 5.67809C9.11394 5.97037 9.1668 6.28993 9.13989 6.6078C9.11298 6.92567 9.00715 7.2318 8.832 7.49843L7.34877 9.75218C8.00586 10.9939 9.02317 12.0079 10.2671 12.6609L12.4919 11.1776C12.7595 11.0009 13.0669 10.8934 13.3863 10.8648C13.7057 10.8363 14.0272 10.8875 14.3219 11.0139L18.8294 12.9498C19.2139 13.1123 19.5349 13.3959 19.7435 13.7575C19.9521 14.1191 20.037 14.5389 19.9852 14.9531C19.8071 16.3474 19.127 17.629 18.0722 18.558C17.0173 19.4869 15.6601 19.9996 14.2545 20ZM5.04686 2.35525C4.27209 2.52258 3.57805 2.95032 3.08033 3.5672C2.58262 4.18409 2.31129 4.95288 2.31154 5.74551C2.31409 8.91219 3.57318 11.9484 5.81237 14.1876C8.05155 16.4268 11.0878 17.6859 14.2545 17.6885C15.0471 17.6887 15.8159 17.4174 16.4328 16.9197C17.0497 16.422 17.4774 15.7279 17.6447 14.9531L13.5996 13.2195L11.3651 14.7124C11.0872 14.8962 10.7665 15.0053 10.4341 15.0289C10.1017 15.0525 9.7688 14.9899 9.46768 14.8472C7.59817 13.9418 6.08584 12.4363 5.17207 10.5708C5.02512 10.2713 4.95935 9.93838 4.98132 9.60543C5.00329 9.27248 5.11224 8.95112 5.29728 8.67346L6.78051 6.40044L5.04686 2.35525Z" fill="#46474C"/>
+                                </svg>
+                            li.header__icons__item
+                                <svg class="header__icons__item__color" width="24" height="14" viewBox="0 0 24 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.33333 0H15.1667C16.45 0 17.5 1.05 17.5 2.33333V11.6667C17.5 12.95 16.45 14 15.1667 14H2.33333C1.05 14 0 12.95 0 11.6667V2.33333C0 1.05 1.05 0 2.33333 0Z" fill="#46474C"/>
+                                <path d="M23.3333 13.4166L17.5 9.91658V4.08325L23.3333 0.583252V13.4166Z" fill="#46474C"/>
+                                </svg>
+                            li.header__icons__item
+                                <svg class="header__icons__item__color" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z" stroke="#44484B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M19.0004 18.9999L14.6504 14.6499" stroke="#44484B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            li.header__icons__item
+                                <svg class="header__icons__item__color" width="5" height="23" viewBox="0 0 5 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="2.5" cy="2.5" r="2.5" fill="#48494E"/>
+                                <circle cx="2.5" cy="11.5" r="2.5" fill="#48494E"/>
+                                <circle cx="2.5" cy="20.5" r="2.5" fill="#48494E"/>
+                                </svg>
+        when headerConfig.headerType[headers.errorHeader]
+            h1.header-error
+            p.header-error__description
+                    

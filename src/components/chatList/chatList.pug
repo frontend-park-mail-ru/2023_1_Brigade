@@ -1,0 +1,15 @@
+include ../ui/input/input.pug
+include ../ui/header/header.pug
+include ../chatType/chatType.pug
+
+- const chatListConfig = { headerContainerType: "chat-list__header", headerTitle: "Message", section: ["PIN", "GROUPS", "ALL"], titles: ["PIN CHATS", "GROUPS CHANNELS", "ALL MESSAGES"], images: ["../../../src/assets/img/pinChatsAva.png", "../../../src/assets/img/groupAva.png"] }
+
+mixin chatList(chatListType)
+    - console.log(chatListType)
+    section.section-offset.chat-list.flex
+        +UiHeader(chatListConfig.headerContainerType, chatListConfig.headerTitle, "+48")
+        +getInput("chat-list__search-field")
+        div.chat-list__messages-type.chat-list__child.flex
+            +getChatType(chatListConfig.section[0], chatListConfig.titles[0], chatListConfig.images[0])
+            +getChatType(chatListConfig.section[1], chatListConfig.titles[1], chatListConfig.images[1])
+            +getChatType(chatListConfig.section[2], chatListConfig.titles[2], chatListConfig.images[0])

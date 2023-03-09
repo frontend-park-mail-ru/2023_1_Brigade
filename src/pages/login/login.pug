@@ -1,0 +1,15 @@
+include ../../components/ui/loginReg/top.pug
+include ../../components/ui/loginReg/bottom.pug
+include ../../components/ui/loginReg/input.pug
+
+
+.login.flex
+    +loginRegTop('login')
+    +loginRegInput('email')
+    .login__item.login__password
+        .login__password__input-eye
+            +loginRegInput('password')
+            //- .login__password__eye
+            //-     include eye.svg
+        //- a.login__password__password-recovery(href='#') Forgot password?
+    +loginRegBottom('login')

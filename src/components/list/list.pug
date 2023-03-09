@@ -1,0 +1,12 @@
+include ../ui/navItem/navItem.pug
+
+- const listConfig = {navList: "nav__list", svgMessage: "message", svgCalls: "calls",  svgSettings: "settings", svgLogout: "logout"}
+
+mixin getList(typeList)
+    case typeList
+        when listConfig.navList
+            ul.nav__list.flex
+                +navItem("+48", listConfig.svgMessage)
+                +navItem("+2", listConfig.svgCalls)
+                +navItem("", listConfig.svgSettings)
+                +navItem("", listConfig.svgLogout)

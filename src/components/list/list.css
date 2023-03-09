@@ -1,0 +1,20 @@
+.messages-type__list {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    overflow: auto;
+    min-height: 120px;
+}
+
+.messages-type__item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.4s ease-in-out all;
+    width: 100%;
+    padding: 0px 10px;
+    cursor: pointer;
+    min-width: 100px;
+    flex-shrink: 1;
+}

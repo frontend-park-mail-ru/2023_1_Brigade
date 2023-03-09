@@ -1,0 +1,86 @@
+.logout {
+    fill: #4A4E50;
+}
+
+.logout:hover {
+    fill: #26A5E4;
+}
+
+/*view chat section*/
+.view-chat {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.view-chat__header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 21px 68px 21px 27px;
+    background: rgba(25, 26, 31, 0.5);
+    min-width: 100%;
+}
+
+.view-chat__header__companion {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.companion__info__title {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FFFFFF;
+    margin-bottom: 5px;
+}
+
+.companion__info__time {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #CDCDCD;
+}
+
+/* group-info section */
+.group-info{
+    background: #18171D;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 38px 25px 0px 27px;
+    /* min-width: 100%; */
+}
+
+.group-info__header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.group-info__header__arrow {
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 14px;
+    background-color: #112235;
+    margin-right: 61px;
+}
+
+.group-info__header__logo {
+    margin-right: 10px;
+}
+
+.group-info__header__text {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFFFFF;
+}

@@ -1,0 +1,27 @@
+include ../chatCard/chatCard.pug
+
+- const chatTypeConfig = {PIN: "PIN", GROUPS: "GROUPS", ALL: "ALL"}
+
+mixin getChatType(chatType, chatHeader, cardImage)
+    div.messeges-type.flex
+        div.messages-type__header.flex
+            case chatType
+                when chatTypeConfig.PIN
+                        <svg class="header-item chats__header__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.096 2.38496C5.86774 2.28613 5.61849 2.24562 5.37068 2.26706C5.12286 2.28851 4.88428 2.37124 4.67639 2.50781C4.4685 2.64439 4.29784 2.83052 4.17977 3.04945C4.0617 3.26837 3.99992 3.51323 4 3.76196V21C4 21.2652 4.10536 21.5195 4.29289 21.7071C4.48043 21.8946 4.73478 22 5 22C5.26522 22 5.51957 21.8946 5.70711 21.7071C5.89464 21.5195 6 21.2652 6 21V16.657L19.339 10.877C20.544 10.354 20.544 8.64596 19.339 8.12396L6.096 2.38496Z" fill="#312E3F"/>
+                        </svg>
+                when chatTypeConfig.GROUPS
+                        <svg class="header-item chats__header__icon" width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect y="1.94116" width="16" height="15.0588" rx="4" fill="#3E3B4A"/>
+                        <path d="M7.92188 15L8.51562 12.0312H6.49219L5.89062 15H4.17188L4.75781 12.0312H3L3.32031 10.3438H5.09375L5.51562 8.23438H3.71875L4.03906 6.5625H5.85156L6.42969 3.71875H8.14844L7.58594 6.5625H9.60938L10.1797 3.71875H11.9141L11.3438 6.5625H13.1875L12.875 8.23438H11.0078L10.5781 10.3438H12.4609L12.1484 12.0312H10.25L9.65625 15H7.92188ZM6.67969 10.4922H8.92188L9.41406 8.09375H7.16406L6.67969 10.4922Z" fill="#302F3F"/>
+                        </svg>
+            h3.header-item.message-type__header__title !{chatHeader}
+            <svg class="header-item chats__header__arrow" width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.29289 8.70711C7.68342 9.09763 8.31658 9.09763 8.70711 8.70711L15.0711 2.34315C15.4616 1.95262 15.4616 1.31946 15.0711 0.928934C14.6805 0.53841 14.0474 0.538409 13.6569 0.928934L8 6.58579L2.34315 0.928931C1.95262 0.538406 1.31946 0.538406 0.928933 0.92893C0.538409 1.31945 0.538409 1.95262 0.928933 2.34314L7.29289 8.70711ZM7 6L7 8L9 8L9 6L7 6Z" fill="#59585D"/>
+            </svg>                        
+        ul.list-reset.messages-type__list.flex
+            +chatCard("chatCard", cardImage, "Akaza", "Hi, i'm akaza", 1, "12:00")
+            if chatTypeConfig.ALL == chatType
+                - for (let i = 0; i < 10; i++)
+                    hr.item-divider
+                    +chatCard("chatCard", cardImage, "Akaza", "Hi, i'm akaza", 1, "12:00")

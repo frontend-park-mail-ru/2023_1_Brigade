@@ -1,0 +1,33 @@
+{
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "pug": "^3.0.2"
+  },
+  "name": "2023_1_brigade",
+  "description": "Репозиторий команды \"Brigade\". Весна, 2023",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "mkdir ./src/templates && npm run compile",
+    "compile": "node compile.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontend-park-mail-ru/2023_1_Brigade.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frontend-park-mail-ru/2023_1_Brigade/issues"
+  },
+  "homepage": "https://github.com/frontend-park-mail-ru/2023_1_Brigade#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "mkdirp": "^2.1.4",
+    "pug-cli": "^1.0.0-alpha6"
+  }
+}
