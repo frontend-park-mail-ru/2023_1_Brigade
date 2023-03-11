@@ -1,0 +1,16 @@
+mixin navItem(counter="", svgType)
+    - console.log(svgType)
+    li.nav__item
+        if svgType != "logout"
+            a(href="#").flex
+                case svgType
+                    when "message"
+                        +svgButton("nav-item__message-btn")
+                    when "calls"
+                        +svgButton("nav-item__calls-btn")
+                    when "settings"
+                        +svgButton("nav-item__settings-btn")
+                if counter
+                    span.nav__item__counter !{counter}
+        else
+            +svgButton("logout-btn")

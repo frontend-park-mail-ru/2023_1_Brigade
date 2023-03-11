@@ -1,0 +1,124 @@
+html {
+    box-sizing: border-box;
+}
+
+*, 
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+li {
+    list-style-type: none;
+}
+
+ul {
+    padding-left: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    background-color: #131318;
+}
+
+h2 {
+    padding: 0px;
+    margin: 0px;
+}
+
+h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+hr {
+    margin: 0px;
+    padding: 0px;
+}
+
+h4 {
+    margin: 0px;
+    padding: 0px;
+}
+
+section {
+    margin: 0px;
+    padding: 0px;
+}
+
+.chat-page {
+    width: 100%;
+    min-width: 500px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    background: #131318;
+}
+
+.list-reset {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+} 
+
+.btn-reset {
+    padding: 0px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
+.indents-reset {
+    margin: 0px;
+    padding: 0px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.flex {
+    display: flex;
+}
+
+.container { 
+    margin: 0 auto;
+}
+
+.vertical-container {
+    min-width: 1920px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.header-offset {
+    margin-bottom: 0px;
+}
+
+.section-offset {
+    margin: 0px;
+    padding: 0px;
+}
+
+main {
+    width: 100%;
+}
+
+.main {
+    height: 100vh;
+}
+
+#root {
+    min-width: 100%;
+    height: 100vh;
+}

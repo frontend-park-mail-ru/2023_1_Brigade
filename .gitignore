@@ -1,0 +1,11 @@
+# ignore template function
+templates/
+
+# Node
+node_modules/
+
+# IDEs and editors
+.idea/
+
+# Visual Studio Code
+.vscode/

@@ -1,0 +1,7 @@
+- const storeUsers = {user1: "./assets/img/geva.png", user2: "./assets/img/danya.png"}
+
+mixin profile(pathToUserAvatar)
+    div.header__img.flex
+        img(src="./assets/img/logo.png", alt="Our logo").header__logo
+        if pathToUserAvatar == storeUsers.user1
+            img(src="./assets/img/iii.png", alt="User avatar").header__user-photo

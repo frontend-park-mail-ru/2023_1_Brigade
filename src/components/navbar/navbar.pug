@@ -1,0 +1,14 @@
+include ../list/list.pug
+include ../ui/button/button.pug
+
+- const navbarConfig = {navbarType: ["chatPage"]}
+
+mixin navLink(link, count)
+    li.nav__item
+        +svgButton("nav-item__button")
+            span.nav__item__counter !{count}
+
+
+mixin navbar(type)
+    nav.nav.header__nav.flex
+        +list("nav__list")
