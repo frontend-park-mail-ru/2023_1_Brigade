@@ -9,3 +9,5 @@ node_modules/
 
 # Visual Studio Code
 .vscode/
+
+.temporary_cache/
