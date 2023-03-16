@@ -1,0 +1,8 @@
+mixin loginRegTop(type)
+    .login-reg__top.flex
+        img(src="./assets/img/sticker.png", alt="Welcome").login-reg__top_photo 
+        span.login-reg__top_welcome Welcome,
+        if type === 'login' 
+            span.login-reg__top_message Glad to see you!
+        if type === 'reg'
+            span.login-reg__top_message Get started now!

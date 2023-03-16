@@ -1,11 +1,11 @@
-import renderChat from '../modules/renders/render-chat.js';
-import renderReg from '../modules/renders/render-reg.js';
-import renderLogin from '../modules/renders/render-login.js';
-import renderError from '../modules/renders/render-error.js';
+import renderChat from '../../modules/renders/render-chat.js';
+import renderReg from '../../modules/renders/render-reg.js';
+import renderLogin from '../../modules/renders/render-login.js';
+import renderError from '../../modules/renders/render-error.js';
 
 export default {
     login: {
-        href: string '/login/',
+        href: '/login/',
         render: renderLogin,
         key: 'login',
     },

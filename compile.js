@@ -1,7 +1,7 @@
 const pug = require('pug');
 const fs = require('node:fs/promises');
 
-const PATHS = ['./src/features/pages/login/', './src/features/pages/reg/', './src/features/pages/chat/', './src/features/pages/error/'];
+const PATHS = ['./src/features/login/view/', './src/features/reg/view/', './src/features/chat/view/', './src/features/error/view/'];
 const PATH_OUT = './src/templates/';
 
 for (const path of PATHS) {

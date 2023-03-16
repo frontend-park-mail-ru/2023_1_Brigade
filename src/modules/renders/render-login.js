@@ -1,7 +1,7 @@
 import log from '../../templates/login.js';
-import getParentElement from '../getParentElement.js';
+import getParentElement from '../../utils/getParentElement.js';
 import login from '../requests/login.js';
-import Validator from '../validator.js';
+import Validator from '../../utils/validator.js';
 
 /**
  * implementation rendering of login page

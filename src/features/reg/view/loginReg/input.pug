@@ -1,0 +1,24 @@
+mixin loginRegInput(type)
+    .login__item.input.flex
+        if type=='email'
+            input(type='email', placeholder='Email address').login-reg__input.email
+            div.input__errors.flex
+                span.empty-email.login-reg__error.invisible Email not filled
+                span.missdog-email.login-reg__error.invisible '@mail' prefix is required
+                span.invalid-email.login-reg__error.invisible Email not correct
+                span.occupied-email.login-reg__error.invisible Already have an account with this email
+        else if type=='password'
+            input(type='password', placeholder='Password').login-reg__input.password
+            div.input__errors.flex
+                span.empty-password.login-reg__error.invisible Password not filled
+                span.invalid-password.login-reg__error.invisible Password too short
+        else if type=='nick'
+            input(type='text', placeholder='Your nick').login-reg__input.nick
+            div.input__errors.flex
+                span.empty-nick.login-reg__error.invisible Nick not filled
+                span.invalid-nick.login-reg__error.invisible Nick too short
+        else if type=='confirm password'
+            input(type='password', placeholder='Confirm password').login-reg__input.confirm-password
+            div.input__errors.flex
+                span.empty-confirm-password.login-reg__error.invisible Confirm password not filled
+                span.invalid-confirm-password.login-reg__error.invisible Confirm password not correct

@@ -1,4 +1,4 @@
-import { get } from '../ajax.js';
+import { get } from '../../utils/ajax.js';
 import config from './config.js';
 
 /**

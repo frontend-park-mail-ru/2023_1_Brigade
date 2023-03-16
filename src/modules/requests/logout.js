@@ -1,4 +1,4 @@
-import { deleteSession } from '../ajax.js';
+import { deleteSession } from '../../utils/ajax.js';
 import config from './config.js';
 
 /**

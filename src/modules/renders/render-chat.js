@@ -1,5 +1,5 @@
 import chat from '../../templates/chat.js';
-import getParentElement from '../getParentElement.js';
+import getParentElement from '../../utils/getParentElement.js';
 import logout from '../requests/logout.js';
 
 /**

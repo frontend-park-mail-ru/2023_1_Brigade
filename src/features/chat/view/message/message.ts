@@ -1,0 +1,3 @@
+// class ViewMessage : extends View {
+    
+// };

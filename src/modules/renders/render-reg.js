@@ -1,6 +1,6 @@
 import reg from '../../templates/reg.js';
-import Validator from '../validator.js';
-import getParentElement from '../getParentElement.js';
+import Validator from '../../utils/validator.js';
+import getParentElement from '../../utils/getParentElement.js';
 import signup from '../requests/signup.js';
 
 /**

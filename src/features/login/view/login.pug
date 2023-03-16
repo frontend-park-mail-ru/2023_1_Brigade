@@ -1,0 +1,10 @@
+include ./loginReg/top.pug
+include ./loginReg/bottom.pug
+include ./loginReg/input.pug
+
+
+.login.flex
+    +loginRegTop('login')
+    +loginRegInput('email')
+    +loginRegInput('password')
+    +loginRegBottom('login')

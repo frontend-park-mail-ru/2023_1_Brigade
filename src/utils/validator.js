@@ -15,7 +15,6 @@ export default class ValidationError {
 
     #validStatus;
 
-    // eslint-disable-next-line class-methods-use-this
     #addError(erorrClass, deletedClasses) {
         deletedClasses.forEach((curClass) => {
             document.querySelector(curClass).classList.add('invisible');
