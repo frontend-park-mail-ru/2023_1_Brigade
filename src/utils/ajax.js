@@ -14,7 +14,7 @@ const BACKEND_URL = 'http://95.163.249.116:8081';
  * @param {json} body - request data
  * @returns {Promise} - request promise
  */
-function ajax(url, { method, body = null }) {
+export function ajax(url, { method, body = null }) {
     return fetch(BACKEND_URL + url, {
         method,
         headers: {

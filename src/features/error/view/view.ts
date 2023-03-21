@@ -1,5 +1,7 @@
-import loadError from '../../templates/error.js';
-import getParentElement from '../../utils/getParentElement.js';
+import loadError from '../../../templates/error.js';
+import getParentElement from '../../../utils/getParentElement.js';
+
+
 /**
  * implementation rendering of error page
  * @param {htmlElement} parent - parent element
@@ -16,16 +18,16 @@ export default (config, prevPage, { name, description }) => {
     document.querySelector('.error-back-button').addEventListener('click', (e) => {
         e.preventDefault();
         switch (prevPage) {
-        case 'login':
-            config.login.render(config);
-            break;
-        case 'reg':
-            config.reg.render(config);
-            break;
-        case 'chat':
-            config.chat.render(config);
-            break;
-        default:
+            case 'login':
+                config.login.render(config);
+                break;
+            case 'reg':
+                config.reg.render(config);
+                break;
+            case 'chat':
+                config.chat.render(config);
+                break;
+            default:
         }
     });
 };
