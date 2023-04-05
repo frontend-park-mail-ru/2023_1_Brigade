@@ -5,7 +5,7 @@ import { router } from "@/router/router";
 export const createAuthAction = () : AsyncAction => {
     return async (dispatch: (action: Action) => void, state: anyObject) => {
         const { status, body } = await auth();
-        
+
         switch (status) {
         case 200:
             const jsonBody = await body;

@@ -18,8 +18,8 @@ export const createGetContactsAction = () : AsyncAction => {
                 return dispatch(createSetContactsAction(jsonBody));
             case 401:
                 // TODO: отрендерить ошибку
-            case 404:         
-                // TODO: отрендерить ошибку       
+            case 404:
+                // TODO: отрендерить ошибку
             case 500:
                 // TODO: отрендерить ошибку
             case 0:

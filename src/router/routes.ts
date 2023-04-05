@@ -4,6 +4,7 @@ import { SmartSignUp } from "@/containers/signUp/signUp";
 import { SmartProfile } from "@/containers/profile/profile";
 import { store } from "@/store/store";
 import { SmartContacts } from "@/containers/contacts/contacts";
+import {SmartCreateGroup} from "@containers/create_group/create_group";
 
 export interface ComponentTemplate {
     componentWillUnmount: Function;

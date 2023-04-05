@@ -12,7 +12,7 @@ export class DumbContacts extends Component {
 
     getContactsList() {
         let contactsList: string[] = [];
-        
+
         for (const key in this.props) {
             const contactUI = new DumbContact(this.props[key]);
 

@@ -6,4 +6,5 @@ export const config = {
     logout: '/logout/',
     updateUser: '/users/settings/',
     contacts: '/users/contacts',
+    createGroup: '/chats/',
 };

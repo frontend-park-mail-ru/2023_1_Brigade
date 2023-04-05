@@ -217,3 +217,37 @@ export const contacts = () => {
             }
         });
 };
+
+export const createGroup = (body: anyObject) => {
+    return post(
+        config.createGroup,
+        body,
+    )
+        .then(({ status, parsedBody }) => {
+            switch (status) {
+                case 201:
+                    return {
+                        status,
+                        body: parsedBody,
+                    };
+                case 400:
+                case 409:
+                case 500:
+                    return {
+                        status,
+                        body: null,
+                    };
+                default:
+                    return {
+                        status,
+                        body: null,
+                    };
+            }
+        })
+        .catch((error) => {
+            return {
+                status: 0,
+                body: error,
+            }
+        });
+};

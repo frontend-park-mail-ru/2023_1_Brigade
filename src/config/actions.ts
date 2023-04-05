@@ -8,4 +8,5 @@ export const constantsOfActions = {
     deleteState: 'deleteState',
     render: 'render',
     getContacts: 'getContacts',
-}
+    createGroup: 'createGroup',
+};

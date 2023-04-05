@@ -1,0 +1,49 @@
+.create-group {
+  width: 1436px;
+  height: 1154px;
+  background-color: #131318;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-group__header {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.create-group__contacts {
+  margin-left: auto;
+}
+
+.contacts {
+  background: #1C1C24;
+  position: relative;
+  height: 1000px;
+  width: 286px;
+}
+
+.contacts__head {
+  padding-top: 45px;
+  text-align: center;
+}
+
+.contacts__contacts {
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.contacts__add-contact {
+  text-align: center;
+  width: 286px;
+  height: 85px;
+  background: #1C1C24;
+}
+
+.contacts__separator {
+  width: 286px;
+  border: 1px solid #4A4E50;
+  background: #1C1C24;
+}
+
