@@ -27,7 +27,6 @@ export class DumbCreateGroup extends Component {
     }
 
     render() {
-        // console.log(this.props)
         return template({
             groupNameLabel: 'Название группы',
             groupNameInput: dataInputUI.renderTemplate({

@@ -111,80 +111,38 @@ import {store} from "@store/store";
 //                 },
 //             ]
 //         })
-const createGroup = new
-// const crtGroup = new SmartCreateGroup({
-//     ...
-//         [
-//             {
-//                 avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//                 email:  "marcussss1@gmail.com",
-//                 id: 1,
-//                 nickname: "marcussss1",
-//                 status: "marcussss1",
-//                 username: "marcussss1",
-//             },
-//             {
-//                 avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//                 email:  "marcussss1@gmail.com",
-//                 id: 1,
-//                 nickname: "marcussss1",
-//                 status: "marcussss1",
-//                 username: "marcussss1"
-//             },
-//             {
-//                 avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//                 email:  "marcussss1@gmail.com",
-//                 id: 1,
-//                 nickname: "marcussss1",
-//                 status: "marcussss1",
-//                 username: "marcussss1"
-//             },
-//             {
-//                 avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//                 email:  "marcussss1@gmail.com",
-//                 id: 1,
-//                 nickname: "marcussss1",
-//                 status: "marcussss1",
-//                 username: "marcussss1"
-//             },
-//         ],
-//     rootNode: ROOT,
-//     // rootNode: ROOT,
-//     // ...
-//     // [
-//     //     {
-//     //         avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//     //         email:  "marcussss1@gmail.com",
-//     //         id: 1,
-//     //         nickname: "marcussss1",
-//     //         status: "marcussss1",
-//     //         username: "marcussss1",
-//     //     },
-//     //     {
-//     //         avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//     //         email:  "marcussss1@gmail.com",
-//     //         id: 1,
-//     //         nickname: "marcussss1",
-//     //         status: "marcussss1",
-//     //         username: "marcussss1"
-//     //     },
-//     //     {
-//     //         avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//     //         email:  "marcussss1@gmail.com",
-//     //         id: 1,
-//     //         nickname: "marcussss1",
-//     //         status: "marcussss1",
-//     //         username: "marcussss1"
-//     //     },
-//     //     {
-//     //         avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
-//     //         email:  "marcussss1@gmail.com",
-//     //         id: 1,
-//     //         nickname: "marcussss1",
-//     //         status: "marcussss1",
-//     //         username: "marcussss1"
-//     //     },
-//     // ]
-// })
-//
+// const createGroup = new
+const crtGroup = new SmartCreateGroup({
+    ...
+        [
+            {
+                avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
+                email:  "marcussss1@gmail.com",
+                id: 1,
+                nickname: "marcussss1",
+                status: "marcussss1",
+                username: "marcussss1",
+            },
+            {
+                avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
+                email:  "marcussss1@gmail.com",
+                id: 1,
+                nickname: "marcussss1",
+                status: "marcussss1",
+                username: "marcussss1"
+            },
+            {
+                avatar: "https://oir.mobi/uploads/posts/2021-04/1619691521_16-oir_mobi-p-bolshaya-obezyana-zhivotnie-krasivo-foto-17.jpg",
+                email:  "marcussss1@gmail.com",
+                id: 1,
+                nickname: "marcussss1",
+                status: "marcussss1",
+                username: "marcussss1"
+            },
+        ],
+    rootNode: ROOT,
+});
+
+crtGroup.render();
+
 // document.querySelector('#root')?.innerHTML = crtGroup.render()

@@ -1,8 +1,9 @@
 .create-group
     .create-group__header
-        .font-size-1(style="margin-bottom: 35px; margin-left:60px;")!= groupNameLabel
-        != groupNameInput
-        .font-size-1(style="margin-top: 35px;")!= buttonCreateGroup
+        .font-size-9!= groupNameLabel
+        .create-group__input
+            != groupNameInput
+        .font-size-9!= buttonCreateGroup
     .create-group__contacts
         .contacts
             .contacts__head
@@ -11,26 +12,5 @@
             .contacts__contacts
                 for contact in contacts
                     != contact
-                    //a(href='#', class='contact-link') #{contact}
-                    //a.hover(class='contact-link')!= contact
-                    //ul
-                    //    each contact in contacts
-                    //        li
-                    //            a(href='#', class='contact-link') #{contact}
-        .contacts__add-contact
-            .contacts__separator
-            != addContactButton
-        //!= contacts
-
-        //.contacts
-        //    .contacts__head
-        //        .font-size-6!= headContacts
-        //    .contacts__separator
-        //    .contacts__contacts
-        //        ul
-        //            for i in contacts
-        //                li!= i
-        //.contacts__add-contact
-        //    .contacts__separator
-        //    != addContactButton
-
+            .contacts__add-contact
+                .contacts__separator

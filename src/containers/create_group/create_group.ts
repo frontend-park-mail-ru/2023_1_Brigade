@@ -8,6 +8,8 @@ import { createCreateGroupAction } from "@/actions/createGroupActions";
 import {DumbCreateGroup} from "@components/create_group/create_group";
 import {constructor} from "image-minimizer-webpack-plugin";
 import {createGroup} from "@utils/api";
+import {compileString} from "sass";
+import {bind} from "express";
 
 
 export interface SmartCreateGroup {
@@ -39,6 +41,10 @@ export class SmartCreateGroup extends Container {
      * Cохраняет props
      * @param {Object} props - параметры компонента
      */
+
+    #contactClicked  = 'red';
+    #contactUnclicked= 'rgb(28, 28, 36)';
+
     constructor(props :componentProps) {
         super(props);
 
@@ -66,25 +72,48 @@ export class SmartCreateGroup extends Container {
      */
     render() {
          if (!this.state.isSubscribed) {
+             console.log(this.props)
             const CreateGroupUI = new DumbCreateGroup({
                 ...this.props,
             });
 
-            this.state.domElements.contacts = document.querySelector('.contact');
-            this.state.domElements.contacts?.addEventListener('click', (e) => {
-                console.log('ok')
-                e.preventDefault();
-                // e.target.
-                // e.
-                console.log(e.target)
-                this.handleClickChooseContact();
-            });
+
+             // const myList = document.querySelector(".contacts__contacts");
+
+             // myList.addEventListener("click", (event: MouseEvent) => {
+             //     // const clickedItem = event.target (https://event.target/) as HTMLElement;
+             //     // console.log("Clicked item: " + clickedItem.textContent);
+             //
+             // });
+
+            this.rootNode.innerHTML = CreateGroupUI.render();
+
+
+             // this.state.domElements.contacts = document.querySelector('.contacts__contacts');
+             // this.state.domElements.saveButton?.addEventListener('click', (e) => {
+             //     e.preventDefault();
+             //
+             //     this.handleClickSave();
+             // });
+             document.querySelectorAll('.contact').forEach(function(contact: any) {
+                 contact.style.backgroundColor = this.#contactUnclicked;
+                 contact.addEventListener('click', (e: any) => {
+                     e.preventDefault()
+
+                    this.handleClickChooseContact(contact)
+                 });
+             }.bind(this));
+            // this.state.domElements.contacts?.addEventListener('click', (e) => {
+            //     e.preventDefault();
+            //     const contact = e.target as HTMLElement;
+            //     console.log(contact)
+            //     this.handleClickChooseContact();
+            // });
 
             // console.log(CreateGroupUI.render())
 
              // this.rootNode = CreateGroupUI.render()
 
-             this.rootNode.innerHTML = CreateGroupUI.render();
 
              // document.querySelector('#root')?.innerHTML = CreateGroupUI.render()
          }
@@ -107,10 +136,12 @@ export class SmartCreateGroup extends Container {
     /**
      * Выбор контакта из списка контактов
      */
-    handleClickChooseContact() {
-        this.state.domElements.contacts.addEventListener('click', () => {
-            this.state.domElements.contacts.style.backgroundColor = 'red'; // изменяем цвет на красный
-        });
+    handleClickChooseContact(contact: any) {
+        if (contact.style.backgroundColor == this.#contactUnclicked) {
+            contact.style.backgroundColor = this.#contactClicked;
+        } else {
+            contact.style.backgroundColor = this.#contactUnclicked;
+        }
     }
     // handleClickChooseContact() {
     //     // classLi
