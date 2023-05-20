@@ -54,7 +54,7 @@ export class List extends Component<Props, State, HTMLElement> {
         return new DOMParser().parseFromString(
             template({
                 ClassName: this.props.className ?? '',
-                Style: this.props.style ?? '',
+                style: this.props.style ?? '',
             }),
             'text/html'
         ).body.firstChild;
