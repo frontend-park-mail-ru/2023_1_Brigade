@@ -25,5 +25,6 @@
 
 .profile__form__list {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center; // space-between
+    align-items: center;
 }

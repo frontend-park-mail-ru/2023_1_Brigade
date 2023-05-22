@@ -1,34 +1,24 @@
 import { Component } from '@framework/component';
 import { DumbProfile } from '@components/new-profile/profile';
-import {
-    checkPassword,
-    checkNickname,
-    addErrorToClass,
-    checkNewPassword,
-} from '@utils/validator';
-import { store } from '@store/store';
-import {
-    passwordErrorTypes,
-    usernameErrorTypes,
-    nicknameErrorTypes,
-    newPasswordErrorTypes,
-} from '@config/errors';
-import {
-    createIncorrectPasswordAction,
-    createOccupiedUsernameAction,
-    createUpdateUserAction,
-    createUpdateUserAvatarAction,
-} from '@actions/userActions';
-import { createRenderAction } from '@actions/routeActions';
 import { DYNAMIC } from '@config/config';
+import { router } from '@router/createRouter';
+import { Popup } from '@components/popup/popup';
+import { store } from '@/store/store';
+import { createLogoutAction } from '@/actions/authActions';
+import { createUpdateUserAction, createUpdateUserAvatarAction } from '@/actions/userActions';
+import { Input } from '@uikit/input/input';
+import { passwordErrorTypes } from '@/config/errors';
 
 interface Props {
     parent: HTMLElement;
+    user?: User;
 }
 
 interface State {
+    oldPassword: Input;
+    newPassword: Input;
+    repeatPassword: Input;
     isMounted: boolean;
-
     node?: DumbProfile;
 }
 
@@ -49,11 +39,10 @@ export class SmartProfile extends Component<Props, State> {
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
-
-        console.log('Profile constructor has been called');
     }
 
     private profile: DumbProfile | null;
+    private popup: Popup | undefined | null;
     private image: File | undefined;
     destroy() {
         if (this.state.isMounted) {
@@ -82,8 +71,52 @@ export class SmartProfile extends Component<Props, State> {
         this.state.node = new DumbProfile({
             parent: this.node,
             user: this.hookUser(store.getState()),
+            avatarOnClick: this.handleClickAvatar,
+            unlockOnClick: this.handleUnlockClick,
+            backOnClick: this.handleBackClick,
             hookUser: this?.hookUser,
+            hookUpdatePopup: this?.hookPopup,
         });
+    }
+
+    /**
+     * 
+     * @param popupRoot корень popup-a
+     * @returns {Popup | undefined} - созданный popup или обновленный popup или undefined
+     */
+    hookPopup(popupRoot: HTMLElement) : Popup | HTMLElement | undefined {
+        console.log('debug this: ', this);
+
+        if (popupRoot) {
+            this.state.oldPassword = new Input({
+                label: 'Почтовый адрес',
+                parent: document.querySelector('.profile-popup') as HTMLElement,
+                className: 'input-container profile__form__input',
+                placeholder: this.props?.user?.email,
+                uniqClassName: 'email',
+                errors: passwordErrorTypes,
+            });
+
+            this.state.newPassword = new Input({
+                label: 'Почтовый адрес',
+                parent: document.querySelector('.profile-popup') as HTMLElement,
+                className: 'input-container profile__form__input',
+                placeholder: this.props?.user?.email,
+                uniqClassName: 'email',
+                errors: passwordErrorTypes,
+            });
+
+            this.state.repeatPassword = new Input({
+                label: 'Почтовый адрес',
+                parent: document.querySelector('.profile-popup') as HTMLElement,
+                className: 'input-container profile__form__input',
+                placeholder: this.props?.user?.email,
+                uniqClassName: 'email',
+                errors: passwordErrorTypes,
+            });
+        }
+
+        return popupRoot;
     }
 
     /**
@@ -102,29 +135,78 @@ export class SmartProfile extends Component<Props, State> {
     }
 
     /**
+     * Обрабатывает нажатие кнопки поменять пароль
+     */
+    handleUnlockClick(e?: Event) {
+        e?.preventDefault();
+        console.log('unlock clicked: ', this.state?.node);
+
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: "Смена пароля",
+                confirmBtnText: 'Подтвердить',
+                cancelBtnText: 'Отмена',
+                className: 'profile-popup',
+                confirmLogoutOnClick: () => {
+                    // TODO: оправляем запрос на изменения профиля
+                    // store.dispatch(createUpdateUserAction(user));
+                    // store.dispatch(createUpdateUserAvatarAction(this.image));
+                    this.popup?.destroy();
+                    this.popup = null;
+                },
+                cancelLogoutOnClick: () => {
+                    this.popup?.destroy();
+                    this.popup = null;
+                },
+            })
+        }
+        this.state?.node?.componentDidMount();
+    }
+
+    /**
+     * Обрабатывает нажатие кнопки назад
+     */
+    handleBackClick() {
+        router.route('/')
+    }
+
+    /**
      * Обрабатывает нажатие кнопки аватарки
      */
-    // handleClickAvatar() {
-    //     const input = document.createElement('input');
-    //     input.type = 'file';
-    //     input.accept = '.jpg' && '.png' && '.svg';
+    handleClickAvatar() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.jpg';
 
-    //     input.addEventListener('change', () => {
-    //         this.image = input?.files?.[0];
-    //         if (this.image) {
-    //             const reader = new FileReader();
-    //             reader.readAsDataURL(this.image);
-    //             reader.onload = () => {
-    //                 const imageUrl = reader.result;
-    //                 const avatar = document.querySelector(
-    //                     '.profile__avatar'
-    //                 ) as HTMLImageElement;
-    //                 avatar.src = imageUrl as string;
-    //             };
-    //         }
-    //     });
+        input.addEventListener('change', () => {
+            this.image = input?.files?.[0];
+            if (this.image) {
+                const reader = new FileReader();
+                reader.readAsDataURL(this.image);
+                reader.onload = () => {
+                    const imageUrl = reader.result;
+                    const avatar = document.querySelector(
+                        '.profile__avatar'
+                    ) as HTMLImageElement;
+                    avatar.src = imageUrl as string;
+                };
+            }
+        });
 
-    //     input.click();
+        input.click();
+    }
+
+    // /**
+    //  * Показывает, что был введен занятый username
+    //  */
+    // occupiedUsername() {
+    //     if (this.state.isMounted && this.props?.occupiedUsername) {
+    //         this.state.domElements.username?.classList.add('data-input--error');
+    //         addErrorToClass('occupied-username', usernameErrorTypes);
+    //         store.dispatch(createOccupiedUsernameAction(false));
+    //     }
     // }
 
     // /**
@@ -181,7 +263,7 @@ export class SmartProfile extends Component<Props, State> {
     // }
 
     // incorrectPassword() {
-    //     if (this.state.isSubscribed && this.props?.incorrectPassword) {
+    //     if (this.state.isMounted && this.props?.incorrectPassword) {
     //         this.state.domElements.current_password?.classList.add(
     //             'data-input--error'
     //         );
@@ -252,82 +334,3 @@ export class SmartProfile extends Component<Props, State> {
     //     addErrorToClass('', usernameErrorTypes);
     // }
 }
-
-
-
-
-
-
-
-
-// if (this.state.isSubscribed && this.props?.user) {
-//             this.profileUI = new DumbProfile({
-//                 parent: document.getElementById('dynamic') as HTMLElement,
-//             });
-
-//             this.state.domElements.avatar =
-//                 document.querySelector('.profile__avatar'); // ellipse-icon
-//             this.state.domElements.avatar?.addEventListener('click', () => {
-//                 this.handleClickAvatar();
-//             });
-
-//             this.state.domElements.saveButton =
-//                 document.querySelector('.button-save');
-//             this.state.domElements.saveButton?.addEventListener(
-//                 'click',
-//                 (e) => {
-//                     e.preventDefault();
-
-//                     this.handleClickSave();
-//                 }
-//             );
-
-//             this.state.domElements.current_password =
-//                 document.querySelector('.current-password');
-//             this.state.domElements.current_password?.addEventListener(
-//                 'input',
-//                 (e) => {
-//                     e.preventDefault();
-
-//                     this.validateCurrentPassword();
-//                 }
-//             );
-
-//             this.state.domElements.new_password =
-//                 document.querySelector('.new-password');
-//             this.state.domElements.new_password?.addEventListener(
-//                 'input',
-//                 (e) => {
-//                     e.preventDefault();
-
-//                     this.validateNewPassword();
-//                 }
-//             );
-
-//             this.state.domElements.nickname =
-//                 document.querySelector('.nickname');
-//             this.state.domElements.nickname?.addEventListener('input', (e) => {
-//                 e.preventDefault();
-
-//                 this.validateNickname();
-//             });
-
-//             this.state.domElements.username =
-//                 document.querySelector('.username');
-//             this.state.domElements.username?.addEventListener('input', (e) => {
-//                 e.preventDefault();
-
-//                 if (this.state.domElements.username?.value) {
-//                     if (
-//                         this.state.domElements.username?.value.charAt(0) !== '@'
-//                     ) {
-//                         this.state.domElements.username.value =
-//                             '@' + this.state.domElements.username.value;
-//                     }
-//                 }
-
-//                 this.validateUsername();
-//             });
-
-//             this.state.domElements.status = document.querySelector('.status');
-//         }

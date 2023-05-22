@@ -1,4 +1,4 @@
-import { emailErrorTypes, nicknameErrorTypes } from '@/config/errors';
+import { confirmPasswordErrorTypes, emailErrorTypes, nicknameErrorTypes, passwordErrorTypes } from '@/config/errors';
 import { Component } from '@/framework/component';
 import { store } from '@/store/store';
 import { Avatar } from '@/uikit/avatar/avatar';
@@ -9,19 +9,26 @@ import { List } from '@/uikit/list/list';
 import template from '@components/new-profile/profile.pug';
 import '@components/new-profile/profile.scss';
 import { Header } from '@uikit/header/header';
-import { svgButtonUI } from '../ui/icon/button';
+import { svgButtonUI } from '@components/ui/icon/button';
+import { Popup } from '@components/popup/popup';
 
 interface Props {
     parent: HTMLElement;
     user: User | undefined;
     style?: Record<string, string | number>;
-    onClick?: (e?: Event) => void;
+    avatarOnClick?: (e?: Event) => void;
+    backOnClick?: (e?: Event) => void;
+    unlockOnClick?: (e?: Event) => void;
+    saveOnClick?: (e?: Event) => void;
+    cancelOnClick?: (e?: Event) => void;
+    hookUpdatePopup: (popupRoot: HTMLElement) => Popup | HTMLElement | undefined;
     hookUser: (state: StoreState) => User | undefined;
 }
 
 interface State {
     isMounted: boolean;
     parent?: HTMLElement | undefined;
+    popup?: Popup | HTMLElement | undefined;
     header?: Header;
     backButton?: Button;
     avatar?: Avatar;
@@ -33,13 +40,14 @@ interface State {
     btnList?: List;
     cancelBtn?: Button;
     saveBtn?: Button;
+    oldPassword?: Input;
+    newPassword?: Input;
+    repeatPassword?: Input;
 }
 
 export class DumbProfile extends Component<Props, State, HTMLElement> {
     constructor(props: Props) {
         super(props);
-        console.log('DumbProfile has been called: ');
-
         this.state.isMounted = false;
 
         this.headerText = document.createElement('span');
@@ -110,7 +118,8 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             className: 'profile__header__back-btn button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: "back-btn",
-            })
+            }),
+            onClick: this.props.backOnClick,
         });
         document.querySelector('.header-profile')?.appendChild(this.headerText);
 
@@ -122,6 +131,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             caption: `${this.props.user?.email ?? ''}`,
             captionStyle: 'profile__avatar__caption flex col',
             captionBlockStyle: 'profile__avatar__container col',
+            onClick: this.props.avatarOnClick,
         });
 
         const avatarContainer = document.querySelector('.profile__avatar__caption');
@@ -141,7 +151,8 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             className: 'profile__form__unlock-btn button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: "unlock-btn",
-            })
+            }),
+            onClick: this.props.unlockOnClick,
         });
 
         this.state.name = new Input({
@@ -170,28 +181,58 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             uniqClassName: 'status',
         });
 
-        this.state.btnList = new List({
+        this.state.oldPassword = new Input({
+            label: 'Старый пароль',
             parent: document.querySelector('.profile__form') as HTMLElement,
+            className: 'input-container profile__form__input',
+            placeholder: 'введите старый пароль',
+            errors: passwordErrorTypes,
+            uniqClassName: 'old-password',
+        });
+
+        this.state.newPassword = new Input({
+            label: 'Новый пароль',
+            parent: document.querySelector('.profile__form') as HTMLElement,
+            className: 'input-container profile__form__input',
+            placeholder: 'введите новый пароль',
+            errors: passwordErrorTypes,
+            uniqClassName: 'new-password',
+        });
+
+        this.state.repeatPassword = new Input({
+            label: 'Повторите пароль',
+            parent: document.querySelector('.profile__form') as HTMLElement,
+            className: 'input-container profile__form__input',
+            placeholder: 'повторите пароль',
+            errors: confirmPasswordErrorTypes,
+            uniqClassName: 'repeat-password',
+        });
+
+        this.state.btnList = new List({
+            parent: document.querySelector('.profile') as HTMLElement,
             className: 'profile__form__list row',
         })
 
         this.state.cancelBtn = new Button({
-            parent: document.querySelector('.profile__form__list') as HTMLElement,
+            parent: document.querySelector('.profile__form__list') as HTMLElement, // .profile__form__list
             label: 'Отмена',
             className: 'profile__form__btn cancel-btn button-border-radius-S button-M button-primary',
+            onClick: this.props.cancelOnClick,
         });
 
         this.state.saveBtn = new Button({
-            parent: document.querySelector('.profile__form__list') as HTMLElement,
+            parent: document.querySelector('.profile__form__list') as HTMLElement, // .profile__form__list
             label: 'Сохранить',
             className: 'profile__form__btn save-btn button-border-radius-S button-M button-primary',
+            onClick: this.props.saveOnClick,
         });
 
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
             const prevProps = this.props;
             this.props.user = this.props.hookUser(state);
+            this.state.popup = this.props.hookUpdatePopup.bind(this)(document.querySelector('.profile-popup') as HTMLElement);
 
-            if (this.props !== prevProps) {
+            if (this.props !== prevProps || this.state.popup) {
                 this.update();
             }
         });
