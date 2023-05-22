@@ -34,16 +34,16 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         super(props);
         this.state.isMounted = false;
         this.prevProps = null;
+        this.update = this.update.bind(this);
 
         this.node = this.render() as HTMLElement;
         this.props.parent.appendChild(this.node);
+
         this.componentDidMount();
-        this.update.bind(this);
 
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            this.prevProps = {...this.props};
+            this.prevProps = { ...this.props };
             this.props.avatar = this.props.hookAvatar(state);
-
 
             if (this.props.avatar !== this.prevProps.avatar) {
                 this.update();
@@ -83,10 +83,12 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         this.state.list = new List({
             parent: this.node,
             className: 'sidebar-header__list',
-        })
+        });
 
         this.state.avatar = new Img({
-            parent: document.querySelector('.sidebar-header__list') as HTMLElement,
+            parent: this.node.querySelector(
+                '.sidebar-header__list'
+            ) as HTMLElement,
             className: 'sidebar-header__list sidebar-header__list__item',
             src: this.props.avatar,
             size: 'S',
@@ -95,8 +97,11 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         });
 
         this.state.chatsButton = new Button({
-            parent: document.querySelector('.sidebar-header__list') as HTMLElement,
-            className: 'sidebar-header__chats-btn sidebar-header__list__item button-transparent',
+            parent: this.node.querySelector(
+                '.sidebar-header__list'
+            ) as HTMLElement,
+            className:
+                'sidebar-header__chats-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'sidebar__chats-icon' ?? '',
             }),
@@ -104,8 +109,11 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         });
 
         this.state.contactsButton = new Button({
-            parent: document.querySelector('.sidebar-header__list') as HTMLElement,
-            className: 'sidebar-header__contacts-btn sidebar-header__list__item button-transparent',
+            parent: this.node.querySelector(
+                '.sidebar-header__list'
+            ) as HTMLElement,
+            className:
+                'sidebar-header__contacts-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'sidebar__contacts-icon' ?? '',
             }),
@@ -120,8 +128,6 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
             }),
             onClick: this.props.logoutOnClick,
         });
-
-        
 
         this.state.isMounted = true;
     }
