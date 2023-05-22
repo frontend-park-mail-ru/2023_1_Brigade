@@ -50,11 +50,12 @@ export class MessageInput extends Component<Props, State> {
             lastInputPosition: 0,
         };
 
+        this.inputFocus = this.inputFocus.bind(this);
+        this.update = this.update.bind(this);
+
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
         this.props.parent.appendChild(this.node);
-
-        this.update.bind(this);
     }
 
     changeText(text: string) {
@@ -83,7 +84,7 @@ export class MessageInput extends Component<Props, State> {
             '.message-input__text-field__in'
         ) as HTMLInputElement;
 
-        document.addEventListener('keyup', this.inputFocus.bind(this));
+        document.addEventListener('keyup', this.inputFocus);
 
         this.state.emojiButton = this.node.querySelector(
             '.view-chat__add-emoji-sticker'
@@ -296,7 +297,7 @@ export class MessageInput extends Component<Props, State> {
             return;
         }
 
-        document.removeEventListener('keydown', this.inputFocus.bind(this));
+        document.removeEventListener('keyup', this.inputFocus);
         this.state.emojiButton?.removeEventListener(
             'click',
             this.onEmoji.bind(this)

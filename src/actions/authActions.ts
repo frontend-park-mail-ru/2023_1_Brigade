@@ -9,7 +9,7 @@ import { router } from '@router/createRouter';
 import { Contacts } from '@containers/contacts/createContacts';
 import { Chats } from '@containers/chatList/createChatList';
 import { getSidebar } from '@containers/sidebar/createSidebar';
-import { getWs } from '@utils/ws';
+import { getNotificationWs, getWs } from '@utils/ws';
 import { DYNAMIC } from '@/config/config';
 
 /**
@@ -26,6 +26,7 @@ export const createAuthAction = (): AsyncAction => {
                 dispatch(createSetUserAction(jsonBody));
 
                 getWs();
+                getNotificationWs();
 
                 if (
                     window.location.pathname !== '/signup' &&
@@ -72,6 +73,7 @@ export const createLoginAction = (
                 dispatch(createSetUserAction(jsonBody));
 
                 getWs();
+                getNotificationWs();
 
                 getSidebar();
                 Chats.componentDidMount();
@@ -112,6 +114,7 @@ export const createSignUpAction = (
                 dispatch(createSetUserAction(jsonBody));
 
                 getWs();
+                getNotificationWs();
 
                 getSidebar();
                 Chats.componentDidMount();
@@ -149,8 +152,9 @@ export const createLogoutAction = (): AsyncAction => {
                 Contacts.componentWillUnmount();
                 Chats.componentWillUnmount();
 
-                const ws = getWs();
-                ws.close();
+                getWs().close();
+                getNotificationWs().close();
+
                 DYNAMIC().classList.remove('flex-grow-1');
 
                 router.route('/login');

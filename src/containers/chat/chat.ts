@@ -18,7 +18,6 @@ import {
 } from '@actions/routeActions';
 import { ChatTypes, MessageActionTypes, MessageTypes } from '@config/enum';
 import { DYNAMIC } from '@config/config';
-import { notify } from '@/services/notification';
 import { DumbMessage } from '@/components/message/message';
 import {
     createAddMessageAction,
@@ -244,6 +243,10 @@ export class SmartChat extends Component<Props, State> {
     }
 
     renderIncomingMessage(message: Message) {
+        if (message.chat_id !== this.props.openedChat?.id) {
+            return;
+        }
+
         switch (message.action) {
             case MessageActionTypes.Edit:
                 store.dispatch(createEditMessageAction(message));
@@ -265,18 +268,6 @@ export class SmartChat extends Component<Props, State> {
                     document.querySelector('.attachments__list') as HTMLElement,
                     message
                 );
-
-                if (message.author_id !== this.props.user?.id) {
-                    this.props.openedChat?.members.forEach((member) => {
-                        if (member.id === message.author_id) {
-                            notify(
-                                member.nickname,
-                                message.body,
-                                this.props.openedChat?.avatar ?? ''
-                            );
-                        }
-                    });
-                }
         }
     }
 
