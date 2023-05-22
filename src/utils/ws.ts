@@ -1,3 +1,5 @@
+import { store } from '@/store/store';
+
 const createWs = (url: string) => {
     let ws: WebSocket | undefined;
     const subscribers = new Map<number, (message: Message) => void>();
@@ -73,7 +75,10 @@ const createNotificationWs = (url: string) => {
 
                 console.log('message:', e);
 
-                if (Notification.permission !== 'granted') {
+                if (
+                    Notification.permission !== 'granted' ||
+                    e.author_id === store.getState().user?.id
+                ) {
                     return;
                 }
 
