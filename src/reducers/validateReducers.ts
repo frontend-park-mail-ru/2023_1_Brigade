@@ -6,7 +6,7 @@ import { constantsOfActions } from '@config/actions';
  * @param {Action} action - Объект, содержащий данные действия.
  * @returns {Object} - Новое состояние объекта.
  */
-export const reduceValidate = (state: State, action: Action) => {
+export const reduceValidate = (state: StoreState, action: Action) => {
     switch (action.type) {
         case constantsOfActions.invalidEmail:
         case constantsOfActions.occupiedEmail:
@@ -14,7 +14,7 @@ export const reduceValidate = (state: State, action: Action) => {
         case constantsOfActions.incorrectPassword:
             return {
                 ...state,
-                ...action.payload,
+                ...(action.payload as Record<string, unknown>),
             };
         default:
             return {

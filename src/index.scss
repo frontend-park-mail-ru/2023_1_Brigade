@@ -4,6 +4,7 @@
     --secondary: #EBECF2;
     --secondary-hover: #D8DAE5;
 }
+
 $active: #003CB2;
 $surface-0: #fff;
 $surface-50: #eef1f2;
@@ -137,6 +138,8 @@ $red-700: #971d0d;
 $red-800: #77170a;
 $red-900: #561108;
 
+$mobile: 768px;
+
 html {
     box-sizing: border-box;
 }
@@ -183,9 +186,20 @@ ul {
     padding-left: 0px;
 }
 
+figure {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0px;
     padding: 0px;
+    transition: all 0.3s ease-in-out;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 h2 {
@@ -211,6 +225,10 @@ h4 {
 section {
     margin: 0px;
     padding: 0px;
+}
+
+.relative {
+    position: relative;
 }
 
 .chat-page {
@@ -248,8 +266,26 @@ button {
     display: flex;
 }
 
+.row {
+    flex-direction: row;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
     margin: 0 auto;
+    padding: 0px 15px;
+}
+
+.position-fixed {
+    position: fixed;
 }
 
 .vertical-container {
@@ -276,26 +312,31 @@ main {
 }
 
 #root {
+    padding: 0px;
     min-width: 100%;
     height: 100vh;
-
-    display: grid;
-    grid-template-columns: [start sidebar-start] 104px [sidebar-end static-start] 380px [static-end dynamic-start] auto [dynamic-end end];
-    
+    display: flex;
+    justify-content: center;    
     background-color: #131318;
 }
 
 #sidebar {
-    grid-column-start: start;
+    
 }
 
 #static {
-    grid-column: static-start / static-end;
+    @media (max-width: $mobile) {
+        flex-grow: 1;
+    }
 }
 
 #dynamic {
-    grid-column: dynamic-start / dynamic-end;
+    // flex-grow: 1;
     background-color: #131318;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
 }
 
 .font-size-1 {
@@ -354,7 +395,5 @@ main {
     font-weight: 700;
     font-size: 26px;
     line-height: 29px;
-    /* identical to box height */
-
     color: #FFFFFF;
 }

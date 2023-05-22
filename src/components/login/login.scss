@@ -1,6 +1,6 @@
 .login {
-    grid-column: start / end;
-    min-width: 100%;
+    width: 100%;
+    max-width: 400px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;

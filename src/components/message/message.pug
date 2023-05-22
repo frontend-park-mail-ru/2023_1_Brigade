@@ -1,20 +1,10 @@
-if Side
-    .messages__message.message-right.flex(name = id)
-        .message__avatar.flex
-            !=MessageAvatar
-            .message__right-side.flex
-                .message__right-side__username
-                    !=Username
-                .message__right-side__text-content.flex
-                    .message__right-side__text-content-text(name = id)!= MessageText.replace(/(.{50})/g, '$1<br>')
-                    .message-three-dots!=TreeDots
-else
-    .messages__message.message-left.flex(name = id)
-        .message__avatar.flex
-            !=MessageAvatar
-            .message__right-side.flex
-                .message__right-side__username
-                    !=Username
-                .message__right-side__text-content.flex
-                    .message__right-side__text-content-text(name = id)!= MessageText.replace(/(.{50})/g, '$1<br>')
-                    .message-three-dots!=TreeDots
+.message(class=className, style=style, id=id).flex
+    if (avatar != '')
+        .message__avatar
+    .message__content.flex
+        if (nickname != '')
+            span.message__nickname= nickname
+        if (image != '')
+            .message__image
+        if (body != '')
+            .message__body= body

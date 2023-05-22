@@ -16,6 +16,8 @@ export class Dropdown extends Component<Props, State> {
         super(props);
     }
 
+    destroy() {}
+
     componentDidMount(): void {
         //TODO
     }

@@ -14,6 +14,8 @@ export class ChannelInput extends Component<Props, State> {
         super(props);
     }
 
+    destroy() {}
+
     componentDidMount(): void {
         //
     }

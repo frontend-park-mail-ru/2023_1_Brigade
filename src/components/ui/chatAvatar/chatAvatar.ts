@@ -8,6 +8,8 @@ interface Props {}
 interface State {}
 
 export class chatAvatarUi extends Component<Props, State> {
+    destroy() {}
+
     componentDidMount(): void {
         //
     }

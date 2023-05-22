@@ -15,6 +15,8 @@ export class searchUi extends Component<Props, State> {
         super(props);
     }
 
+    destroy() {}
+
     componentDidMount(): void {
         //TODO
     }

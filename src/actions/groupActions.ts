@@ -8,7 +8,7 @@ import { createMoveToChatAction } from './routeActions';
  * @param {State} state - Объект, содержащий данные о создаваемой группе чатов
  * @returns {Action} - Экшен
  */
-export const createSetCreateGroupAction = (state: State) => {
+export const createSetCreateGroupAction = (state: StoreState) => {
     return {
         type: constantsOfActions.createGroup,
         payload: state,

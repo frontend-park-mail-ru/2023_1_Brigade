@@ -5,13 +5,15 @@ import '@components/emptyDynamicPage/emptyDynamicPage.scss';
 interface Props {}
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
 }
 
 export class DumbEmptyDynamicPage extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
     }
+
+    destroy() {}
 
     componentDidMount(): void {
         //TODO

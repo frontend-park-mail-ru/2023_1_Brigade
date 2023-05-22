@@ -5,6 +5,11 @@ export enum ChatTypes {
 }
 
 export enum MessageTypes {
+    Sticker,
+    notSticker,
+}
+
+export enum MessageActionTypes {
     Create,
     Edit,
     Delete,

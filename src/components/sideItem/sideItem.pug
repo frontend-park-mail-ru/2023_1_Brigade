@@ -1,5 +1,4 @@
 .nav__item.flex
-    a(href="#").flex
-        !=SideButton
-        if ItemValue
-            span.nav__item__counter !{ItemValue}
+    !=SideButton
+    if ItemValue
+        span.nav__item__counter !{ItemValue}

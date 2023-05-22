@@ -1,29 +1,41 @@
-import '@uikit/input/input.scss';
-import template from '@uikit/input/input.pug';
 import { Component } from '@framework/component';
+import template from '@uikit/input/input.pug';
+import '@uikit/input/input.scss';
 
 interface Props {
+    parent: HTMLElement;
+    placeholder?: string;
+    className?: string;
+    uniqClassName?: string;
+    type?: string;
+    errors?: ErrorTypes[];
     label?: string;
     caption?: string;
-    placeholder?: string;
-    value?: string;
-    contentType?: string;
-    className?: string;
-    size?: 'S' | 'M' | 'L';
-    style?: Record<string, string | number>;
     onChange?: (e?: Event) => void;
-    parent: HTMLElement;
+    style?: Record<string, string | number>;
+    size?: 'S' | 'M' | 'L';
+    contentType?: string;
+    value?: string;
 }
 
-interface State {}
+interface State {
+    parent?: HTMLElement;
+    node: HTMLElement | undefined;
+}
 
 export class Input extends Component<Props, State, HTMLInputElement> {
     constructor(props: Props) {
         super(props);
 
-        this.node = this.render() as HTMLInputElement;
-        this.componentDidMount();
-        this.props.parent.appendChild(this.node);
+        this.state = {
+            parent: this.props?.parent,
+            node: this.render() as HTMLInputElement,
+        };
+
+        if (this.state.node) {
+            this.componentDidMount();
+            this.state.parent?.appendChild(this.state.node);
+        }
     }
 
     destroy() {
@@ -53,17 +65,18 @@ export class Input extends Component<Props, State, HTMLInputElement> {
     }
 
     render() {
-        const className = `${this.props.className ?? ''}`.trim();
-
         return new DOMParser().parseFromString(
             template({
-                className,
-                label: this.props.label ?? '',
-                caption: this.props.caption ?? '',
-                placeholder: this.props.placeholder ?? '',
-                value: this.props.value ?? '',
+                Placeholder: this.props.placeholder,
+                ClassName: this.props.className,
+                UniqClassName: this.props.uniqClassName,
+                Errors: this.props.errors,
+                Label: this.props.label ?? '',
+                Caption: this.props.caption ?? '',
+                Value: this.props.value ?? '',
                 contentType: this.props.contentType ?? '',
                 style: this.props.style ?? '',
+                Type: this.props.type ?? 'text',
             }),
             'text/html'
         ).body.firstChild;

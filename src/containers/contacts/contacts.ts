@@ -3,7 +3,6 @@ import { store } from '@store/store';
 import { createGetContactsAction } from '@actions/contactsActions';
 import { DumbContacts } from '@components/contacts/contacts';
 import { createCreateDialogAction } from '@actions/chatActions';
-import { createMoveToChatsAction } from '@actions/routeActions';
 import { STATIC } from '@config/config';
 
 interface Props {
@@ -12,7 +11,7 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     domElements: {
         headContacts: HTMLElement | null;
         contacts: HTMLElement | null;
@@ -25,7 +24,7 @@ export class SmartContacts extends Component<Props, State> {
         super(props);
 
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             domElements: {
                 headContacts: null,
                 contacts: null,
@@ -33,11 +32,19 @@ export class SmartContacts extends Component<Props, State> {
             },
         };
 
-        this.node = STATIC;
+        this.node = STATIC();
+    }
+
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartContacts is not mounted');
+        }
     }
 
     render() {
-        if (this.state.isSubscribed && this.props?.user) {
+        if (this.state.isMounted && this.props?.user) {
             if (!this.props.contacts) {
                 this.props.contacts = [];
             }
@@ -68,7 +75,7 @@ export class SmartContacts extends Component<Props, State> {
     }
 
     componentDidMount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             this.unsubscribe = store.subscribe(
                 this.constructor.name,
                 (props: Props) => {
@@ -78,8 +85,8 @@ export class SmartContacts extends Component<Props, State> {
                 }
             );
 
-            if (this.state.isSubscribed === false) {
-                this.state.isSubscribed = true;
+            if (this.state.isMounted === false) {
+                this.state.isMounted = true;
             }
 
             store.dispatch(createGetContactsAction());
@@ -87,9 +94,9 @@ export class SmartContacts extends Component<Props, State> {
     }
 
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.unsubscribe();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 

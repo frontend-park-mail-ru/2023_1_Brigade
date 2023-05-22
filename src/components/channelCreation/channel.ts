@@ -13,6 +13,8 @@ export class DumbCreateChannel extends Component<Props, State> {
         super(props);
     }
 
+    destroy() {}
+
     componentDidMount(): void {
         //
     }

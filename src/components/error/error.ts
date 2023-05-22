@@ -6,13 +6,15 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
 }
 
 export class DumbContact extends Component<Props, State> {
     constructor(props: Record<string, unknown>) {
         super(props);
     }
+
+    destroy() {}
 
     componentDidMount(): void {
         //TODO

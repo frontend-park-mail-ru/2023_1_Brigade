@@ -15,7 +15,7 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     domElements: {
         saveChangesBtn: HTMLElement | null;
     };
@@ -32,21 +32,31 @@ export class SmartAddUserInGroup extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             domElements: {
                 saveChangesBtn: null,
             },
         };
 
         this.chatId = this.props?.chatId;
-        this.node = DYNAMIC;
+        this.node = DYNAMIC();
+
+        this.componentDidMount();
     }
 
     #contactClicked = 'rgb(37, 37, 48)';
     #contactUnClicked = 'rgb(28, 28, 36)';
 
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartGroup is not mounted');
+        }
+    }
+
     render() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.props?.chats?.forEach((chat) => {
                 if (chat.id == this.chatId) {
                     const addUser = new DumbAddContactInGroup({
@@ -151,9 +161,9 @@ export class SmartAddUserInGroup extends Component<Props, State> {
     }
 
     componentDidMount() {
-        if (!this.state.isSubscribed) {
-            if (this.state.isSubscribed === false) {
-                this.state.isSubscribed = true;
+        if (!this.state.isMounted) {
+            if (this.state.isMounted === false) {
+                this.state.isMounted = true;
             }
 
             this.unsubscribe = store.subscribe(
@@ -170,9 +180,9 @@ export class SmartAddUserInGroup extends Component<Props, State> {
     }
 
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.unsubscribe();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 

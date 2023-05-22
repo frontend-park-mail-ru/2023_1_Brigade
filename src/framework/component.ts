@@ -1,6 +1,5 @@
 export interface IComponent {
-    componentDidMount(): void;
-    componentWillUnmount(): void;
+    destroy(): void;
 }
 
 /**
@@ -22,8 +21,7 @@ export abstract class Component<Props, State, Element = HTMLElement>
         this.state = {} as State;
     }
 
-    abstract componentDidMount(): void;
-    abstract componentWillUnmount(): void;
+    abstract destroy(): void;
 
     protected props: Props;
     protected state: State;

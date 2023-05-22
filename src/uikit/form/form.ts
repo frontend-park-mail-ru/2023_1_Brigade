@@ -4,16 +4,18 @@ import { Component } from '@framework/component';
 
 interface Props {
     className?: string;
+    style?: Record<string, string | number>;
+    onClick?: (e?: Event) => void;
     parent: HTMLElement;
 }
 
 interface State {}
 
-export class Form extends Component<Props, State> {
+export class Form extends Component<Props, State, HTMLFormElement> {
     constructor(props: Props) {
         super(props);
 
-        this.node = this.render() as HTMLButtonElement;
+        this.node = this.render() as HTMLFormElement;
         this.componentDidMount();
         this.props.parent.appendChild(this.node);
     }
@@ -24,20 +26,35 @@ export class Form extends Component<Props, State> {
         this.node = undefined;
     }
 
-    getNode() {
-        return this.node;
+    getNode(): Element | undefined {
+        return this?.node;
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        if (!this.node) {
+            return;
+        }
 
-    componentWillUnmount() {}
+        if (this.props.onClick) {
+            this.node.addEventListener('click', this.props.onClick);
+        }
+    }
+
+    componentWillUnmount() {
+        if (!this.node) {
+            return;
+        }
+
+        if (this.props.onClick) {
+            this.node.removeEventListener('click', this.props.onClick);
+        }
+    }
 
     render() {
-        const className = `${this.props.className ?? ''}`.trim();
-
         return new DOMParser().parseFromString(
             template({
-                className,
+                ClassName: this.props.className ?? 'form',
+                Style: this.props.style ?? '',
             }),
             'text/html'
         ).body.firstChild;

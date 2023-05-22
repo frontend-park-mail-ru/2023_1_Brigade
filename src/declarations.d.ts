@@ -17,7 +17,6 @@ interface Action {
         | Chat[]
         | OpenedChat
         | Message
-        | Record<string, boolean>
         | null
         | undefined
         | {
@@ -26,7 +25,18 @@ interface Action {
               title: string;
               members: (number | undefined)[];
           }
-        | Record<string, unknown>;
+        | Record<
+              string,
+              | User
+              | User[]
+              | Chat
+              | Chat[]
+              | OpenedChat
+              | Message
+              | boolean
+              | unknown
+          >
+        | string;
 }
 
 interface AsyncAction {
@@ -39,15 +49,15 @@ interface Response {
 }
 
 interface Reducer {
-    (state: State, action: Action): State;
+    (state: StoreState, action: Action): StoreState;
 }
 
 interface GetState {
-    (): State;
+    (): StoreState;
 }
 
 interface Callback {
-    (props: State): void;
+    (props: StoreState): void;
 }
 
 interface CreateStore {
@@ -76,7 +86,7 @@ interface ErrorTypes {
     message: string;
 }
 
-interface State {
+interface StoreState {
     user?: User;
     chats?: Chat[];
     contacts?: User[];
@@ -122,7 +132,9 @@ interface OpenedChat {
 
 interface Message {
     id: string;
+    action: MessageActionType;
     type: MessageTypes;
+    image_url: string;
     body: string;
     chat_id: number;
     author_id: number;

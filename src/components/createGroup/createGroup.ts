@@ -11,13 +11,15 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
 }
 
 export class DumbCreateGroup extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
     }
+
+    destroy() {}
 
     componentDidMount(): void {
         //TODO

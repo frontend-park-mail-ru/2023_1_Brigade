@@ -130,7 +130,7 @@ export const createCreateDialogAction = (contact: User) => {
     return async (dispatch: Dispatch, state: GetState) => {
         let haveThisChat = false;
 
-        state().chats?.forEach((chat) => {
+        state().chats?.forEach((chat: Chat) => {
             if (
                 chat.type === ChatTypes.Dialog &&
                 (chat.members[0]?.id == contact.id ||
@@ -195,7 +195,7 @@ export const createDeleteChatAction = (deletedChatId: number | undefined) => {
             return;
         }
 
-        state().chats?.forEach((chat) => {
+        state().chats?.forEach((chat: Chat) => {
             if (chat.id == deletedChatId) {
                 dispatch(createDeleteChatFromStoreAction(chat));
             }

@@ -8,8 +8,9 @@ import {
 import { router } from '@router/createRouter';
 import { Contacts } from '@containers/contacts/createContacts';
 import { Chats } from '@containers/chatList/createChatList';
-import { Sidebar } from '@containers/sidebar/createSidebar';
-import { getWs } from '@utils/ws';
+import { getSidebar } from '@containers/sidebar/createSidebar';
+import { getNotificationWs, getWs } from '@utils/ws';
+import { DYNAMIC } from '@/config/config';
 
 /**
  * Создает экшн для авторизации пользователя.
@@ -25,9 +26,16 @@ export const createAuthAction = (): AsyncAction => {
                 dispatch(createSetUserAction(jsonBody));
 
                 getWs();
+                getNotificationWs();
 
-                Sidebar.componentDidMount();
-                Chats.componentDidMount();
+                if (
+                    window.location.pathname !== '/signup' &&
+                    window.location.pathname !== '/login'
+                ) {
+                    getSidebar();
+                    Chats.componentDidMount();
+                    DYNAMIC().classList.add('flex-grow-1');
+                }
 
                 router.route(window.location.pathname);
 
@@ -65,9 +73,11 @@ export const createLoginAction = (
                 dispatch(createSetUserAction(jsonBody));
 
                 getWs();
+                getNotificationWs();
 
-                Sidebar.componentDidMount();
+                getSidebar();
                 Chats.componentDidMount();
+                DYNAMIC().classList.add('flex-grow-1');
 
                 router.route('/');
 
@@ -104,9 +114,11 @@ export const createSignUpAction = (
                 dispatch(createSetUserAction(jsonBody));
 
                 getWs();
+                getNotificationWs();
 
-                Sidebar.componentDidMount();
+                getSidebar();
                 Chats.componentDidMount();
+                DYNAMIC().classList.add('flex-grow-1');
 
                 router.route('/');
 
@@ -136,12 +148,14 @@ export const createLogoutAction = (): AsyncAction => {
 
         switch (status) {
             case 204:
-                Sidebar.componentWillUnmount();
+                getSidebar().destroy();
                 Contacts.componentWillUnmount();
                 Chats.componentWillUnmount();
 
-                const ws = getWs();
-                ws.close();
+                getWs().close();
+                getNotificationWs().close();
+
+                DYNAMIC().classList.remove('flex-grow-1');
 
                 router.route('/login');
 

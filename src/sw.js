@@ -5,6 +5,7 @@ const CACHE_WHITE_LIST = [CACHE_NAME];
 const TIMEOUT = 1000;
 
 self.addEventListener('install', (event) => {
+    self.skipWaiting();
     event.waitUntil(
         caches
             .open(CACHE_NAME)
@@ -15,7 +16,6 @@ self.addEventListener('install', (event) => {
                 console.error('Failed install sw:', err);
             })
     );
-    self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

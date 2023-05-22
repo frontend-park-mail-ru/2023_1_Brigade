@@ -7,6 +7,8 @@ interface Props {}
 interface State {}
 
 export class svgButtonUI extends Component<Props, State> {
+    destroy() {}
+
     componentDidMount(): void {
         //
     }

@@ -23,6 +23,9 @@ export class Router {
 
             this.go(window.location.pathname);
         });
+
+        // TODO: обработчики для передвижения мыши по экрану
+        // window.addEventListener('', () => {});
     };
 
     /**
@@ -65,16 +68,10 @@ export class Router {
             return;
         }
 
-        // if (this.currentComponent && this.currentComponent instanceof this.currentRoute.component) {
-        //     this.currentComponent.update(this.currentDynamicParams);
-        //     return;
-        // }
-
-        this.currentComponent?.componentWillUnmount();
+        this.currentComponent?.destroy();
         this.currentComponent = this.currentRoute.component(
             this.currentDynamicParams
         );
-        this.currentComponent?.componentDidMount();
     };
 
     private routes: Route[];

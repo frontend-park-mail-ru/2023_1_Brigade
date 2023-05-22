@@ -14,6 +14,7 @@ import {
     reduceSetChats,
     reduceSetSearchedChats,
 } from '@reducers/chatReducers';
+import { reduceMessage } from '@/reducers/messageReducer';
 
 /**
  * Устанавливает соответствие между экшенами и редьюсерами
@@ -45,4 +46,7 @@ export const reducers = [
         type: constantsOfActions.deleteUserInChat,
         reducer: reduceDeleteUserInChat,
     },
+    { type: constantsOfActions.addMessage, reducer: reduceMessage },
+    { type: constantsOfActions.editMessage, reducer: reduceMessage },
+    { type: constantsOfActions.deleteMessage, reducer: reduceMessage },
 ];

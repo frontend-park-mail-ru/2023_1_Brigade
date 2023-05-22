@@ -7,7 +7,7 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     parent?: HTMLElement;
     node: HTMLElement | undefined;
 }
@@ -19,23 +19,31 @@ export class List extends Component<Props, State> {
         this.state = {
             parent: this.props.parent,
             node: undefined,
-            isSubscribed: false,
+            isMounted: false,
         };
     }
 
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartSignUp is not mounted');
+        }
+    }
+
     componentDidMount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             this.state.node = this.render() as HTMLElement;
 
             this.state.parent?.appendChild(this.state.node);
-            this.state.isSubscribed = true;
+            this.state.isMounted = true;
         }
     }
 
     componentWillUnmount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             this.state.node?.remove();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 

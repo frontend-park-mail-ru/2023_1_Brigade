@@ -6,7 +6,7 @@ import { constantsOfActions } from '@/config/actions';
  * @returns {Store} - объект Store, содержащий текущее состояние state, функцию для обновления состояния dispatch и функцию подписки на обновление состояния subscribe.
  */
 export const createStore = (reducers: Map<string, Reducer>): Store => {
-    let state: State = {};
+    let state: StoreState = {};
     const subscribers = new Map<string, Callback>();
 
     return {
@@ -27,7 +27,7 @@ export const createStore = (reducers: Map<string, Reducer>): Store => {
                 cb(state);
             });
         },
-        subscribe: (key: string, cb: (state: State) => void) => {
+        subscribe: (key: string, cb: (state: StoreState) => void) => {
             subscribers.set(key, cb);
             return () => {
                 subscribers.delete(key);

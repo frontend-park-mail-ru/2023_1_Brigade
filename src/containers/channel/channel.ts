@@ -17,7 +17,7 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     valid: {
         channelNameIsValid: boolean;
         isValid: () => boolean;
@@ -35,7 +35,7 @@ export class SmartCreateChannel extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             valid: {
                 channelNameIsValid: true,
                 isValid: () => {
@@ -51,13 +51,23 @@ export class SmartCreateChannel extends Component<Props, State> {
             },
         };
 
-        this.node = DYNAMIC;
+        this.node = DYNAMIC();
+
+        this.componentDidMount();
     }
 
     #image: File | undefined;
 
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartSignUp is not mounted');
+        }
+    }
+
     render() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             const ChannelUI = new DumbCreateChannel({
                 ...this.props.contacts,
             });
@@ -111,7 +121,7 @@ export class SmartCreateChannel extends Component<Props, State> {
     }
 
     componentDidMount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             this.unsubscribe = store.subscribe(
                 this.constructor.name,
                 (props: Props) => {
@@ -121,14 +131,14 @@ export class SmartCreateChannel extends Component<Props, State> {
                 }
             );
 
-            this.state.isSubscribed = true;
+            this.state.isMounted = true;
         }
     }
 
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.unsubscribe();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 

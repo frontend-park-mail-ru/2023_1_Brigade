@@ -14,7 +14,7 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     parent?: HTMLElement;
     node: HTMLElement | undefined;
     onClick?: (e: Event) => void;
@@ -29,7 +29,7 @@ export class ChatItem extends Component<Props, State> {
         this.state = {
             parent: this.props.parent,
             node: undefined,
-            isSubscribed: false,
+            isMounted: false,
             onClick: this.props.onClick,
             chatId: this.props.chat?.id,
             observe: this.props.observe,
@@ -39,8 +39,16 @@ export class ChatItem extends Component<Props, State> {
         this.update.bind(this);
     }
 
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartSignUp is not mounted');
+        }
+    }
+
     componentDidMount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             this.state.node = this.render() as HTMLElement;
             if (this.props.isCurrent) {
                 this.state.node.classList.add('is_current');
@@ -71,15 +79,15 @@ export class ChatItem extends Component<Props, State> {
             );
 
             this.state.parent?.appendChild(this.state.node);
-            this.state.isSubscribed = true;
+            this.state.isMounted = true;
         }
     }
 
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.unsubscribe();
             this.state.node?.remove();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 

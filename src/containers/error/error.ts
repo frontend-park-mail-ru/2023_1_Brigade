@@ -3,7 +3,7 @@ import { Component } from '@framework/component';
 interface Props {}
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     domElements: {
         backButton: HTMLInputElement | null;
     };
@@ -25,18 +25,28 @@ export class SmartError extends Component<Props, State> {
         super(props);
 
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             domElements: {
                 backButton: null,
             },
         };
+
+        this.componentDidMount();
+    }
+
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartError is not mounted');
+        }
     }
 
     /**
      * Рендерит ошибку
      */
     render() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
         }
     }
 
@@ -44,14 +54,14 @@ export class SmartError extends Component<Props, State> {
      * Навешивает переданные обработчики на валидацию и кнопки
      */
     componentDidMount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             // this.unsubscribe.push(store.subscribe(this.constructor.name, (props: Record<string, unknown>) => {
             //     this.props = props;
 
             //     this.render();
             // }));
-            if (this.state.isSubscribed === false) {
-                this.state.isSubscribed = true;
+            if (this.state.isMounted === false) {
+                this.state.isMounted = true;
             }
         }
     }
@@ -60,9 +70,9 @@ export class SmartError extends Component<Props, State> {
      * Удаляет все подписки
      */
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.unsubscribe();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 }

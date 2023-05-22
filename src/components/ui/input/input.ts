@@ -15,6 +15,8 @@ export class inputUI extends Component<Props, State> {
         super(props);
     }
 
+    destroy() {}
+
     componentDidMount(): void {
         //
     }

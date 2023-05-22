@@ -7,7 +7,7 @@ import { constantsOfActions } from '@config/actions';
  * @param {Action} action - Экшен
  * @return {object} Обновленное состояние после установки данных о пользователе
  */
-export const reduceSetUser = (state: State, action: Action) => {
+export const reduceSetUser = (state: StoreState, action: Action) => {
     switch (action.type) {
         case constantsOfActions.setUser:
             if (action.payload) {
@@ -30,7 +30,7 @@ export const reduceSetUser = (state: State, action: Action) => {
  * @param {Action} action - Экшен
  * @return {object} Обновленное состояние после удаления данных из State
  */
-export const reduceDeleteState = (state: State, action: Action) => {
+export const reduceDeleteState = (state: StoreState, action: Action) => {
     switch (action.type) {
         case constantsOfActions.deleteState:
             return {};

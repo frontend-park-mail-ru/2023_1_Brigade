@@ -15,7 +15,7 @@ interface Props {
 }
 
 interface State {
-    isSubscribed: boolean;
+    isMounted: boolean;
     domElements: {
         groupNameLabel: HTMLElement | null;
         groupNameInput: HTMLInputElement | null;
@@ -51,7 +51,7 @@ export class SmartCreateGroup extends Component<Props, State> {
         super(props);
 
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             domElements: {
                 groupNameLabel: null,
                 groupNameInput: null,
@@ -70,14 +70,24 @@ export class SmartCreateGroup extends Component<Props, State> {
             },
         };
 
-        this.node = DYNAMIC;
+        this.node = DYNAMIC();
+
+        this.componentDidMount();
+    }
+
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartCreateGroup is not mounted');
+        }
     }
 
     /**
      * Рендерит создание группы
      */
     render() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             const CreateGroupUI = new DumbCreateGroup({
                 contacts: this.props?.contacts ?? [],
             });
@@ -155,7 +165,7 @@ export class SmartCreateGroup extends Component<Props, State> {
      * Навешивает переданные обработчики на валидацию и кнопки
      */
     componentDidMount() {
-        if (!this.state.isSubscribed) {
+        if (!this.state.isMounted) {
             this.unsubscribe = store.subscribe(
                 this.constructor.name,
                 (props: Props) => {
@@ -165,8 +175,8 @@ export class SmartCreateGroup extends Component<Props, State> {
                 }
             );
 
-            if (this.state.isSubscribed === false) {
-                this.state.isSubscribed = true;
+            if (this.state.isMounted === false) {
+                this.state.isMounted = true;
             }
         }
 
@@ -177,9 +187,9 @@ export class SmartCreateGroup extends Component<Props, State> {
      * Удаляет все подписки
      */
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
+        if (this.state.isMounted) {
             this.unsubscribe();
-            this.state.isSubscribed = false;
+            this.state.isMounted = false;
         }
     }
 

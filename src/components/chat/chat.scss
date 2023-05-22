@@ -1,3 +1,25 @@
+.attachments {
+    flex-direction: column;
+    width: 25%;
+    min-width: 300px;
+    background: #181B23;
+
+    &__heder {
+        justify-content: center;
+        align-items: center;
+        height: 115px;
+        font-family: 'Actor';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 30px;
+
+        font-feature-settings: 'pnum' on, 'lnum' on;
+
+        color: #FFFFFF;
+    }
+}
+
 .view-chat {
     flex-direction: column;
     align-items: flex-start;
@@ -26,11 +48,17 @@
     min-width: 100%;
     flex-grow: 3;
     max-height: 100%;
+    max-width: 40vw;
     overflow: auto;
 }
 
 p {
     margin: 0px;   
+}
+
+.view-chat__message-input {
+    width: 100%;
+    padding: 21px 68px 21px 27px;
 }
 
 .messages__message {

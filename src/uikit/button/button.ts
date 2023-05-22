@@ -20,8 +20,11 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
         super(props);
 
         this.node = this.render() as HTMLButtonElement;
-        this.componentDidMount();
-        this.props.parent.appendChild(this.node);
+
+        if (this.node && this.props.parent) {
+            this.componentDidMount();
+            this.props.parent.appendChild(this.node);
+        }
     }
 
     destroy() {
@@ -52,14 +55,17 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
 
     render() {
         const className = `${this.props.className ?? ''} ${
-            this.props.size ?? ''
-        } ${this.props.type ?? ''} ${this.props.icon ?? ''}`.trim();
+            this.props.size ? 'button-' + this.props.size : ''
+        }`.trim();
 
         return new DOMParser().parseFromString(
             template({
                 className,
                 label: this.props.label ?? '',
                 style: this.props.style ?? '',
+                type: this.props.type ?? '',
+                size: this.props.size ?? '',
+                icon: this.props.icon ?? '',
             }),
             'text/html'
         ).body.firstChild;

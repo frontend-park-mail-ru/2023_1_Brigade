@@ -87,11 +87,19 @@ module.exports = {
                     to: path.resolve(__dirname, 'dist/assets/fonts'),
                 },
                 {
+                    from: path.resolve(__dirname, 'src/assets/icons'),
+                    to: path.resolve(__dirname, 'dist/assets/icons'),
+                },
+                {
                     from: path.resolve(__dirname, 'src/sw.js'),
                     to: path.resolve(__dirname, 'dist'),
                 },
                 {
                     from: path.resolve(__dirname, 'src/offline.html'),
+                    to: path.resolve(__dirname, 'dist'),
+                },
+                {
+                    from: path.resolve(__dirname, 'src/manifest.json'),
                     to: path.resolve(__dirname, 'dist'),
                 },
             ],

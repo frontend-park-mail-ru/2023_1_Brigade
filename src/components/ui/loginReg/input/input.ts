@@ -7,6 +7,8 @@ interface Props {}
 interface State {}
 
 export class loginRegInputUI extends Component<Props, State> {
+    destroy() {}
+
     componentDidMount(): void {
         //
     }

@@ -1,4 +1,10 @@
-div
-    label= label 
-    input(type=contentType, style=style, placeholder=placeholder).input= value
-    caption= caption
+div(class=ClassName)
+    span(class=LabelClassName).input-container__label
+        !=Label
+    input(class=UniqClassName)(type=Type, placeholder=Placeholder)
+    !=Caption
+    if Errors
+        .input__errors.flex
+            each error in Errors
+                span(class=error.class).login-reg__error.invisible
+                    !=error.message

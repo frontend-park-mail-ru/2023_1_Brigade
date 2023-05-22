@@ -28,4 +28,7 @@ export const constantsOfActions = {
     deleteSearchedChats: 'deleteSearchedChats',
     addUserInChat: 'addUserInChat',
     deleteUserInChat: 'deleteUserInChat',
+    addMessage: 'addMessage',
+    editMessage: 'editMessage',
+    deleteMessage: 'deleteMessage',
 };

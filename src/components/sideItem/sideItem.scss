@@ -1,3 +1,23 @@
+$default-background: rgba(0, 0, 0, 0.3);
+$active-background: rgba(0, 77, 229, 0.7);
+
 .nav__item {
     justify-content: center;
+    min-width: 60px;
+    min-height: 60px;
+    background-color: $default-background;
+    border-radius: 20px;
+    transition:  background-color 0.3s ease-in-out;;
+
+    &hover {
+        background-color: $active-background;
+    }
+
+    &active {
+        background-color: $active-background;
+    }
+
+    &focus {
+        background-color: $active-background;
+    }
 }

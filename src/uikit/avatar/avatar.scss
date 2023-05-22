@@ -1,0 +1,181 @@
+.login-reg__top {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 43px;
+}
+
+.login-reg__top_photo {
+    align-self: center;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: #112235;
+}
+
+.login-reg__top_welcome {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 43px;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.login-reg__top_message {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 43px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.profile__avatar {
+    padding-top: 10px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    &-border-radius {
+        &-50 {
+            border-radius: 50%;
+        }
+
+        &-25 {
+            border-radius: 25%;
+        }
+
+        &-10 {
+            border-radius: 10%;
+        }
+
+        &-5 {
+            border-radius: 5%;
+        }
+    }
+
+    &-S {
+        max-width: 60px;
+        max-height: 60px;
+    }
+
+    &-M {
+        max-width: 130px;
+        max-height: 130px;
+    }
+    
+    &-L {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+    &-XL {
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    &__caption {
+        font-family: 'Actor';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 29px;
+        text-align: center;
+        color: #FFFFFF;
+        padding: 10px;
+        align-items: center;
+        justify-content: center;
+        
+        &__username {
+            font-family: 'SF Pro Display';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 19px;
+            text-align: center;
+            color: #696969;
+            // z-index: 1;
+        }
+        
+        &__status {
+            font-family: 'SF Pro Display';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 14px;
+            text-align: center;
+            color: #696969;
+            // z-index: 1;
+        }
+    }
+}
+
+
+// TODO: сделать стили по-человечески
+// .figure {
+//     flex-direction: column;
+//     align-items: center;
+//     margin-bottom: 43px;
+
+//     &-column {
+//         flex-direction: column;
+//     }
+
+//     &-row {
+//         flex-direction: row;
+//     }
+// }
+
+// .image {
+//     object-fit: cover;
+//     align-self: center;
+//     max-width: 130px;
+//     max-height: 130px;
+//     border-radius: 50%;
+//     background: #112235;
+//     cursor: pointer;
+
+//     &--pointer {
+//         cursor: pointer;
+//     }
+
+//     &-border-radius {
+//         &-50 {
+//             border-radius: 50%;
+//         }
+
+//         &-25 {
+//             border-radius: 25%;
+//         }
+
+//         &-10 {
+//             border-radius: 10%;
+//         }
+
+//         &-5 {
+//             border-radius: 5%;
+//         }
+//     }
+
+//     &-S {
+//         max-width: 60px;
+//         max-height: 60px;
+//     }
+
+//     &-M {
+//         max-width: 130px;
+//         max-height: 130px;
+//     }
+    
+//     &-L {
+//         max-width: 200px;
+//         max-height: 200px;
+//     }
+
+//     &-XL {
+//         max-width: 300px;
+//         max-height: 300px;
+//     }
+// }

@@ -1,57 +1,60 @@
-.messages__message {
-    flex-direction: row;
-    align-items: flex-start;
+.message {
+    align-items: flex-end;
     justify-content: flex-start;
-    min-width: 90px;
-    background-color: transparent;
-}
-
-.message__avatar {
-    margin-right: 5px;
-}
-
-.message-left {
-    align-self: flex-start;
-}
-
-.message-right {
-    align-self: flex-end;
-}
-
-.message__right-side {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    width: 500px;
-}
-
-.message__right-side__username {
-    font-family: 'SF Pro Display';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 18px;
-    color: #FFFFFF;
-    padding: 5px;
-}
-
-.message__right-side__text-content {
-    justify-content: space-between;
-    font-family: 'SF Pro Display';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 19px;
-    color: #FFFFFF;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    min-width: 500px;
-    min-height: 50px;
-    padding: 10px;
-}
-
-.message__right-side__text-content-text {
     width: 100%;
-    word-wrap: break-word;
-    white-space: pre-wrap;
+    background-color: transparent;
+    margin-bottom: 10px;
+
+    &__left {
+        justify-content: flex-start;
+    }
+
+    &__right {
+        justify-content: flex-end;
+        
+        .message__content {
+            background: #8774E1;
+        }
+    }
+
+    &__avatar {
+        margin-right: 10px;
+    }
+
+    &__nickname {
+        margin-bottom: 10px;
+    }
+
+    &__image {
+        margin-bottom: 10px;
+    }
+
+    &--sticker {
+        .message__content {
+            background-color: inherit;
+        }
+    }
+
+    &__content {
+        max-width: 60%;
+        flex-direction: column;
+        justify-content: end;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+
+    &__body {
+        font-family: 'SF Pro Display';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 1.2em;
+        line-height: 19px;
+        color: #FFFFFF;
+
+        max-width: 100%;
+        word-wrap: break-word;
+        word-break: normal;
+        white-space: normal;
+    }
 }

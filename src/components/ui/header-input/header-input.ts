@@ -7,6 +7,8 @@ interface Props {}
 interface State {}
 
 export class headerInputUI extends Component<Props, State> {
+    destroy() {}
+
     componentDidMount(): void {
         //
     }
