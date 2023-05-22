@@ -105,35 +105,10 @@ export class SmartProfile extends Component<Props, State> {
      */
     hookPopup(popupRoot: HTMLElement): Popup | HTMLElement | undefined {
         if (popupRoot) {
-            this.state.oldPassword = new Input({
-                label: 'Почтовый адрес',
-                parent: document.querySelector('.profile-popup') as HTMLElement,
-                className: 'input-container profile__form__input',
-                placeholder: this.props?.user?.email,
-                uniqClassName: 'email',
-                errors: passwordErrorTypes,
-            });
-
-            this.state.newPassword = new Input({
-                label: 'Почтовый адрес',
-                parent: document.querySelector('.profile-popup') as HTMLElement,
-                className: 'input-container profile__form__input',
-                placeholder: this.props?.user?.email,
-                uniqClassName: 'email',
-                errors: passwordErrorTypes,
-            });
-
-            this.state.repeatPassword = new Input({
-                label: 'Почтовый адрес',
-                parent: document.querySelector('.profile-popup') as HTMLElement,
-                className: 'input-container profile__form__input',
-                placeholder: this.props?.user?.email,
-                uniqClassName: 'email',
-                errors: passwordErrorTypes,
-            });
+            
         }
 
-        return popupRoot;
+        return undefined;
     }
 
     /**
@@ -242,7 +217,6 @@ export class SmartProfile extends Component<Props, State> {
                 },
             });
         }
-        this.state?.node?.componentDidMount();
     }
 
     /**
