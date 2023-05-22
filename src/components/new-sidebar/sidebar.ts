@@ -39,6 +39,16 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         this.props.parent.appendChild(this.node);
         this.componentDidMount();
         this.update.bind(this);
+
+        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
+            this.prevProps = {...this.props};
+            this.props.avatar = this.props.hookAvatar(state);
+
+
+            if (this.props.avatar !== this.prevProps.avatar) {
+                this.update();
+            }
+        });
     }
 
     destroy() {
@@ -111,14 +121,7 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
             onClick: this.props.logoutOnClick,
         });
 
-        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            this.prevProps = this.props;
-            this.props.avatar = this.props.hookAvatar(state);
-
-            if (this.props !== this.prevProps) {
-                this.update();
-            }
-        });
+        
 
         this.state.isMounted = true;
     }
