@@ -154,8 +154,6 @@ export class SmartProfile extends Component<Props, State> {
     handleConfirmChanges(e?: Event) {
         e?.preventDefault();
 
-        // store.dispatch(createUpdateUserAvatarAction(this.image));
-
         const user = {
             email: (document.querySelector('.email') as HTMLInputElement).value,
             new_avatar_url: store.getState()?.user?.avatar ?? '',
@@ -237,6 +235,7 @@ export class SmartProfile extends Component<Props, State> {
                     this.popup?.destroy();
                     this.popup = null;
                 },
+
                 cancelLogoutOnClick: () => {
                     this.popup?.destroy();
                     this.popup = null;
@@ -263,6 +262,7 @@ export class SmartProfile extends Component<Props, State> {
 
         input.addEventListener('change', () => {
             this.image = input?.files?.[0];
+            console.log('image after change: ', this.image);
             if (this.image) {
                 const reader = new FileReader();
                 reader.readAsDataURL(this.image);
