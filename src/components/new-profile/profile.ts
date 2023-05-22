@@ -178,6 +178,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             parent: document.querySelector('.profile__form') as HTMLElement,
             className: 'input-container profile__form__input',
             placeholder: this.props.user?.email,
+            value: this.props.user?.email,
             uniqClassName: 'email',
             errors: emailErrorTypes,
         });
@@ -187,6 +188,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             parent: document.querySelector('.profile__form') as HTMLElement,
             className: 'input-container profile__form__input',
             placeholder: this.props.user?.nickname,
+            value: this.props.user?.nickname,
             uniqClassName: 'nickname',
             errors: nicknameErrorTypes,
         });
@@ -196,6 +198,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             parent: document.querySelector('.profile__form') as HTMLElement,
             className: 'input-container profile__form__input',
             placeholder: this.props.user?.status,
+            value: this.props.user?.status,
             uniqClassName: 'status',
         });
 
@@ -206,6 +209,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             placeholder: 'введите старый пароль',
             errors: passwordErrorTypes,
             uniqClassName: 'old-password',
+            type: 'password',
         });
 
         this.state.newPassword = new Input({
@@ -215,6 +219,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             placeholder: 'введите новый пароль',
             errors: passwordErrorTypes,
             uniqClassName: 'new-password',
+            type: 'password',
         });
 
         this.state.repeatPassword = new Input({
@@ -224,10 +229,11 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             placeholder: 'повторите пароль',
             errors: confirmPasswordErrorTypes,
             uniqClassName: 'repeat-password',
+            type: 'password',
         });
 
         this.state.btnList = new List({
-            parent: document.querySelector('.profile') as HTMLElement,
+            parent: document.querySelector('.profile__form') as HTMLElement,
             className: 'profile__form__list row',
         });
         this.state.btnList.getNode()?.classList.remove('list');
@@ -235,7 +241,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.state.cancelBtn = new Button({
             parent: document.querySelector(
                 '.profile__form__list'
-            ) as HTMLElement, // .profile__form__list
+            ) as HTMLElement,
             label: 'Отмена',
             className:
                 'profile__form__btn cancel-btn button-border-radius-S button-M button-primary',
@@ -245,7 +251,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.state.saveBtn = new Button({
             parent: document.querySelector(
                 '.profile__form__list'
-            ) as HTMLElement, // .profile__form__list
+            ) as HTMLElement,
             label: 'Сохранить',
             className:
                 'profile__form__btn save-btn button-border-radius-S button-M button-primary',
