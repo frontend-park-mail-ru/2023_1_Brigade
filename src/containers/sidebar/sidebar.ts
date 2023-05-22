@@ -75,7 +75,7 @@ export class SmartSidebar extends Component<Props, State> {
         if (this.popup) {
             this.popup?.destroy();
         }
-        
+
         this.state.isMounted = false;
     }
 
@@ -100,7 +100,7 @@ export class SmartSidebar extends Component<Props, State> {
         if (!this.popup) {
             this.popup = new Popup({
                 parent: root as HTMLElement,
-                title: "Вы действительно хотите выйти из приложения ?",
+                title: 'Вы действительно хотите выйти из приложения ?',
                 confirmBtnText: 'Подтвердить',
                 cancelBtnText: 'Отмена',
                 className: 'logout-popup',
@@ -113,7 +113,7 @@ export class SmartSidebar extends Component<Props, State> {
                     this.popup?.destroy();
                     this.popup = null;
                 },
-            })
+            });
         }
     }
 }

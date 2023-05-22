@@ -18,7 +18,6 @@ import {
 } from '@actions/routeActions';
 import { ChatTypes, MessageActionTypes, MessageTypes } from '@config/enum';
 import { DYNAMIC } from '@config/config';
-import { notify } from '@/services/notification';
 import { DumbMessage } from '@/components/message/message';
 import {
     createAddMessageAction,
@@ -114,6 +113,7 @@ export class SmartChat extends Component<Props, State> {
                     this.node.innerHTML = this.state.chat.render();
                     this.state.chat.setMessageList();
                     this.state.chat.setInput();
+                    this.state.chat.setAttachmentList();
                 }
 
                 this.state.domElements.input = document.querySelector(
@@ -210,24 +210,6 @@ export class SmartChat extends Component<Props, State> {
                     }
                 );
 
-                // this.state.domElements?.input?.addEventListener(
-                //     'keydown',
-                //     (e) => {
-                //         if (e.key === 'Enter' && e.target) {
-                //             this.handleClickSendButton();
-                //         }
-                //     }
-                // );
-
-                // this.state.domElements.submitBtn?.addEventListener(
-                //     'click',
-                //     (e) => {
-                //         e.preventDefault();
-
-                //         this.handleClickSendButton();
-                //     }
-                // );
-
                 this.state.domElements.deleteBtn?.addEventListener(
                     'click',
                     (e) => {
@@ -261,6 +243,16 @@ export class SmartChat extends Component<Props, State> {
     }
 
     renderIncomingMessage(message: Message) {
+        console.log(
+            'message.chat_id !== this.props.openedChat?.id',
+            message.chat_id,
+            '!==',
+            this.props.openedChat?.id
+        );
+        if (message.chat_id !== this.props.openedChat?.id) {
+            return;
+        }
+
         switch (message.action) {
             case MessageActionTypes.Edit:
                 store.dispatch(createEditMessageAction(message));
@@ -278,17 +270,10 @@ export class SmartChat extends Component<Props, State> {
                     message
                 );
 
-                if (message.author_id !== this.props.user?.id) {
-                    this.props.openedChat?.members.forEach((member) => {
-                        if (member.id === message.author_id) {
-                            notify(
-                                member.nickname,
-                                message.body,
-                                this.props.openedChat?.avatar ?? ''
-                            );
-                        }
-                    });
-                }
+                this.state.chat?.addAttachment(
+                    document.querySelector('.attachments__list') as HTMLElement,
+                    message
+                );
         }
     }
 
@@ -406,6 +391,7 @@ export class SmartChat extends Component<Props, State> {
     componentWillUnmount() {
         if (this.state.isMounted) {
             this.unsubscribe();
+            this.unsubscribeFromWs();
             this.state.chat?.destroy();
             this.state.isMounted = false;
         }

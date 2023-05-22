@@ -1,4 +1,9 @@
-import { confirmPasswordErrorTypes, emailErrorTypes, nicknameErrorTypes, passwordErrorTypes } from '@/config/errors';
+import {
+    confirmPasswordErrorTypes,
+    emailErrorTypes,
+    nicknameErrorTypes,
+    passwordErrorTypes,
+} from '@/config/errors';
 import { Component } from '@/framework/component';
 import { store } from '@/store/store';
 import { Avatar } from '@/uikit/avatar/avatar';
@@ -27,7 +32,9 @@ interface Props {
     oldPasswordOnChange?: (e?: Event) => void;
     newPasswordOnChange?: (e?: Event) => void;
     repeatPasswordOnChange?: (e?: Event) => void;
-    hookUpdatePopup: (popupRoot: HTMLElement) => Popup | HTMLElement | undefined;
+    hookUpdatePopup: (
+        popupRoot: HTMLElement
+    ) => Popup | HTMLElement | undefined;
     hookUser: (state: StoreState) => User | undefined;
 }
 
@@ -61,7 +68,9 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.headerText.textContent = 'Редактирование профиля';
 
         this.profileUsername = document.createElement('span');
-        this.profileUsername.classList.add('profile__avatar__caption__username');
+        this.profileUsername.classList.add(
+            'profile__avatar__caption__username'
+        );
         if (this.props.user?.nickname) {
             console.log('nickname: ', this.props.user.nickname);
             this.profileUsername.textContent = this.props.user?.nickname;
@@ -123,7 +132,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             parent: document.querySelector('.header-profile') as HTMLElement,
             className: 'profile__header__back-btn button-transparent',
             icon: svgButtonUI.renderTemplate({
-                svgClassName: "back-btn",
+                svgClassName: 'back-btn',
             }),
             onClick: this.props.backOnClick,
         });
@@ -131,7 +140,8 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
 
         this.state.avatar = new Avatar({
             parent: document.querySelector('.profile') as HTMLElement,
-            className: 'profile__avatar profile__avatar-border-radius-50 profile__avatar-L',
+            className:
+                'profile__avatar profile__avatar-border-radius-50 profile__avatar-L',
             src: this.props.user?.avatar ?? './assets/img/defaultAva.png', // this.props.user.avatar
             alt: 'User avatar',
             caption: `${this.props.user?.email ?? ''}`,
@@ -140,7 +150,9 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             onClick: this.props.avatarOnClick,
         });
 
-        const avatarContainer = document.querySelector('.profile__avatar__caption');
+        const avatarContainer = document.querySelector(
+            '.profile__avatar__caption'
+        );
 
         if (avatarContainer) {
             avatarContainer.appendChild(this.profileUsername);
@@ -156,7 +168,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             parent: document.querySelector('.profile__form') as HTMLElement,
             className: 'profile__form__unlock-btn button-transparent',
             icon: svgButtonUI.renderTemplate({
-                svgClassName: "unlock-btn",
+                svgClassName: 'unlock-btn',
             }),
             onClick: this.props.unlockOnClick,
         });
@@ -217,26 +229,35 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.state.btnList = new List({
             parent: document.querySelector('.profile') as HTMLElement,
             className: 'profile__form__list row',
-        })
+        });
+        this.state.btnList.getNode()?.classList.remove('list');
 
         this.state.cancelBtn = new Button({
-            parent: document.querySelector('.profile__form__list') as HTMLElement, // .profile__form__list
+            parent: document.querySelector(
+                '.profile__form__list'
+            ) as HTMLElement, // .profile__form__list
             label: 'Отмена',
-            className: 'profile__form__btn cancel-btn button-border-radius-S button-M button-primary',
+            className:
+                'profile__form__btn cancel-btn button-border-radius-S button-M button-primary',
             onClick: this.props.cancelOnClick,
         });
 
         this.state.saveBtn = new Button({
-            parent: document.querySelector('.profile__form__list') as HTMLElement, // .profile__form__list
+            parent: document.querySelector(
+                '.profile__form__list'
+            ) as HTMLElement, // .profile__form__list
             label: 'Сохранить',
-            className: 'profile__form__btn save-btn button-border-radius-S button-M button-primary',
+            className:
+                'profile__form__btn save-btn button-border-radius-S button-M button-primary',
             onClick: this.props.saveOnClick,
         });
 
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
             const prevProps = this.props;
             this.props.user = this.props.hookUser(state);
-            this.state.popup = this.props.hookUpdatePopup.bind(this)(document.querySelector('.profile-popup') as HTMLElement);
+            this.state.popup = this.props.hookUpdatePopup.bind(this)(
+                document.querySelector('.profile-popup') as HTMLElement
+            );
 
             if (this.props !== prevProps || this.state.popup) {
                 this.update();

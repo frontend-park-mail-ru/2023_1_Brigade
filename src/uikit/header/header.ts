@@ -59,7 +59,7 @@ export class Header extends Component<Props, State, HTMLElement> {
                 Title: this.props.title ?? '',
                 // ChatInfo: this.props.chatInfo ?? '',
             }),
-            'text/html' 
+            'text/html'
         ).body.firstChild;
     }
 }

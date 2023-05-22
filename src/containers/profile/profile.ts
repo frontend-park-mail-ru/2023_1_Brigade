@@ -105,7 +105,6 @@ export class SmartProfile extends Component<Props, State> {
      */
     hookPopup(popupRoot: HTMLElement): Popup | HTMLElement | undefined {
         if (popupRoot) {
-            
         }
 
         return undefined;

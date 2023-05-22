@@ -5,7 +5,9 @@ import { svgButtonUI } from '@/components/ui/icon/button';
 import { chatAvatarUi } from '@components/ui/chatAvatar/chatAvatar';
 import { ChatTypes, MessageTypes } from '@config/enum';
 import { DumbMessage } from '@components/message/message';
-import { MessageInput } from '../message-input/message-input';
+import { MessageInput } from '@components/message-input/message-input';
+import { List } from '@uikit/list/list';
+import { Attachment } from '@components/attachment/attachment';
 
 interface Props {
     chatData: OpenedChat;
@@ -26,6 +28,8 @@ interface State {
     isMounted: boolean;
     messages: DumbMessage[];
     messageInput: MessageInput | undefined;
+    attachmentsList: List | undefined;
+    attachments: Attachment[];
 }
 
 export class DumbChat extends Component<Props, State> {
@@ -41,6 +45,8 @@ export class DumbChat extends Component<Props, State> {
             isMounted: false,
             messages: [],
             messageInput: undefined,
+            attachmentsList: undefined,
+            attachments: [],
         };
         this.editBtn = '';
         this.deleteChatBtn = '';
@@ -51,6 +57,8 @@ export class DumbChat extends Component<Props, State> {
 
     destroy() {
         this.state.messages.forEach((message) => message.destroy());
+        this.state.attachments.forEach((attachments) => attachments.destroy());
+        this.state.attachmentsList?.destroy();
         this.state.messageInput?.destroy();
         this.state.isMounted = false;
     }
@@ -121,6 +129,47 @@ export class DumbChat extends Component<Props, State> {
 
         this.props.chatData?.messages?.forEach((message) => {
             this.addMessage(parent, message);
+        });
+    }
+
+    addAttachment(parent: HTMLElement, message: Message) {
+        if (message.type === MessageTypes.Sticker || message.image_url === '') {
+            return;
+        }
+
+        const attachmentComponent = new Attachment({
+            attachment: message.image_url,
+            hookAttachment: (state) => {
+                const updatedMessage = state.openedChat?.messages.find(
+                    (newMessage) => newMessage.id === message.id
+                );
+
+                return updatedMessage?.image_url;
+            },
+            parent,
+        });
+
+        this.state.attachments.push(attachmentComponent);
+    }
+
+    setAttachmentList() {
+        let parent = document.querySelector('.attachments') as HTMLElement;
+        if (!parent) {
+            return;
+        }
+
+        this.state.attachmentsList = new List({
+            className: 'attachments__list',
+            parent,
+        });
+
+        parent = this.state.attachmentsList?.getNode() as HTMLElement;
+        if (!parent) {
+            return;
+        }
+
+        this.props.chatData?.messages?.forEach((message) => {
+            this.addAttachment(parent, message);
         });
     }
 

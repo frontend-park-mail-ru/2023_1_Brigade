@@ -50,11 +50,12 @@ export class MessageInput extends Component<Props, State> {
             lastInputPosition: 0,
         };
 
+        this.inputFocus = this.inputFocus.bind(this);
+        this.update = this.update.bind(this);
+
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
         this.props.parent.appendChild(this.node);
-
-        this.update.bind(this);
     }
 
     changeText(text: string) {
@@ -83,7 +84,7 @@ export class MessageInput extends Component<Props, State> {
             '.message-input__text-field__in'
         ) as HTMLInputElement;
 
-        document.addEventListener('keyup', this.inputFocus.bind(this));
+        document.addEventListener('keyup', this.inputFocus);
 
         this.state.emojiButton = this.node.querySelector(
             '.view-chat__add-emoji-sticker'
@@ -168,7 +169,7 @@ export class MessageInput extends Component<Props, State> {
                 this.state.stickers.push(
                     new Img({
                         src: sticker,
-                        borderRadius: '10',
+                        borderRadius: '5',
                         size: 'S',
                         onClick: () => {
                             this.props.onSend({
@@ -200,6 +201,14 @@ export class MessageInput extends Component<Props, State> {
             this.state.input.value.length,
             this.state.input.value.length
         );
+
+        if (e.key.length > 1) {
+            return;
+        }
+
+        if (this.state.input) {
+            this.state.input.value += e.key;
+        }
     }
 
     async onSend() {
@@ -266,7 +275,7 @@ export class MessageInput extends Component<Props, State> {
                     this.state.attachmentImg?.destroy();
                     this.state.attachmentImg = new Img({
                         src: imageUrl as string,
-                        borderRadius: '10',
+                        borderRadius: '5',
                         size: 'L',
                         parent,
                     });
@@ -279,6 +288,8 @@ export class MessageInput extends Component<Props, State> {
         });
 
         input.click();
+
+        this.state.input?.focus();
     }
 
     componentWillUnmount() {
@@ -286,7 +297,7 @@ export class MessageInput extends Component<Props, State> {
             return;
         }
 
-        document.removeEventListener('keydown', this.inputFocus.bind(this));
+        document.removeEventListener('keyup', this.inputFocus);
         this.state.emojiButton?.removeEventListener(
             'click',
             this.onEmoji.bind(this)

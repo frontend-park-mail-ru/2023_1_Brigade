@@ -66,7 +66,8 @@ export class Popup extends Component<Props, State, HTMLElement> {
         this.state.btnList = new List({
             parent: document.querySelector('.popup__content') as HTMLElement,
             className: 'popup__btn-list',
-        })
+        });
+        this.state.btnList.getNode()?.classList.remove('list');
 
         this.state.confirmBtn = new Button({
             parent: document.querySelector('.popup__btn-list') as HTMLElement,
@@ -106,11 +107,13 @@ export class Popup extends Component<Props, State, HTMLElement> {
     }
 
     private render() {
-        return new DOMParser().parseFromString(template({
-            ClassName: this.props.className,
-            Title: this.props.title,
-            Content: '',
-        }), 'text/html').body
-            .firstChild;
+        return new DOMParser().parseFromString(
+            template({
+                ClassName: this.props.className,
+                Title: this.props.title,
+                Content: '',
+            }),
+            'text/html'
+        ).body.firstChild;
     }
 }

@@ -98,7 +98,7 @@ export class DumbMessage extends Component<Props, State> {
             if (messageImage) {
                 this.state.img = new Img({
                     src: this.props.message.image_url,
-                    borderRadius: '10',
+                    borderRadius: '5',
                     size:
                         this.props.message.type === MessageTypes.notSticker
                             ? 'XL'

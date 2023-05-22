@@ -2,7 +2,6 @@ import { Component } from '@/framework/component';
 import template from '@uikit/list/list.pug';
 import '@uikit/list/list.scss';
 
-
 interface Props {
     className?: string;
     style?: Record<string, string | number>;
@@ -21,7 +20,7 @@ export class List extends Component<Props, State, HTMLElement> {
         this.props.parent.appendChild(this.node);
     }
 
-    destroy() {        
+    destroy() {
         this.componentWillUnmount();
         this.node?.remove();
         this.node = undefined;
@@ -52,9 +51,12 @@ export class List extends Component<Props, State, HTMLElement> {
     }
 
     private render() {
-        return new DOMParser().parseFromString(template({
-            ClassName: this.props.className ?? '',
-            Style: this.props.style ?? '',
-        }), 'text/html').body.firstChild;
+        return new DOMParser().parseFromString(
+            template({
+                ClassName: this.props.className ?? '',
+                Style: this.props.style ?? '',
+            }),
+            'text/html'
+        ).body.firstChild;
     }
 }
