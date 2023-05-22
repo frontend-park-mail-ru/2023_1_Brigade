@@ -12,6 +12,8 @@ import { passwordErrorTypes } from '@/config/errors';
 interface Props {
     parent: HTMLElement;
     user?: User;
+    occupiedUsername?: boolean;
+    incorrectPassword?: boolean;
 }
 
 interface State {
@@ -25,6 +27,15 @@ interface State {
         newPasswordIsValid: boolean;
         nicknameIsValid: boolean;
         isValid: () => boolean | undefined;
+    };
+    domElements: {
+        avatar: HTMLInputElement | null;
+        username: HTMLInputElement | null;
+        nickname: HTMLInputElement | null;
+        status: HTMLInputElement | null;
+        current_password: HTMLInputElement | null;
+        new_password: HTMLInputElement | null;
+        saveButton: HTMLInputElement | null;
     };
 }
 
@@ -93,8 +104,6 @@ export class SmartProfile extends Component<Props, State> {
      * @returns {Popup | undefined} - созданный popup или обновленный popup или undefined
      */
     hookPopup(popupRoot: HTMLElement) : Popup | HTMLElement | undefined {
-        console.log('debug this: ', this);
-
         if (popupRoot) {
             this.state.oldPassword = new Input({
                 label: 'Почтовый адрес',
@@ -142,23 +151,22 @@ export class SmartProfile extends Component<Props, State> {
         this.state.isMounted = false;
     }
 
-    handleEmailInput() {
-
-    }
-
     handleConfirmChanges(e?: Event) {
         e?.preventDefault();
+        store.dispatch(createUpdateUserAvatarAction(this.image));
 
         const user = {
-            nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
-            new_avatar_url: (document.querySelector('.nickname') as HTMLInputElement).value,
             email: (document.querySelector('.email') as HTMLInputElement).value,
+            new_avatar_url: store.getState()?.user?.avatar,
+            nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
             status: (document.querySelector('.status') as HTMLInputElement).value,
             current_password: (document.querySelector('.old-password') as HTMLInputElement).value,
             new_password: (document.querySelector('.new-password') as HTMLInputElement).value,
         };
+
+        console.log('user before send: ', user);
         store.dispatch(createUpdateUserAction(user));
-        // store.dispatch(createUpdateUserAvatarAction(this.image));
+        
         this.popup?.destroy();
         this.popup = null;
     }
@@ -184,16 +192,20 @@ export class SmartProfile extends Component<Props, State> {
                 cancelBtnText: 'Отмена',
                 className: 'profile-popup',
                 confirmLogoutOnClick: () => {
+                    store.dispatch(createUpdateUserAvatarAction(this.image));
+
                     const user = {
-                        nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
-                        new_avatar_url: (document.querySelector('.nickname') as HTMLInputElement).value,
                         email: (document.querySelector('.email') as HTMLInputElement).value,
+                        new_avatar_url: store.getState()?.user?.avatar,
+                        nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
                         status: (document.querySelector('.status') as HTMLInputElement).value,
                         current_password: (document.querySelector('.old-password') as HTMLInputElement).value,
                         new_password: (document.querySelector('.new-password') as HTMLInputElement).value,
                     };
+
+                    console.log('user before send: ', user);
                     store.dispatch(createUpdateUserAction(user));
-                    // store.dispatch(createUpdateUserAvatarAction(this.image));
+
                     this.popup?.destroy();
                     this.popup = null;
                 },
