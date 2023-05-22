@@ -243,6 +243,12 @@ export class SmartChat extends Component<Props, State> {
     }
 
     renderIncomingMessage(message: Message) {
+        console.log(
+            'message.chat_id !== this.props.openedChat?.id',
+            message.chat_id,
+            '!==',
+            this.props.openedChat?.id
+        );
         if (message.chat_id !== this.props.openedChat?.id) {
             return;
         }
@@ -385,6 +391,7 @@ export class SmartChat extends Component<Props, State> {
     componentWillUnmount() {
         if (this.state.isMounted) {
             this.unsubscribe();
+            this.unsubscribeFromWs();
             this.state.chat?.destroy();
             this.state.isMounted = false;
         }
