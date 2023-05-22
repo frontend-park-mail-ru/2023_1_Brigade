@@ -20,6 +20,12 @@ interface State {
     repeatPassword: Input;
     isMounted: boolean;
     node?: DumbProfile;
+    valid: {
+        currentPasswordIsValid: boolean;
+        newPasswordIsValid: boolean;
+        nicknameIsValid: boolean;
+        isValid: () => boolean | undefined;
+    };
 }
 
 /**
@@ -73,6 +79,8 @@ export class SmartProfile extends Component<Props, State> {
             user: this.hookUser(store.getState()),
             avatarOnClick: this.handleClickAvatar,
             unlockOnClick: this.handleUnlockClick,
+            saveOnClick: this.handleConfirmChanges,
+            cancelOnClick: this.handleCancelChanges,
             backOnClick: this.handleBackClick,
             hookUser: this?.hookUser,
             hookUpdatePopup: this?.hookPopup,
@@ -134,6 +142,32 @@ export class SmartProfile extends Component<Props, State> {
         this.state.isMounted = false;
     }
 
+    handleEmailInput() {
+
+    }
+
+    handleConfirmChanges(e?: Event) {
+        e?.preventDefault();
+
+        const user = {
+            nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
+            new_avatar_url: (document.querySelector('.nickname') as HTMLInputElement).value,
+            email: (document.querySelector('.email') as HTMLInputElement).value,
+            status: (document.querySelector('.status') as HTMLInputElement).value,
+            current_password: (document.querySelector('.old-password') as HTMLInputElement).value,
+            new_password: (document.querySelector('.new-password') as HTMLInputElement).value,
+        };
+        store.dispatch(createUpdateUserAction(user));
+        // store.dispatch(createUpdateUserAvatarAction(this.image));
+        this.popup?.destroy();
+        this.popup = null;
+    }
+
+    handleCancelChanges(e?: Event) {
+        e?.preventDefault();
+        router.route('/');
+    }
+
     /**
      * Обрабатывает нажатие кнопки поменять пароль
      */
@@ -150,8 +184,15 @@ export class SmartProfile extends Component<Props, State> {
                 cancelBtnText: 'Отмена',
                 className: 'profile-popup',
                 confirmLogoutOnClick: () => {
-                    // TODO: оправляем запрос на изменения профиля
-                    // store.dispatch(createUpdateUserAction(user));
+                    const user = {
+                        nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
+                        new_avatar_url: (document.querySelector('.nickname') as HTMLInputElement).value,
+                        email: (document.querySelector('.email') as HTMLInputElement).value,
+                        status: (document.querySelector('.status') as HTMLInputElement).value,
+                        current_password: (document.querySelector('.old-password') as HTMLInputElement).value,
+                        new_password: (document.querySelector('.new-password') as HTMLInputElement).value,
+                    };
+                    store.dispatch(createUpdateUserAction(user));
                     // store.dispatch(createUpdateUserAvatarAction(this.image));
                     this.popup?.destroy();
                     this.popup = null;
@@ -197,140 +238,4 @@ export class SmartProfile extends Component<Props, State> {
 
         input.click();
     }
-
-    // /**
-    //  * Показывает, что был введен занятый username
-    //  */
-    // occupiedUsername() {
-    //     if (this.state.isMounted && this.props?.occupiedUsername) {
-    //         this.state.domElements.username?.classList.add('data-input--error');
-    //         addErrorToClass('occupied-username', usernameErrorTypes);
-    //         store.dispatch(createOccupiedUsernameAction(false));
-    //     }
-    // }
-
-    // /**
-    //  * Обрабатывает нажатие кнопки логина
-    //  */
-    // handleClickSave() {
-    //     if (this.state.valid.isValid()) {
-    //         const user = {
-    //             username: this.state.domElements.username?.value.slice(1),
-    //             nickname: this.state.domElements.nickname?.value,
-    //             status: this.state.domElements.status?.value,
-    //             current_password:
-    //                 this.state.domElements.current_password?.value,
-    //             new_password: this.state.domElements.new_password?.value,
-    //         } as Record<string, unknown>;
-
-    //         store.dispatch(createUpdateUserAction(user));
-    //         store.dispatch(createUpdateUserAvatarAction(this.#image));
-    //     } else {
-    //         this.validateCurrentPassword();
-    //         this.validateNewPassword();
-    //         this.validateNickname();
-    //         this.validateUsername();
-    //     }
-    // }
-
-    // /**
-    //  * Проверяет пользовательский ввод текущего пароля
-    //  */
-    // validateCurrentPassword() {
-    //     this.state.domElements.current_password?.classList.remove(
-    //         'data-input--error'
-    //     );
-    //     addErrorToClass('', passwordErrorTypes);
-
-    //     const { isError, errorClass } = checkPassword(
-    //         this.state.domElements.current_password?.value ?? ''
-    //     );
-
-    //     if (isError) {
-    //         this.state.domElements.current_password?.classList.add(
-    //             'data-input--error'
-    //         );
-    //         addErrorToClass(errorClass, passwordErrorTypes);
-    //         if (this.state.valid.currentPasswordIsValid) {
-    //             this.state.valid.currentPasswordIsValid = false;
-    //         }
-    //         return;
-    //     }
-
-    //     if (this.state.valid.currentPasswordIsValid === false) {
-    //         this.state.valid.currentPasswordIsValid = true;
-    //     }
-    // }
-
-    // incorrectPassword() {
-    //     if (this.state.isMounted && this.props?.incorrectPassword) {
-    //         this.state.domElements.current_password?.classList.add(
-    //             'data-input--error'
-    //         );
-    //         addErrorToClass('incorrect-password', passwordErrorTypes);
-    //         if (this.state.valid.currentPasswordIsValid) {
-    //             this.state.valid.currentPasswordIsValid = false;
-    //         }
-    //         store.dispatch(createIncorrectPasswordAction(false));
-    //     }
-    // }
-
-    // /**
-    //  * Проверяет пользовательский ввод нового пароля
-    //  */
-    // validateNewPassword() {
-    //     this.state.domElements.new_password?.classList.remove(
-    //         'data-input--error'
-    //     );
-    //     addErrorToClass('', newPasswordErrorTypes);
-
-    //     const { isError, errorClass } = checkNewPassword(
-    //         this.state.domElements.new_password?.value ?? ''
-    //     );
-
-    //     if (isError) {
-    //         this.state.domElements.new_password?.classList.add(
-    //             'data-input--error'
-    //         );
-    //         addErrorToClass(errorClass, newPasswordErrorTypes);
-    //         if (this.state.valid.newPasswordIsValid) {
-    //             this.state.valid.newPasswordIsValid = false;
-    //         }
-    //         return;
-    //     }
-
-    //     if (this.state.valid.newPasswordIsValid === false) {
-    //         this.state.valid.newPasswordIsValid = true;
-    //     }
-    // }
-
-    // /**
-    //  * Проверяет пользовательский ввод имени
-    //  */
-    // validateNickname() {
-    //     this.state.domElements.nickname?.classList.remove('data-input--error');
-    //     addErrorToClass('', nicknameErrorTypes);
-
-    //     const { isError, errorClass } = checkNickname(
-    //         this.state.domElements.nickname?.value ?? ''
-    //     );
-
-    //     if (isError) {
-    //         this.state.domElements.nickname?.classList.add('data-input--error');
-    //         addErrorToClass(errorClass, nicknameErrorTypes);
-    //         if (this.state.valid.nicknameIsValid) {
-    //             this.state.valid.nicknameIsValid = false;
-    //         }
-    //         return;
-    //     }
-
-    //     if (this.state.valid.nicknameIsValid === false) {
-    //         this.state.valid.nicknameIsValid = true;
-    //     }
-    // }
-
-    // validateUsername() {
-    //     this.state.domElements.username?.classList.remove('data-input--error');
-    //     addErrorToClass('', usernameErrorTypes);
-    // }
 }

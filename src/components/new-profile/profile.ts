@@ -21,6 +21,12 @@ interface Props {
     unlockOnClick?: (e?: Event) => void;
     saveOnClick?: (e?: Event) => void;
     cancelOnClick?: (e?: Event) => void;
+    emailOnChange?: (e?: Event) => void;
+    nicknameOnChange?: (e?: Event) => void;
+    statusOnChange?: (e?: Event) => void;
+    oldPasswordOnChange?: (e?: Event) => void;
+    newPasswordOnChange?: (e?: Event) => void;
+    repeatPasswordOnChange?: (e?: Event) => void;
     hookUpdatePopup: (popupRoot: HTMLElement) => Popup | HTMLElement | undefined;
     hookUser: (state: StoreState) => User | undefined;
 }
