@@ -14,7 +14,7 @@ export const reduceValidate = (state: StoreState, action: Action) => {
         case constantsOfActions.incorrectPassword:
             return {
                 ...state,
-                ...action.payload,
+                ...(action.payload as Record<string, unknown>),
             };
         default:
             return {

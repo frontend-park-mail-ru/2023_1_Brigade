@@ -13,6 +13,13 @@ export const createSetUserAction = (state: User) => {
     };
 };
 
+// export const createSetUserAvatarAction = (state: User) => {
+//     return {
+//         type: constantsOfActions.setUserAvatar,
+//         payload: state,
+//     };
+// };
+
 /**
  * Создает экшен для невалидного емейла.
  * @param {boolean} state - Состояние емейла
@@ -74,11 +81,26 @@ export const createIncorrectPasswordAction = (state: boolean) => {
  * @param {Record<string, unknown>} user - Объект пользователя для обновления.
  * @returns {AsyncAction} Асинхронное действие, которое вызывает "createSetUserAction" или другие действия с ошибками.
  **/
-export const createUpdateUserAction = (
-    user: Record<string, unknown>
-): AsyncAction => {
+export const createUpdateUserAction = (user: {
+    image: File | undefined;
+    user: {
+        email: string;
+        new_avatar_url: string;
+        nickname: string;
+        status: string;
+        current_password: string;
+        new_password: string;
+    };
+}): AsyncAction => {
     return async (dispatch: Dispatch) => {
-        const { status, body } = await updateUser(user);
+        if (user.image) {
+            const { status, body } = await uploadAvatar(user.image);
+
+            if (status === 201) {
+                user.user.new_avatar_url = await body;
+            }
+        }
+        const { status, body } = await updateUser(user.user);
         const jsonBody = await body;
         switch (status) {
             case 200:
@@ -109,34 +131,34 @@ export const createUpdateUserAction = (
  * @param {File | undefined} avatar - Новый файл аватара для загрузки.
  * @returns {AsyncAction} Асихронный экшен, который либо вызывает "createSetUserAction", либо другие действия с ошибками.
  **/
-export const createUpdateUserAvatarAction = (
-    avatar: File | undefined
-): AsyncAction => {
-    return async (dispatch: Dispatch) => {
-        if (!avatar) {
-            return;
-        }
+// export const createUpdateUserAvatarAction = (
+//     avatar: File | undefined
+// ): AsyncAction => {
+//     return async (dispatch: Dispatch) => {
+//         if (!avatar) {
+//             return;
+//         }
 
-        const { status, body } = await uploadAvatar(avatar);
-        const jsonBody = await body;
+//         const { status, body } = await uploadAvatar(avatar);
+//         const jsonBody = await body;
 
-        switch (status) {
-            case 201:
-                dispatch(createSetUserAction(jsonBody));
-                break;
-            case 401:
-            // TODO:
-            case 404:
-            // TODO:
-            case 500:
-            // TODO:
-            case 0:
-            // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
-            default:
-            // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
-        }
-    };
-};
+//         switch (status) {
+//             case 201:
+//                 dispatch(createSetUserAvatarAction(jsonBody));
+//                 break;
+//             case 401:
+//             // TODO:
+//             case 404:
+//             // TODO:
+//             case 500:
+//             // TODO:
+//             case 0:
+//             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
+//             default:
+//             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
+//         }
+//     };
+// };
 
 /**
  * Создает экшен для удаления состояния пользователя.

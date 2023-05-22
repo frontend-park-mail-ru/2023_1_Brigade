@@ -5,7 +5,7 @@ import { router } from '@router/createRouter';
 import { Popup } from '@components/popup/popup';
 import { store } from '@/store/store';
 import { createLogoutAction } from '@/actions/authActions';
-import { createUpdateUserAction, createUpdateUserAvatarAction } from '@/actions/userActions';
+import { createUpdateUserAction } from '@/actions/userActions';
 import { Input } from '@uikit/input/input';
 import { passwordErrorTypes } from '@/config/errors';
 
@@ -69,7 +69,7 @@ export class SmartProfile extends Component<Props, State> {
         }
     }
 
-    hookUser(state: StoreState) : User | undefined {
+    hookUser(state: StoreState): User | undefined {
         return state.user ?? undefined;
     }
 
@@ -88,22 +88,22 @@ export class SmartProfile extends Component<Props, State> {
         this.state.node = new DumbProfile({
             parent: this.node,
             user: this.hookUser(store.getState()),
-            avatarOnClick: this.handleClickAvatar,
-            unlockOnClick: this.handleUnlockClick,
-            saveOnClick: this.handleConfirmChanges,
-            cancelOnClick: this.handleCancelChanges,
-            backOnClick: this.handleBackClick,
-            hookUser: this?.hookUser,
-            hookUpdatePopup: this?.hookPopup,
+            avatarOnClick: this.handleClickAvatar.bind(this),
+            unlockOnClick: this.handleUnlockClick.bind(this),
+            saveOnClick: this.handleConfirmChanges.bind(this),
+            cancelOnClick: this.handleCancelChanges.bind(this),
+            backOnClick: this.handleBackClick.bind(this),
+            hookUser: this?.hookUser.bind(this),
+            hookUpdatePopup: this?.hookPopup.bind(this),
         });
     }
 
     /**
-     * 
+     *
      * @param popupRoot корень popup-a
      * @returns {Popup | undefined} - созданный popup или обновленный popup или undefined
      */
-    hookPopup(popupRoot: HTMLElement) : Popup | HTMLElement | undefined {
+    hookPopup(popupRoot: HTMLElement): Popup | HTMLElement | undefined {
         if (popupRoot) {
             this.state.oldPassword = new Input({
                 label: 'Почтовый адрес',
@@ -147,26 +147,37 @@ export class SmartProfile extends Component<Props, State> {
         if (this.profile) {
             this.profile?.destroy();
         }
-        
+
         this.state.isMounted = false;
     }
 
     handleConfirmChanges(e?: Event) {
         e?.preventDefault();
-        store.dispatch(createUpdateUserAvatarAction(this.image));
+
+        // store.dispatch(createUpdateUserAvatarAction(this.image));
 
         const user = {
             email: (document.querySelector('.email') as HTMLInputElement).value,
-            new_avatar_url: store.getState()?.user?.avatar,
-            nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
-            status: (document.querySelector('.status') as HTMLInputElement).value,
-            current_password: (document.querySelector('.old-password') as HTMLInputElement).value,
-            new_password: (document.querySelector('.new-password') as HTMLInputElement).value,
+            new_avatar_url: store.getState()?.user?.avatar ?? '',
+            nickname: (document.querySelector('.nickname') as HTMLInputElement)
+                .value,
+            status: (document.querySelector('.status') as HTMLInputElement)
+                .value,
+            current_password: (
+                document.querySelector('.old-password') as HTMLInputElement
+            ).value,
+            new_password: (
+                document.querySelector('.new-password') as HTMLInputElement
+            ).value,
         };
 
-        console.log('user before send: ', user);
-        store.dispatch(createUpdateUserAction(user));
-        
+        const forUpdate = {
+            image: this.image,
+            user,
+        };
+
+        store.dispatch(createUpdateUserAction(forUpdate));
+
         this.popup?.destroy();
         this.popup = null;
     }
@@ -187,24 +198,41 @@ export class SmartProfile extends Component<Props, State> {
         if (!this.popup) {
             this.popup = new Popup({
                 parent: root as HTMLElement,
-                title: "Смена пароля",
+                title: 'Смена пароля',
                 confirmBtnText: 'Подтвердить',
                 cancelBtnText: 'Отмена',
                 className: 'profile-popup',
                 confirmLogoutOnClick: () => {
-                    store.dispatch(createUpdateUserAvatarAction(this.image));
-
                     const user = {
-                        email: (document.querySelector('.email') as HTMLInputElement).value,
-                        new_avatar_url: store.getState()?.user?.avatar,
-                        nickname: (document.querySelector('.nickname') as HTMLInputElement).value,
-                        status: (document.querySelector('.status') as HTMLInputElement).value,
-                        current_password: (document.querySelector('.old-password') as HTMLInputElement).value,
-                        new_password: (document.querySelector('.new-password') as HTMLInputElement).value,
+                        email: (
+                            document.querySelector('.email') as HTMLInputElement
+                        ).value,
+                        new_avatar_url: store.getState()?.user?.avatar ?? '',
+                        nickname: (
+                            document.querySelector(
+                                '.nickname'
+                            ) as HTMLInputElement
+                        ).value,
+                        status: (
+                            document.querySelector(
+                                '.status'
+                            ) as HTMLInputElement
+                        ).value,
+                        current_password: (
+                            document.querySelector(
+                                '.old-password'
+                            ) as HTMLInputElement
+                        ).value,
+                        new_password: (
+                            document.querySelector(
+                                '.new-password'
+                            ) as HTMLInputElement
+                        ).value,
                     };
 
-                    console.log('user before send: ', user);
-                    store.dispatch(createUpdateUserAction(user));
+                    store.dispatch(
+                        createUpdateUserAction({ image: this.image, user })
+                    );
 
                     this.popup?.destroy();
                     this.popup = null;
@@ -213,7 +241,7 @@ export class SmartProfile extends Component<Props, State> {
                     this.popup?.destroy();
                     this.popup = null;
                 },
-            })
+            });
         }
         this.state?.node?.componentDidMount();
     }
@@ -222,7 +250,7 @@ export class SmartProfile extends Component<Props, State> {
      * Обрабатывает нажатие кнопки назад
      */
     handleBackClick() {
-        router.route('/')
+        router.route('/');
     }
 
     /**
