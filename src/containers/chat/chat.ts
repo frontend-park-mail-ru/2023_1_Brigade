@@ -18,7 +18,6 @@ import {
 } from '@actions/routeActions';
 import { ChatTypes, MessageActionTypes, MessageTypes } from '@config/enum';
 import { DYNAMIC } from '@config/config';
-import { notify } from '@/services/notification';
 import { DumbMessage } from '@/components/message/message';
 import {
     createAddMessageAction,
