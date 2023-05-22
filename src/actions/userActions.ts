@@ -117,6 +117,8 @@ export const createUpdateUserAvatarAction = (
             return;
         }
 
+        console.log('update avatar: ', avatar);
+
         const { status, body } = await uploadAvatar(avatar);
         const jsonBody = await body;
 
