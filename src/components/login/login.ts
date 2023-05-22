@@ -35,7 +35,6 @@ export class DumbLogin extends Component<Props, State, HTMLElement> {
             this.state.parent = this.props.parent;
             this.componentDidMount();
             this.props.parent.appendChild(this.node);
-            // this.props.parent?.insertBefore(this.node, document.getElementById('sidebar'));
         }
 
         this.state.avatar = new Avatar({

@@ -5,6 +5,7 @@ import { Button } from '@uikit/button/button';
 import { svgButtonUI } from '../ui/icon/button';
 import { store } from '@store/store';
 import { Img } from '@/uikit/img/img';
+import { List } from '@uikit/list/list';
 
 interface Props {
     parent: HTMLElement;
@@ -20,20 +21,34 @@ interface Props {
 interface State {
     isMounted: boolean;
     avatar: Img;
+    list: List;
     chatsButton: Button;
     contactsButton: Button;
     logoutButton: Button;
 }
 
 export class DumbSidebar extends Component<Props, State, HTMLElement> {
+    private prevProps: any;
+
     constructor(props: Props) {
         super(props);
         this.state.isMounted = false;
+        this.prevProps = null;
+        this.update = this.update.bind(this);
 
         this.node = this.render() as HTMLElement;
         this.props.parent.appendChild(this.node);
+
         this.componentDidMount();
-        this.update.bind(this);
+
+        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
+            this.prevProps = { ...this.props };
+            this.props.avatar = this.props.hookAvatar(state);
+
+            if (this.props.avatar !== this.prevProps.avatar) {
+                this.update();
+            }
+        });
     }
 
     destroy() {
@@ -65,17 +80,28 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
             return;
         }
 
+        this.state.list = new List({
+            parent: this.node,
+            className: 'sidebar-header__list',
+        });
+
         this.state.avatar = new Img({
+            parent: this.node.querySelector(
+                '.sidebar-header__list'
+            ) as HTMLElement,
+            className: 'sidebar-header__list sidebar-header__list__item',
             src: this.props.avatar,
             size: 'S',
             alt: 'nickname',
             onClick: this.props.avatarOnClick,
-            parent: this.node,
         });
 
         this.state.chatsButton = new Button({
-            parent: this.node,
-            className: 'sidebar-header__chats-btn',
+            parent: this.node.querySelector(
+                '.sidebar-header__list'
+            ) as HTMLElement,
+            className:
+                'sidebar-header__chats-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'sidebar__chats-icon' ?? '',
             }),
@@ -83,8 +109,11 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         });
 
         this.state.contactsButton = new Button({
-            parent: this.node,
-            className: 'sidebar-header__contacts-btn',
+            parent: this.node.querySelector(
+                '.sidebar-header__list'
+            ) as HTMLElement,
+            className:
+                'sidebar-header__contacts-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'sidebar__contacts-icon' ?? '',
             }),
@@ -93,21 +122,11 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
 
         this.state.logoutButton = new Button({
             parent: this.node,
-            className: 'sidebar-header__logout-btn',
+            className: 'sidebar-header__logout-btn button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'logout-btn' ?? '',
             }),
             onClick: this.props.logoutOnClick,
-        });
-
-        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            const prevProps = this.props;
-
-            this.props.avatar = this.props.hookAvatar(state);
-
-            if (this.props !== prevProps) {
-                this.update();
-            }
         });
 
         this.state.isMounted = true;

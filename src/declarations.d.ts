@@ -35,7 +35,8 @@ interface Action {
               | Message
               | boolean
               | unknown
-          >;
+          >
+        | string;
 }
 
 interface AsyncAction {

@@ -6,3 +6,7 @@
     width: 100%;
     overflow: auto;
 }
+
+.sidebar-header__list__item:not(:last-child) {
+    margin-bottom: 15px;
+}

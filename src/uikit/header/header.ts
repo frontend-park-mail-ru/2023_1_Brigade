@@ -1,30 +1,28 @@
-import '@uikit/button/button.scss';
-import template from '@uikit/button/button.pug';
+import '@uikit/header/header.scss';
+import template from '@uikit/header/header.pug';
 import { Component } from '@framework/component';
 
 interface Props {
-    label?: string;
-    icon?: string;
-    type?: 'primary' | 'secondary';
+    parent: HTMLElement;
+    title?: string;
     className?: string;
-    size?: 'S' | 'M' | 'L';
     style?: Record<string, string | number>;
     onClick?: (e?: Event) => void;
-    parent: HTMLElement;
 }
 
-interface State {}
+interface State {
+    parent?: HTMLElement;
+    node: HTMLElement | undefined;
+}
 
-export class Button extends Component<Props, State, HTMLButtonElement> {
+export class Header extends Component<Props, State, HTMLElement> {
     constructor(props: Props) {
         super(props);
+        console.log('header constructor has been called');
 
-        this.node = this.render() as HTMLButtonElement;
-
-        if (this.node && this.props.parent) {
-            this.componentDidMount();
-            this.props.parent.appendChild(this.node);
-        }
+        this.node = this.render() as HTMLElement;
+        this.componentDidMount();
+        this.props.parent.appendChild(this.node);
     }
 
     destroy() {
@@ -54,18 +52,12 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
     }
 
     render() {
-        const className = `${this.props.className ?? ''} ${
-            this.props.size ? 'button-' + this.props.size : ''
-        }`.trim();
-
         return new DOMParser().parseFromString(
             template({
-                className,
-                label: this.props.label ?? '',
-                style: this.props.style ?? '',
-                type: this.props.type ?? '',
-                size: this.props.size ?? '',
-                icon: this.props.icon ?? '',
+                ClassName: this.props.className ?? '',
+                // UserInfo: this.props.userInfo ?? '',
+                Title: this.props.title ?? '',
+                // ChatInfo: this.props.chatInfo ?? '',
             }),
             'text/html'
         ).body.firstChild;

@@ -88,7 +88,7 @@ export const reduceOpenChat = (state: StoreState, action: Action) => {
                 return {
                     ...state,
                     openedChat: {
-                        ...action.payload,
+                        ...(action.payload as OpenedChat),
                         isNotRendered: true,
                     } as OpenedChat,
                 };
@@ -172,7 +172,7 @@ export const reduceSetSearchedChats = (state: StoreState, action: Action) => {
             if (action.payload) {
                 return {
                     ...state,
-                    ...action.payload,
+                    ...(action.payload as Record<string, unknown>),
                 };
             }
         default:
@@ -198,7 +198,7 @@ export const reduceDeleteSearchedChats = (
             if (action.payload) {
                 return {
                     ...state,
-                    ...action.payload,
+                    ...(action.payload as Record<string, unknown>),
                 };
             }
         default:

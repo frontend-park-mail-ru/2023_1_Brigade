@@ -7,6 +7,7 @@ import {
     createMoveToProfileAction,
 } from '@actions/routeActions';
 import { createLogoutAction } from '@actions/authActions';
+import { Popup } from '@/components/popup/popup';
 
 interface Props {
     parent: HTMLElement;
@@ -30,10 +31,13 @@ export class SmartSidebar extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state.isMounted = false;
+        this.popup = null;
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
     }
+
+    private popup: Popup | undefined | null;
 
     destroy() {
         if (this.state.isMounted) {
@@ -63,12 +67,13 @@ export class SmartSidebar extends Component<Props, State> {
         });
     }
 
-    /**
-     * Удаляет все подписки
-     */
     componentWillUnmount() {
         if (!this.node) {
             return;
+        }
+
+        if (this.popup) {
+            this.popup?.destroy();
         }
 
         this.state.isMounted = false;
@@ -91,6 +96,24 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     logoutOnClick() {
-        store.dispatch(createLogoutAction());
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: 'Вы действительно хотите выйти из приложения ?',
+                confirmBtnText: 'Подтвердить',
+                cancelBtnText: 'Отмена',
+                className: 'logout-popup',
+                confirmLogoutOnClick: () => {
+                    store.dispatch(createLogoutAction());
+                    this.popup?.destroy();
+                    this.popup = null;
+                },
+                cancelLogoutOnClick: () => {
+                    this.popup?.destroy();
+                    this.popup = null;
+                },
+            });
+        }
     }
 }

@@ -25,7 +25,7 @@ export class Router {
         });
 
         // TODO: обработчики для передвижения мыши по экрану
-        window.addEventListener('', () => {});
+        // window.addEventListener('', () => {});
     };
 
     /**

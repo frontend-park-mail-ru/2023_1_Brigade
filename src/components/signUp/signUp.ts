@@ -97,7 +97,7 @@ export class DumbSignUp extends Component<Props, State, HTMLElement> {
 
         this.state.signupButton = new Button({
             parent: document.querySelector('.reg__form') as HTMLElement,
-            label: 'Войти',
+            label: 'Зарегистрироваться',
             className: 'reg__form__btn',
         });
 

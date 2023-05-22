@@ -58,9 +58,6 @@ export class Avatar extends Component<Props, State, HTMLImageElement> {
     }
 
     render() {
-        // TODO:
-        // const className = `${this.props.className ?? ''} ${
-        //     this.props.borderRadius ? 'border-radius-' + this.props.borderRadius : ''}`.trim(); // TODO: не нравица
         return new DOMParser().parseFromString(
             template({
                 Src: this.props.src ?? '',

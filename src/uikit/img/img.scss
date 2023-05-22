@@ -21,6 +21,7 @@
     max-height: 130px;
     border-radius: 50%;
     background: #112235;
+    cursor: pointer;
 
     &--pointer {
         cursor: pointer;
@@ -44,7 +45,7 @@
         }
     }
 
-    &-S {
+&-S {
         max-width: 60px;
         max-height: 60px;
     }
@@ -57,7 +58,7 @@
     &-L {
         max-width: 200px;
         max-height: 200px;
-    }
+    }    
 
     &-XL {
         max-width: 300px;

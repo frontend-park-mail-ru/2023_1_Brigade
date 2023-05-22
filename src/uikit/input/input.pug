@@ -1,8 +1,10 @@
 div(class=ClassName)
-    !=Label
+    span(class=LabelClassName).input-container__label
+        !=Label
     input(class=UniqClassName)(type=Type, placeholder=Placeholder)
     !=Caption
-    .input__errors.flex
-        each error in Errors
-            span(class=error.class).login-reg__error.invisible
-                !=error.message
+    if Errors
+        .input__errors.flex
+            each error in Errors
+                span(class=error.class).login-reg__error.invisible
+                    !=error.message

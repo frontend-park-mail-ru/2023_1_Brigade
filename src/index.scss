@@ -227,6 +227,10 @@ section {
     padding: 0px;
 }
 
+.relative {
+    position: relative;
+}
+
 .chat-page {
     width: 100%;
     min-width: 500px;
@@ -262,9 +266,26 @@ button {
     display: flex;
 }
 
+.row {
+    flex-direction: row;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
     margin: 0 auto;
     padding: 0px 15px;
+}
+
+.position-fixed {
+    position: fixed;
 }
 
 .vertical-container {

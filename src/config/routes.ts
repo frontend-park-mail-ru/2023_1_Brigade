@@ -6,6 +6,7 @@ import { SmartProfile } from '@containers/profile/profile';
 import { SmartSignUp } from '@containers/signUp/signUp';
 import { SmartAddUserInGroup } from '@containers/group/group';
 import { SmartCreateChannel } from '@/containers/channel/channel';
+import { DYNAMIC } from './config';
 
 export const routes: Route[] = [
     {
@@ -23,7 +24,9 @@ export const routes: Route[] = [
     {
         path: /^\/profile$/,
         component: () => {
-            return new SmartProfile({});
+            return new SmartProfile({
+                parent: DYNAMIC(),
+            });
         },
     },
     {

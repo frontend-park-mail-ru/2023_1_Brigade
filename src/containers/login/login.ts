@@ -9,6 +9,7 @@ import {
     createRenderAction,
 } from '@actions/routeActions';
 import { DYNAMIC, LOGIN, ROOT, SIDEBAR, STATIC } from '@config/config';
+
 import { createInvalidEmailAction } from '@/actions/userActions';
 
 interface Props {
