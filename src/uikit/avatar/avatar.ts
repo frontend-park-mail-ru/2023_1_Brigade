@@ -31,6 +31,10 @@ export class Avatar extends Component<Props, State, HTMLImageElement> {
         }
     }
 
+    getNode() {
+        return this.node;
+    }
+
     destroy() {
         this.componentWillUnmount();
         this.node?.remove();
