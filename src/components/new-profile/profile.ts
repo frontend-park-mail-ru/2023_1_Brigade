@@ -88,6 +88,22 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             this.componentDidMount();
             this.update.bind(this);
         }
+
+        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
+            const prevProps = {...this.props};
+            this.props.user = this.props.hookUser(state);
+
+            console.log('props value: ', {...this.props});
+            console.log('user value after update: ', this.props.user)
+
+            // this.state.popup = this.props.hookUpdatePopup.bind(this)(
+            //     document.querySelector('.profile-popup') as HTMLElement
+            // );
+
+            if (this.props.user !== prevProps.user) {
+                this.update();
+            }
+        });
     }
 
     private headerText: HTMLElement;
@@ -256,18 +272,6 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             className:
                 'profile__form__btn save-btn button-border-radius-S button-M button-primary',
             onClick: this.props.saveOnClick,
-        });
-
-        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            const prevProps = this.props;
-            this.props.user = this.props.hookUser(state);
-            this.state.popup = this.props.hookUpdatePopup.bind(this)(
-                document.querySelector('.profile-popup') as HTMLElement
-            );
-
-            if (this.props !== prevProps || this.state.popup) {
-                this.update();
-            }
         });
 
         this.state.isMounted = true;

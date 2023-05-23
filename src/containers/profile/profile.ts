@@ -5,9 +5,10 @@ import { router } from '@router/createRouter';
 import { Popup } from '@components/popup/popup';
 import { store } from '@/store/store';
 import { createLogoutAction } from '@/actions/authActions';
-import { createUpdateUserAction } from '@/actions/userActions';
+import { createIncorrectPasswordAction, createUpdateUserAction } from '@/actions/userActions';
 import { Input } from '@uikit/input/input';
-import { passwordErrorTypes } from '@/config/errors';
+import { emailErrorTypes, newPasswordErrorTypes, nicknameErrorTypes, passwordErrorTypes, usernameErrorTypes } from '@/config/errors';
+import { addErrorToClass, checkEmail, checkNewPassword, checkNickname, checkPassword } from '@/utils/validator';
 
 interface Props {
     parent: HTMLElement;
@@ -23,6 +24,8 @@ interface State {
     isMounted: boolean;
     node?: DumbProfile;
     valid: {
+        passwordIsValid: boolean;
+        emailIsValid: any;
         currentPasswordIsValid: boolean;
         newPasswordIsValid: boolean;
         nicknameIsValid: boolean;
@@ -31,6 +34,7 @@ interface State {
     domElements: {
         avatar: HTMLInputElement | null;
         username: HTMLInputElement | null;
+        email: HTMLInputElement | null;
         nickname: HTMLInputElement | null;
         status: HTMLInputElement | null;
         current_password: HTMLInputElement | null;
@@ -56,6 +60,21 @@ export class SmartProfile extends Component<Props, State> {
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
+
+        this.state.domElements.email = document.querySelector('.email') as HTMLInputElement;
+        this.state.domElements.nickname = document.querySelector('.nickname') as HTMLInputElement;
+        this.state.domElements.status = document.querySelector('.status') as HTMLInputElement;
+        this.state.domElements.current_password = document.querySelector('.old-password') as HTMLInputElement;
+        this.state.domElements.new_password = document.querySelector('.new-password') as HTMLInputElement;
+
+        this.state.valid.isValid =  () => {
+            return (
+                this.state.valid.emailIsValid &&
+                this.state.valid.passwordIsValid &&
+                this.state.valid.newPasswordIsValid &&
+                this.state.valid.nicknameIsValid
+            );
+        };
     }
 
     private profile: DumbProfile | null;
@@ -128,30 +147,32 @@ export class SmartProfile extends Component<Props, State> {
     handleConfirmChanges(e?: Event) {
         e?.preventDefault();
 
-        const user = {
-            email: (document.querySelector('.email') as HTMLInputElement).value,
-            new_avatar_url: store.getState()?.user?.avatar ?? '',
-            nickname: (document.querySelector('.nickname') as HTMLInputElement)
-                .value,
-            status: (document.querySelector('.status') as HTMLInputElement)
-                .value,
-            current_password: (
-                document.querySelector('.old-password') as HTMLInputElement
-            ).value,
-            new_password: (
-                document.querySelector('.new-password') as HTMLInputElement
-            ).value,
-        };
-
-        const forUpdate = {
-            image: this.image,
-            user,
-        };
-
-        store.dispatch(createUpdateUserAction(forUpdate));
-
-        this.popup?.destroy();
-        this.popup = null;
+        if (this.state.valid.isValid()) {
+            const user = {
+                email: (document.querySelector('.email') as HTMLInputElement).value,
+                new_avatar_url: store.getState()?.user?.avatar ?? '',
+                nickname: (document.querySelector('.nickname') as HTMLInputElement)
+                    .value,
+                status: (document.querySelector('.status') as HTMLInputElement)
+                    .value,
+                current_password: (
+                    document.querySelector('.old-password') as HTMLInputElement
+                ).value,
+                new_password: (
+                    document.querySelector('.new-password') as HTMLInputElement
+                ).value,
+            };
+    
+            const forUpdate = {
+                image: this.image,
+                user,
+            };
+    
+            store.dispatch(createUpdateUserAction(forUpdate));
+    
+            this.popup?.destroy();
+            this.popup = null;
+        }
     }
 
     handleCancelChanges(e?: Event) {
@@ -175,39 +196,41 @@ export class SmartProfile extends Component<Props, State> {
                 cancelBtnText: 'Отмена',
                 className: 'profile-popup',
                 confirmLogoutOnClick: () => {
-                    const user = {
-                        email: (
-                            document.querySelector('.email') as HTMLInputElement
-                        ).value,
-                        new_avatar_url: store.getState()?.user?.avatar ?? '',
-                        nickname: (
-                            document.querySelector(
-                                '.nickname'
-                            ) as HTMLInputElement
-                        ).value,
-                        status: (
-                            document.querySelector(
-                                '.status'
-                            ) as HTMLInputElement
-                        ).value,
-                        current_password: (
-                            document.querySelector(
-                                '.old-password'
-                            ) as HTMLInputElement
-                        ).value,
-                        new_password: (
-                            document.querySelector(
-                                '.new-password'
-                            ) as HTMLInputElement
-                        ).value,
-                    };
+                    if (this.state.valid.isValid()) {
+                        const user = {
+                            email: (
+                                document.querySelector('.email') as HTMLInputElement
+                            ).value,
+                            new_avatar_url: store.getState()?.user?.avatar ?? '',
+                            nickname: (
+                                document.querySelector(
+                                    '.nickname'
+                                ) as HTMLInputElement
+                            ).value,
+                            status: (
+                                document.querySelector(
+                                    '.status'
+                                ) as HTMLInputElement
+                            ).value,
+                            current_password: (
+                                document.querySelector(
+                                    '.old-password'
+                                ) as HTMLInputElement
+                            ).value,
+                            new_password: (
+                                document.querySelector(
+                                    '.new-password'
+                                ) as HTMLInputElement
+                            ).value,
+                        };
 
-                    store.dispatch(
-                        createUpdateUserAction({ image: this.image, user })
-                    );
+                        store.dispatch(
+                            createUpdateUserAction({ image: this.image, user })
+                        );
 
-                    this.popup?.destroy();
-                    this.popup = null;
+                        this.popup?.destroy();
+                        this.popup = null;
+                    }
                 },
 
                 cancelLogoutOnClick: () => {
@@ -250,5 +273,130 @@ export class SmartProfile extends Component<Props, State> {
         });
 
         input.click();
+    }
+
+    /**
+     * Проверяет пользовательский ввод текущего пароля
+     */
+    validateCurrentPassword() {
+        this.state.domElements.current_password?.classList.remove(
+            'data-input--error'
+        );
+        addErrorToClass('', passwordErrorTypes);
+
+        const { isError, errorClass } = checkPassword(
+            this.state.domElements.current_password?.value ?? ''
+        );
+
+        if (isError) {
+            this.state.domElements.current_password?.classList.add(
+                'data-input--error'
+            );
+            addErrorToClass(errorClass, passwordErrorTypes);
+            if (this.state.valid.currentPasswordIsValid) {
+                this.state.valid.currentPasswordIsValid = false;
+            }
+            return;
+        }
+
+        if (this.state.valid.currentPasswordIsValid === false) {
+            this.state.valid.currentPasswordIsValid = true;
+        }
+    }
+
+    incorrectPassword() {
+        if (this.state.isMounted && this.props?.incorrectPassword) {
+            this.state.domElements.current_password?.classList.add(
+                'data-input--error'
+            );
+            addErrorToClass('incorrect-password', passwordErrorTypes);
+            if (this.state.valid.currentPasswordIsValid) {
+                this.state.valid.currentPasswordIsValid = false;
+            }
+            store.dispatch(createIncorrectPasswordAction(false));
+        }
+    }
+
+    /**
+     * Проверяет пользовательский ввод нового пароля
+     */
+    validateNewPassword() {
+        this.state.domElements.new_password?.classList.remove(
+            'data-input--error'
+        );
+        addErrorToClass('', newPasswordErrorTypes);
+
+        const { isError, errorClass } = checkNewPassword(
+            this.state.domElements.new_password?.value ?? ''
+        );
+
+        if (isError) {
+            this.state.domElements.new_password?.classList.add(
+                'data-input--error'
+            );
+            addErrorToClass(errorClass, newPasswordErrorTypes);
+            if (this.state.valid.newPasswordIsValid) {
+                this.state.valid.newPasswordIsValid = false;
+            }
+            return;
+        }
+
+        if (this.state.valid.newPasswordIsValid === false) {
+            this.state.valid.newPasswordIsValid = true;
+        }
+    }
+
+    /**
+     * Проверяет пользовательский ввод имени
+     */
+    validateNickname() {
+        this.state.domElements.nickname?.classList.remove('data-input--error');
+        addErrorToClass('', nicknameErrorTypes);
+
+        const { isError, errorClass } = checkNickname(
+            this.state.domElements.nickname?.value ?? ''
+        );
+
+        if (isError) {
+            this.state.domElements.nickname?.classList.add('data-input--error');
+            addErrorToClass(errorClass, nicknameErrorTypes);
+            if (this.state.valid.nicknameIsValid) {
+                this.state.valid.nicknameIsValid = false;
+            }
+            return;
+        }
+
+        if (this.state.valid.nicknameIsValid === false) {
+            this.state.valid.nicknameIsValid = true;
+        }
+    }
+
+    /**
+     * Проверяет пользовательский ввод почты
+     */
+    validateEmail() {
+        this.state.domElements.email?.classList.remove(
+            'login-reg__input_error'
+        );
+        addErrorToClass('', emailErrorTypes);
+
+        const { isError, errorClass } = checkEmail(
+            this.state.domElements.email?.value ?? ''
+        );
+
+        if (isError) {
+            this.state.domElements.email?.classList.add(
+                'login-reg__input_error'
+            );
+            addErrorToClass(errorClass, emailErrorTypes);
+            if (this.state.valid.emailIsValid) {
+                this.state.valid.passwordIsValid = false;
+            }
+            return;
+        }
+
+        if (this.state.valid.emailIsValid === false) {
+            this.state.valid.emailIsValid = true;
+        }
     }
 }
