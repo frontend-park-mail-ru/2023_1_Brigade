@@ -19,8 +19,11 @@ interface Props {
     onEditMessage: (message: DumbMessage) => void;
     onSendMessage: (message: {
         type: MessageTypes;
-        body?: string | undefined;
-        image_url?: string | undefined;
+        body: string;
+        attachments: {
+            url: string;
+            name: string;
+        }[];
     }) => void;
 }
 
@@ -133,23 +136,29 @@ export class DumbChat extends Component<Props, State> {
     }
 
     addAttachment(parent: HTMLElement, message: Message) {
-        if (message.type === MessageTypes.Sticker || message.image_url === '') {
+        if (
+            message.type === MessageTypes.Sticker ||
+            message.attachments.length < 1
+        ) {
             return;
         }
 
-        const attachmentComponent = new Attachment({
-            attachment: message.image_url,
-            hookAttachment: (state) => {
-                const updatedMessage = state.openedChat?.messages.find(
-                    (newMessage) => newMessage.id === message.id
-                );
+        message.attachments.forEach((attachment, index) => {
+            const attachmentComponent = new Attachment({
+                src: attachment,
+                isSticker: MessageTypes.notSticker,
+                hookAttachment: (state) => {
+                    const updatedMessage = state.openedChat?.messages.find(
+                        (newMessage) => newMessage.id === message.id
+                    );
 
-                return updatedMessage?.image_url;
-            },
-            parent,
+                    return updatedMessage?.attachments[index];
+                },
+                parent,
+            });
+
+            this.state.attachments.push(attachmentComponent);
         });
-
-        this.state.attachments.push(attachmentComponent);
     }
 
     setAttachmentList() {

@@ -4,15 +4,19 @@ import { Component } from '@framework/component';
 import { Img } from '@uikit/img/img';
 import { svgButtonUI } from '@components/ui/icon/button';
 import { MessageTypes } from '@config/enum';
-import { Emoji, Stickers } from '@/config/emojis-stickers';
+import { Emoji, Stickers } from '@config/images_urls';
 import { Button } from '@uikit/button/button';
-import { sendImage } from '@/utils/api';
+import { sendImage } from '@utils/api';
+import { Attachment } from '@components/attachment/attachment';
 
 interface Props {
     onSend: (message: {
         type: MessageTypes;
-        body?: string | undefined;
-        image_url?: string | undefined;
+        body: string;
+        attachments: {
+            url: string;
+            name: string;
+        }[];
     }) => void;
     className?: string;
     style?: Record<string, string | number>;
@@ -29,9 +33,9 @@ interface State {
     emojiButton: HTMLElement | null;
     attachmentButton: HTMLElement | null;
     lastInputPosition: number;
-    attachmentImg?: Img;
+    attachments: Attachment[];
 
-    attachmentFile?: File;
+    attachmentFiles: File[];
 }
 
 export class MessageInput extends Component<Props, State> {
@@ -48,6 +52,9 @@ export class MessageInput extends Component<Props, State> {
             emojiButton: null,
             attachmentButton: null,
             lastInputPosition: 0,
+            attachments: [],
+
+            attachmentFiles: [],
         };
 
         this.inputFocus = this.inputFocus.bind(this);
@@ -174,7 +181,10 @@ export class MessageInput extends Component<Props, State> {
                         onClick: () => {
                             this.props.onSend({
                                 type: MessageTypes.Sticker,
-                                image_url: sticker,
+                                body: '',
+                                attachments: [
+                                    { url: sticker, name: 'Sticker.webp' },
+                                ],
                             });
                         },
                         parent: stickersContainer,
@@ -212,42 +222,55 @@ export class MessageInput extends Component<Props, State> {
     }
 
     async onSend() {
-        const body = this.state.input?.value;
-        let imgUrl = '';
+        const text = this.state.input?.value ?? '';
+        const attachments: { url: string; name: string }[] = [];
 
-        if (!body?.trim() && !this.state.attachmentFile) {
+        if (!text?.trim() && this.state.attachmentFiles.length < 1) {
             return;
         }
 
-        // ? где и как такое лучше делать
-        if (this.state.attachmentFile) {
-            const { status, body } = await sendImage(this.state.attachmentFile);
+        const promises: Promise<any>[] = [];
 
-            const jsonBody = await body;
-
-            switch (status) {
-                case 201:
-                    imgUrl = jsonBody;
-                    break;
-                default:
-                // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
-            }
-        }
-
-        this.props.onSend({
-            type: MessageTypes.notSticker,
-            body,
-            image_url: imgUrl,
+        this.state.attachmentFiles.forEach(async (attachment) => {
+            promises.push(sendImage(attachment));
         });
 
-        if (this.state.input) {
-            this.state.input.value = '';
-            this.state.attachmentFile = undefined;
-            this.state.attachmentImg?.destroy();
-            this.node
-                ?.querySelector('.message-input__attachment')
-                ?.classList.remove('message-input__attachment--show');
-        }
+        Promise.all(promises).then((results) => {
+            const statuses = results.map((result) => result.status);
+            const bodyes = results.map((result) => result.body);
+
+            Promise.all(bodyes).then((jsonBodyes) => {
+                jsonBodyes.forEach((body, index) => {
+                    if (statuses[index] === 201) {
+                        attachments.push(body);
+                    } else {
+                        // TODO: ошибка
+                    }
+                });
+
+                if (!text?.trim() && attachments.length < 1) {
+                    // TODO:
+                    console.error('Ошибка загрузки файла');
+                } else {
+                    this.props.onSend({
+                        type: MessageTypes.notSticker,
+                        body: text,
+                        attachments,
+                    });
+                }
+
+                if (this.state.input) {
+                    this.state.input.value = '';
+                    this.state.attachmentFiles = [];
+                    this.state.attachments.forEach((attachment) =>
+                        attachment.destroy()
+                    );
+                    this.node
+                        ?.querySelector('.message-input__attachment')
+                        ?.classList.remove('message-input__attachment--show');
+                }
+            });
+        });
     }
 
     onEmoji() {
@@ -259,28 +282,31 @@ export class MessageInput extends Component<Props, State> {
     onAttachment() {
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.jpg';
 
         input.addEventListener('change', () => {
-            this.state.attachmentFile = input?.files?.[0];
-            if (this.state.attachmentFile) {
-                const reader = new FileReader();
-                reader.readAsDataURL(this.state.attachmentFile);
-                reader.onload = () => {
-                    const imageUrl = reader.result;
-                    const parent = document.querySelector(
-                        '.message-input__attachment'
-                    ) as HTMLImageElement;
-
-                    this.state.attachmentImg?.destroy();
-                    this.state.attachmentImg = new Img({
-                        src: imageUrl as string,
-                        borderRadius: '5',
-                        size: 'L',
-                        parent,
-                    });
-                };
+            const file = input?.files?.[0];
+            if (!file) {
+                return;
             }
+
+            this.state.attachmentFiles.push(file);
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const url = reader.result as string;
+                const parent = document.querySelector(
+                    '.message-input__attachment'
+                ) as HTMLElement;
+
+                this.state.attachments.push(
+                    new Attachment({
+                        src: { url, name: file.name },
+                        isSticker: MessageTypes.notSticker,
+                        parent,
+                    })
+                );
+            };
 
             this.node
                 ?.querySelector('.message-input__attachment')
@@ -313,7 +339,7 @@ export class MessageInput extends Component<Props, State> {
 
         this.state.emojis.forEach((emoji) => emoji.destroy());
         this.state.stickers.forEach((sticker) => sticker.destroy());
-        this.state.attachmentImg?.destroy();
+        this.state.attachments.forEach((attachment) => attachment.destroy());
 
         this.state.isMounted = false;
     }
