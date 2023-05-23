@@ -37,6 +37,7 @@ export class SmartSidebar extends Component<Props, State> {
         super(props);
         this.state.isMounted = false;
         this.popup = null;
+        this.prevActive = null;
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -47,6 +48,7 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     private popup: Popup | undefined | null;
+    private prevActive: HTMLElement | undefined | null;
 
     destroy() {
         if (this.state.isMounted) {
@@ -58,6 +60,20 @@ export class SmartSidebar extends Component<Props, State> {
 
     render() {
         return this.props.parent;
+    }
+
+    isActive() {
+        if (this.prevActive) {
+            this.prevActive.removeAttribute('id');
+        }
+
+        const items = document.querySelectorAll('.sidebar-header__list__item');
+        for (let item of items) {
+            if (item === document.activeElement) {
+                this.prevActive = item as HTMLElement;
+                item.id = 'active-btn';
+            }
+        }
     }
 
     componentDidMount() {
@@ -97,18 +113,22 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     avatarOnClick() {
+        this.isActive();
         store.dispatch(createMoveToProfileAction());
     }
 
     chatsOnClick() {
+        this.isActive();
         store.dispatch(createMoveToChatsAction());
     }
 
     contactsOnClick() {
+        this.isActive();
         store.dispatch(createMoveToContactsAction());
     }
 
     logoutOnClick() {
+        this.isActive();
         const root = document.getElementById('root');
         if (!this.popup) {
             this.popup = new Popup({

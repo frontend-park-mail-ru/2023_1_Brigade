@@ -113,7 +113,7 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
 
         this.state.logoutButton = new Button({
             parent: this.node,
-            className: 'sidebar-header__logout-btn button-transparent',
+            className: 'sidebar-header__logout-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'logout-btn' ?? '',
             }),
