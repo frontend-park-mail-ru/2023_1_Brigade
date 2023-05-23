@@ -8,6 +8,8 @@ import {
 } from '@actions/routeActions';
 import { createLogoutAction } from '@actions/authActions';
 import { Popup } from '@/components/popup/popup';
+import { List } from '@/uikit/list/list';
+import { Button } from '@/uikit/button/button';
 
 interface Props {
     parent: HTMLElement;
@@ -16,6 +18,9 @@ interface Props {
 interface State {
     isMounted: boolean;
     node?: DumbSidebar;
+    confirmBtn: Button | null;
+    cancelBtn: Button | null;
+    btnList: List | null;
 }
 
 /**
@@ -35,6 +40,10 @@ export class SmartSidebar extends Component<Props, State> {
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
+
+        this.state.btnList = null;
+        this.state.cancelBtn = null;
+        this.state.confirmBtn = null;
     }
 
     private popup: Popup | undefined | null;
@@ -59,11 +68,11 @@ export class SmartSidebar extends Component<Props, State> {
         this.state.node = new DumbSidebar({
             parent: this.node,
             avatar: this.hookAvatar(store.getState()) ?? '',
-            avatarOnClick: this.avatarOnClick,
-            chatsOnClick: this.chatsOnClick,
-            contactsOnClick: this.contactsOnClick,
-            logoutOnClick: this.logoutOnClick,
-            hookAvatar: this.hookAvatar,
+            avatarOnClick: this.avatarOnClick.bind(this),
+            chatsOnClick: this.chatsOnClick.bind(this),
+            contactsOnClick: this.contactsOnClick.bind(this),
+            logoutOnClick: this.logoutOnClick.bind(this),
+            hookAvatar: this.hookAvatar.bind(this),
         });
     }
 
@@ -76,6 +85,10 @@ export class SmartSidebar extends Component<Props, State> {
             this.popup?.destroy();
         }
 
+        this.state?.confirmBtn?.destroy();
+        this.state?.cancelBtn?.destroy();
+        this.state?.btnList?.destroy();
+        
         this.state.isMounted = false;
     }
 
@@ -101,19 +114,40 @@ export class SmartSidebar extends Component<Props, State> {
             this.popup = new Popup({
                 parent: root as HTMLElement,
                 title: 'Вы действительно хотите выйти из приложения ?',
-                confirmBtnText: 'Подтвердить',
-                cancelBtnText: 'Отмена',
                 className: 'logout-popup',
-                confirmLogoutOnClick: () => {
-                    store.dispatch(createLogoutAction());
-                    this.popup?.destroy();
-                    this.popup = null;
-                },
-                cancelLogoutOnClick: () => {
-                    this.popup?.destroy();
-                    this.popup = null;
-                },
             });
+
+            const popContent: HTMLElement | null = document.querySelector('.popup__content') as HTMLElement;
+
+            if (popContent) {
+                this.state.btnList = new List({
+                    parent: popContent,
+                    className: 'popup__btn-list',
+                });
+
+                this.state?.btnList.getNode()?.classList.remove('list');
+        
+                this.state.confirmBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn confirm__btn button-S',
+                    label: 'Подтвердить',
+                    onClick: () => {
+                        store.dispatch(createLogoutAction());
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+        
+                this.state.cancelBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });   
+            }
         }
     }
 }
