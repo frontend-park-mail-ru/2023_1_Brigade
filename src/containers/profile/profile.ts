@@ -63,7 +63,14 @@ export class SmartProfile extends Component<Props, State> {
     private profile: DumbProfile | null;
     private popup: Popup | undefined | null;
     private image: File | undefined;
-    private user: Object | null; 
+    private user: {
+        email: string,
+        new_avatar_url: string,
+        nickname: string,
+        status: string,
+        current_password: string,
+        new_password: string,
+    } | null; 
 
     destroy() {
         if (this.state.isMounted) {
@@ -132,33 +139,28 @@ export class SmartProfile extends Component<Props, State> {
     handleConfirmChanges(e?: Event) {
         e?.preventDefault();
 
-        // if (this.state.valid.isValid()) {
-            const user = {
-                email: (document.querySelector('.email') as HTMLInputElement).value,
-                new_avatar_url: store.getState()?.user?.avatar ?? '',
-                nickname: (document.querySelector('.nickname') as HTMLInputElement)
-                    .value,
-                status: (document.querySelector('.status') as HTMLInputElement)
-                    .value,
-                current_password: '',
-                new_password: '',
-            };
+        if (this.user) {
+            this.user.email = (document.querySelector('.email') as HTMLInputElement).value,
+            this.user.new_avatar_url = store.getState()?.user?.avatar ?? '',
+            this.user.nickname = (document.querySelector('.nickname') as HTMLInputElement).value
+            this.user.status = (document.querySelector('.status') as HTMLInputElement).value
 
-            if (this.popup) {
-                user.current_password = (document.querySelector('.old-password') as HTMLInputElement)?.value;
-                user.new_password = (document.querySelector('.new-password') as HTMLInputElement)?.value;
-            }
-    
+
             const forUpdate = {
                 image: this.image,
-                user,
+                this.user,
             };
     
             store.dispatch(createUpdateUserAction(forUpdate));
-    
-            this.popup?.destroy();
-            this.popup = null;
+        }
+            
+        // if (this.popup) {
+        //     this.user.current_password = (document.querySelector('.old-password') as HTMLInputElement)?.value;
+        //     this.user.new_password = (document.querySelector('.new-password') as HTMLInputElement)?.value;
         // }
+
+        this.popup?.destroy();
+        this.popup = null;
     }
 
     handleCancelChanges(e?: Event) {
