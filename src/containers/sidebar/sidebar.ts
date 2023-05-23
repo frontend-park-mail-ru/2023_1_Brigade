@@ -63,9 +63,14 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     isActive() {
+        console.log('check classname: ', this.prevActive?.className.includes('sidebar-header__chats-btn'));
+        console.log('check classname: ', this.prevActive?.className.includes('sidebar-header__contacts-btn'));
+
         if (this.prevActive) {
             this.prevActive.removeAttribute('id');
         }
+
+        // if (this.prevActive?.className)
 
         const items = document.querySelectorAll('.sidebar-header__list__item');
         for (let item of items) {
@@ -90,6 +95,11 @@ export class SmartSidebar extends Component<Props, State> {
             logoutOnClick: this.logoutOnClick.bind(this),
             hookAvatar: this.hookAvatar.bind(this),
         });
+
+        this.prevActive = document.querySelector('.sidebar-header__chats-btn') as HTMLElement;
+        if (this.prevActive) {
+            this.prevActive.id = 'active-btn';
+        }
     }
 
     componentWillUnmount() {
@@ -113,7 +123,7 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     avatarOnClick() {
-        this.isActive();
+        // this.isActive();
         store.dispatch(createMoveToProfileAction());
     }
 
@@ -128,7 +138,6 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     logoutOnClick() {
-        this.isActive();
         const root = document.getElementById('root');
         if (!this.popup) {
             this.popup = new Popup({

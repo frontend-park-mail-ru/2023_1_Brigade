@@ -298,9 +298,12 @@ export class SmartSignUp extends Component<Props, State> {
      * Проверяет пользовательский ввод подтверждения пароля
      */
     validateConfirmPassword() {
+        // удаляем ошибку
         this.state.domElements.confirmPassword?.classList.remove(
             'login-reg__input_error'
         );
+
+        // делаем все ошибки невидимыми
         addErrorToClass('', confirmPasswordErrorTypes);
 
         const { isError, errorClass } = checkConfirmPassword(
@@ -313,12 +316,14 @@ export class SmartSignUp extends Component<Props, State> {
                 'login-reg__input_error'
             );
             addErrorToClass(errorClass, passwordErrorTypes);
+            // если было true, то теперь есть ошибка и false
             if (this.state.valid.confirmPasswordIsValid) {
                 this.state.valid.confirmPasswordIsValid = false;
             }
             return;
         }
 
+        // если было false и была ошщибка, то теперь ошибки нет
         if (this.state.valid.confirmPasswordIsValid === false) {
             this.state.valid.confirmPasswordIsValid = true;
         }

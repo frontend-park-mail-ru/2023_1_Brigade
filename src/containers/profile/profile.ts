@@ -7,7 +7,7 @@ import { store } from '@/store/store';
 import { createUpdateUserAction } from '@/actions/userActions';
 import { Input } from '@uikit/input/input';
 import { confirmPasswordErrorTypes, emailErrorTypes, newPasswordErrorTypes, nicknameErrorTypes, passwordErrorTypes, usernameErrorTypes } from '@/config/errors';
-import { addErrorToClass, checkEmail, checkNewPassword, checkNickname, checkPassword } from '@/utils/validator';
+import { addErrorToClass, checkConfirmPassword, checkEmail, checkNewPassword, checkNickname, checkPassword } from '@/utils/validator';
 import { List } from '@/uikit/list/list';
 import { Button } from '@/uikit/button/button';
 
@@ -27,6 +27,13 @@ interface State {
     btnList?: List;
     confirmBtn?: Button;
     cancelBtn?: Button;
+    valid?: {
+        emailIsValid: boolean;
+        passwordIsValid: boolean;
+        confirmPasswordIsValid: boolean;
+        nicknameIsValid: boolean;
+        isValid: () => boolean | undefined;
+    };
 }
 
 /**
@@ -42,7 +49,12 @@ export class SmartProfile extends Component<Props, State> {
         DYNAMIC().innerHTML = '';
         super(props);
         this.state.isMounted = false;
+        this.user = null;
         this.profile = null;
+
+        // this.state.valid: {
+            
+        // }
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -51,6 +63,7 @@ export class SmartProfile extends Component<Props, State> {
     private profile: DumbProfile | null;
     private popup: Popup | undefined | null;
     private image: File | undefined;
+    private user: Object | null; 
 
     destroy() {
         if (this.state.isMounted) {
@@ -198,6 +211,31 @@ export class SmartProfile extends Component<Props, State> {
                     errors: confirmPasswordErrorTypes,
                     uniqClassName: 'repeat-password',
                     type: 'password',
+                    onChange: (e) => {
+                        e?.preventDefault();
+    
+                        this.validateConfirmPassword.bind(this);
+                    }
+                });
+
+
+                // TODO addEventListner для input-ов на валидацию
+                this.state.oldPassword?.getNode()?.addEventListener('input', (e) => {
+                    e.preventDefault();
+
+                    // TODO: validation function
+                });
+
+                this.state.newPassword?.getNode()?.addEventListener('input', (e) => {
+                    e.preventDefault();
+
+                    // TODO: validation function
+                });
+
+                this.state.repeatPassword?.getNode()?.addEventListener('input', (e) => {
+                    e.preventDefault();
+
+                    this.validateConfirmPassword();
                 });
     
                 this.state.btnList = new List({
@@ -294,5 +332,41 @@ export class SmartProfile extends Component<Props, State> {
         });
 
         input.click();
+    }
+
+    /**
+     * Проверяет пользовательский ввод подтверждения пароля
+     */
+    validateConfirmPassword() {
+        console.log('validate has been called');
+        // удаляем ошибку
+        this.state.repeatPassword.getNode()?.classList.remove(
+            'login-reg__input_error'
+        );
+
+        // делаем все ошибки невидимыми
+        addErrorToClass('', confirmPasswordErrorTypes);
+        const { isError, errorClass } = checkConfirmPassword(
+            this.state.newPassword?.getNode()?.value ?? '',
+            this.state.repeatPassword?.getNode()?.value ?? '',
+        );
+
+        if (isError) {
+            this.state.repeatPassword.getNode()?.classList.add(
+                'login-reg__input_error'
+            );
+            addErrorToClass(errorClass, passwordErrorTypes);
+
+            // если было true, то теперь есть ошибка и false
+            if (this?.state?.valid?.confirmPasswordIsValid) {
+                this.state.valid.confirmPasswordIsValid = false;
+            }
+            return;
+        }
+
+        // если было false и была ошщибка, то теперь ошибки нет
+        if (this?.state?.valid?.confirmPasswordIsValid === false) {
+            this.state.valid.confirmPasswordIsValid = true;
+        }
     }
 }
