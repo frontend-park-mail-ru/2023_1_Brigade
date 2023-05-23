@@ -15,6 +15,7 @@ const createWs = (url: string) => {
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
                 const e = JSON.parse(event.data);
+                console.log('onmessage', e);
                 const cb = subscribers.get(e.chat_id);
                 if (cb) {
                     cb(e);

@@ -90,7 +90,7 @@ export class DumbMessage extends Component<Props, State> {
                 });
             }
         }
-        console.log('message', this.props.message)
+
         if (this.props.message.attachments.length > 0) {
             const messageImage = this.node.querySelector(
                 '.message__image'

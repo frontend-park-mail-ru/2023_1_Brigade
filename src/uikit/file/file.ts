@@ -54,7 +54,8 @@ export class FileUi extends Component<Props, State, HTMLElement> {
 
         return new DOMParser().parseFromString(
             template({
-                Src: this.props.src,
+                Src: this.props.src.url,
+                Download: this.props.src.name,
                 ClassName,
                 style: this.props.style,
             }),
