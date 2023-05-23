@@ -25,6 +25,11 @@ export class Header extends Component<Props, State, HTMLElement> {
         this.props.parent.appendChild(this.node);
     }
 
+
+    getNode() {
+        return this.node;
+    }
+
     destroy() {
         this.componentWillUnmount();
         this.node?.remove();

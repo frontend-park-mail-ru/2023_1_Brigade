@@ -38,6 +38,10 @@ export class Input extends Component<Props, State, HTMLInputElement> {
         }
     }
 
+    getNode() {
+        return this.node;
+    }
+
     destroy() {
         this.componentWillUnmount();
         this.node?.remove();
