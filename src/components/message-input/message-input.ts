@@ -221,16 +221,33 @@ export class MessageInput extends Component<Props, State> {
     }
 
     async onSend() {
-        const body = this.state.input?.value ?? '';
+        const text = this.state.input?.value ?? '';
         const attachments: { url: string; name: string }[] = [];
 
-        if (!body?.trim() && !this.state.attachmentFile) {
+        if (!text?.trim() && this.state.attachmentFile.length < 1) {
             return;
         }
 
-        // ? где и как такое лучше делать
-        this.state.attachmentFile.forEach(async (attachment) => {
-            const { status, body } = await sendImage(attachment);
+        // this.state.attachmentFile.forEach(async (attachment) => {
+        //     const { status, body } = await sendImage(attachment);
+
+        //     const jsonBody = await body;
+
+        //     switch (status) {
+        //         case 201:
+        //             attachments.push(jsonBody);
+        //             break;
+        //         default:
+        //         // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
+        //     }
+        // });
+
+        // await Promise.all(attachments);
+
+        if (this.state.attachmentFile.length > 0) {
+            const { status, body } = await sendImage(
+                this.state.attachmentFile[0]
+            );
 
             const jsonBody = await body;
 
@@ -241,13 +258,11 @@ export class MessageInput extends Component<Props, State> {
                 default:
                 // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
             }
-        });
-
-        await Promise.all(attachments);
+        }
 
         this.props.onSend({
             type: MessageTypes.notSticker,
-            body,
+            body: text,
             attachments,
         });
 
