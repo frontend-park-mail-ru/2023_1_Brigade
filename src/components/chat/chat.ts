@@ -138,7 +138,8 @@ export class DumbChat extends Component<Props, State> {
         }
 
         const attachmentComponent = new Attachment({
-            attachment: message.image_url,
+            src: message.image_url,
+            isSticker: MessageTypes.notSticker,
             hookAttachment: (state) => {
                 const updatedMessage = state.openedChat?.messages.find(
                     (newMessage) => newMessage.id === message.id

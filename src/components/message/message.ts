@@ -6,6 +6,7 @@ import { MessageTypes } from '@config/enum';
 import { store } from '@store/store';
 import { Dropdown } from '@uikit/dropdown/dropdown';
 import { ROOT } from '@config/config';
+import { Attachment } from '../attachment/attachment';
 
 interface Props {
     message: Message;
@@ -22,7 +23,7 @@ interface Props {
 
 interface State {
     avatar?: Img;
-    img?: Img;
+    attachment?: Attachment;
 }
 
 export class DumbMessage extends Component<Props, State> {
@@ -96,14 +97,9 @@ export class DumbMessage extends Component<Props, State> {
             ) as HTMLElement;
 
             if (messageImage) {
-                this.state.img = new Img({
+                this.state.attachment = new Attachment({
                     src: this.props.message.image_url,
-                    borderRadius: '5',
-                    size:
-                        this.props.message.type === MessageTypes.notSticker
-                            ? 'XL'
-                            : 'L',
-                    alt: '',
+                    isSticker: this.props.message.type,
                     parent: messageImage,
                 });
             }
@@ -126,7 +122,7 @@ export class DumbMessage extends Component<Props, State> {
         }
 
         this.state.avatar?.destroy();
-        this.state.img?.destroy();
+        this.state.attachment?.destroy();
 
         this.node.removeEventListener('contextmenu', this.onRightClick);
     }

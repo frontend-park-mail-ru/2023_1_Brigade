@@ -107,3 +107,28 @@ export const Stickers = [
     './assets/img/stickers/sticker_29.webp',
     './assets/img/stickers/sticker_30.webp',
 ];
+
+interface Files {
+    [key: string]: string;
+    pdf: string;
+    doc: string;
+    docx: string;
+    odt: string;
+    html: string;
+    css: string;
+    json: string;
+    txt: string;
+    file: string;
+}
+
+export const Files: Files = {
+    pdf: './assets/img/files/pdf.png',
+    doc: './assets/img/files/doc.png',
+    docx: './assets/img/files/doc.png',
+    odt: './assets/img/files/doc.png',
+    html: './assets/img/files/html.png',
+    css: './assets/img/files/css.png',
+    json: './assets/img/files/json.png',
+    txt: './assets/img/files/txt.png',
+    file: './assets/img/files/file.png',
+};

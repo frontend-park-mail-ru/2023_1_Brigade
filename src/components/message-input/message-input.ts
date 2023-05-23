@@ -4,9 +4,10 @@ import { Component } from '@framework/component';
 import { Img } from '@uikit/img/img';
 import { svgButtonUI } from '@components/ui/icon/button';
 import { MessageTypes } from '@config/enum';
-import { Emoji, Stickers } from '@/config/emojis-stickers';
+import { Emoji, Stickers } from '@config/images_urls';
 import { Button } from '@uikit/button/button';
-import { sendImage } from '@/utils/api';
+import { sendImage } from '@utils/api';
+import { Attachment } from '@components/attachment/attachment';
 
 interface Props {
     onSend: (message: {
@@ -29,7 +30,7 @@ interface State {
     emojiButton: HTMLElement | null;
     attachmentButton: HTMLElement | null;
     lastInputPosition: number;
-    attachmentImg?: Img;
+    attachment?: Attachment;
 
     attachmentFile?: File;
 }
@@ -243,7 +244,7 @@ export class MessageInput extends Component<Props, State> {
         if (this.state.input) {
             this.state.input.value = '';
             this.state.attachmentFile = undefined;
-            this.state.attachmentImg?.destroy();
+            this.state.attachment?.destroy();
             this.node
                 ?.querySelector('.message-input__attachment')
                 ?.classList.remove('message-input__attachment--show');
@@ -259,10 +260,10 @@ export class MessageInput extends Component<Props, State> {
     onAttachment() {
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.jpg';
 
         input.addEventListener('change', () => {
             this.state.attachmentFile = input?.files?.[0];
+
             if (this.state.attachmentFile) {
                 const reader = new FileReader();
                 reader.readAsDataURL(this.state.attachmentFile);
@@ -270,13 +271,12 @@ export class MessageInput extends Component<Props, State> {
                     const imageUrl = reader.result;
                     const parent = document.querySelector(
                         '.message-input__attachment'
-                    ) as HTMLImageElement;
+                    ) as HTMLElement;
 
-                    this.state.attachmentImg?.destroy();
-                    this.state.attachmentImg = new Img({
+                    this.state.attachment?.destroy();
+                    this.state.attachment = new Attachment({
                         src: imageUrl as string,
-                        borderRadius: '5',
-                        size: 'L',
+                        isSticker: MessageTypes.notSticker,
                         parent,
                     });
                 };
@@ -313,7 +313,7 @@ export class MessageInput extends Component<Props, State> {
 
         this.state.emojis.forEach((emoji) => emoji.destroy());
         this.state.stickers.forEach((sticker) => sticker.destroy());
-        this.state.attachmentImg?.destroy();
+        this.state.attachment?.destroy();
 
         this.state.isMounted = false;
     }
