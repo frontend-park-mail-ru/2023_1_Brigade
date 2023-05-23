@@ -12,8 +12,11 @@ import { Attachment } from '@components/attachment/attachment';
 interface Props {
     onSend: (message: {
         type: MessageTypes;
-        body?: string | undefined;
-        image_url?: string | undefined;
+        body: string;
+        attachments: {
+            url: string;
+            name: string;
+        }[];
     }) => void;
     className?: string;
     style?: Record<string, string | number>;
@@ -32,7 +35,7 @@ interface State {
     lastInputPosition: number;
     attachment?: Attachment;
 
-    attachmentFile?: File;
+    attachmentFile: File[];
 }
 
 export class MessageInput extends Component<Props, State> {
@@ -49,6 +52,8 @@ export class MessageInput extends Component<Props, State> {
             emojiButton: null,
             attachmentButton: null,
             lastInputPosition: 0,
+
+            attachmentFile: [],
         };
 
         this.inputFocus = this.inputFocus.bind(this);
@@ -175,7 +180,10 @@ export class MessageInput extends Component<Props, State> {
                         onClick: () => {
                             this.props.onSend({
                                 type: MessageTypes.Sticker,
-                                image_url: sticker,
+                                body: '',
+                                attachments: [
+                                    { url: sticker, name: 'Sticker.webp' },
+                                ],
                             });
                         },
                         parent: stickersContainer,
@@ -213,37 +221,39 @@ export class MessageInput extends Component<Props, State> {
     }
 
     async onSend() {
-        const body = this.state.input?.value;
-        let imgUrl = '';
+        const body = this.state.input?.value ?? '';
+        const attachments: { url: string; name: string }[] = [];
 
         if (!body?.trim() && !this.state.attachmentFile) {
             return;
         }
 
         // ? где и как такое лучше делать
-        if (this.state.attachmentFile) {
-            const { status, body } = await sendImage(this.state.attachmentFile);
+        this.state.attachmentFile.forEach(async (attachment) => {
+            const { status, body } = await sendImage(attachment);
 
             const jsonBody = await body;
 
             switch (status) {
                 case 201:
-                    imgUrl = jsonBody;
+                    attachments.push(jsonBody);
                     break;
                 default:
                 // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
             }
-        }
+        });
+
+        await Promise.all(attachments);
 
         this.props.onSend({
             type: MessageTypes.notSticker,
             body,
-            image_url: imgUrl,
+            attachments,
         });
 
         if (this.state.input) {
             this.state.input.value = '';
-            this.state.attachmentFile = undefined;
+            this.state.attachmentFile = [];
             this.state.attachment?.destroy();
             this.node
                 ?.querySelector('.message-input__attachment')
@@ -262,25 +272,28 @@ export class MessageInput extends Component<Props, State> {
         input.type = 'file';
 
         input.addEventListener('change', () => {
-            this.state.attachmentFile = input?.files?.[0];
-
-            if (this.state.attachmentFile) {
-                const reader = new FileReader();
-                reader.readAsDataURL(this.state.attachmentFile);
-                reader.onload = () => {
-                    const imageUrl = reader.result;
-                    const parent = document.querySelector(
-                        '.message-input__attachment'
-                    ) as HTMLElement;
-
-                    this.state.attachment?.destroy();
-                    this.state.attachment = new Attachment({
-                        src: imageUrl as string,
-                        isSticker: MessageTypes.notSticker,
-                        parent,
-                    });
-                };
+            const file = input?.files?.[0];
+            if (!file) {
+                return;
             }
+
+            this.state.attachmentFile.push(file);
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const url = reader.result as string;
+                const parent = document.querySelector(
+                    '.message-input__attachment'
+                ) as HTMLElement;
+
+                this.state.attachment?.destroy();
+                this.state.attachment = new Attachment({
+                    src: { url, name: file.name },
+                    isSticker: MessageTypes.notSticker,
+                    parent,
+                });
+            };
 
             this.node
                 ?.querySelector('.message-input__attachment')

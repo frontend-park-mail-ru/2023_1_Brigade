@@ -8,9 +8,11 @@ import { MessageTypes } from '@config/enum';
 import { Files } from '@/config/images_urls';
 
 interface Props {
-    src: string;
+    src: { url: string; name: string };
     isSticker: MessageTypes;
-    hookAttachment?: (state: StoreState) => string | undefined;
+    hookAttachment?: (
+        state: StoreState
+    ) => { url: string; name: string } | undefined;
     className?: string;
     style?: Record<string, string | number>;
     parent: HTMLElement;
@@ -77,7 +79,7 @@ export class Attachment extends Component<Props, State> {
             return;
         }
 
-        const format = this.props.src.split('.').pop();
+        const format = this.props.src.name.split('.').pop();
         switch (format?.toLowerCase()) {
             case 'jpg':
             case 'jpeg':
@@ -86,7 +88,7 @@ export class Attachment extends Component<Props, State> {
             case 'webp':
                 this.state.attachments?.push(
                     new Img({
-                        src: this.props.src,
+                        src: this.props.src.url,
                         borderRadius: '5',
                         size:
                             this.props.hookAttachment &&
@@ -100,22 +102,9 @@ export class Attachment extends Component<Props, State> {
                 break;
 
             default:
-                if (this.props.src.startsWith('data:image/')) {
-                    this.state.attachments.push(
-                        new Img({
-                            src: this.props.src,
-                            borderRadius: '5',
-                            size: this.props.hookAttachment ? 'XL' : 'L',
-                            alt: '',
-                            parent: this.node,
-                        })
-                    );
-                    break;
-                }
-
                 const attachment = new Img({
                     src:
-                        Files[this.props.src.split('.').pop() ?? 'file'] ??
+                        Files[this.props.src.name.split('.').pop() ?? 'file'] ??
                         Files.file,
                     borderRadius: '5',
                     size: 'S',
@@ -126,8 +115,8 @@ export class Attachment extends Component<Props, State> {
                         }
 
                         const link = document.createElement('a');
-                        link.href = this.props.src;
-                        link.download = this.props.src;
+                        link.href = this.props.src.url;
+                        link.download = this.props.src.name;
                         link.click();
                     },
                     parent: this.node,

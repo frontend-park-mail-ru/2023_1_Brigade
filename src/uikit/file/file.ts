@@ -3,7 +3,7 @@ import template from '@uikit/file/file.pug';
 import { Component } from '@framework/component';
 
 interface Props {
-    src: string;
+    src: { url: string; name: string };
     className?: string;
     style?: Record<string, string | number>;
     parent: HTMLElement;

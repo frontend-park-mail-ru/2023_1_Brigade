@@ -91,18 +91,20 @@ export class DumbMessage extends Component<Props, State> {
             }
         }
 
-        if (this.props.message.image_url) {
+        if (this.props.message.attachments.length > 0) {
             const messageImage = this.node.querySelector(
                 '.message__image'
             ) as HTMLElement;
 
-            if (messageImage) {
-                this.state.attachment = new Attachment({
-                    src: this.props.message.image_url,
-                    isSticker: this.props.message.type,
-                    parent: messageImage,
-                });
-            }
+            this.props.message.attachments.forEach((attachment) => {
+                if (messageImage) {
+                    this.state.attachment = new Attachment({
+                        src: attachment,
+                        isSticker: this.props.message.type,
+                        parent: messageImage,
+                    });
+                }
+            });
         }
 
         if (this.props.place === 'left') {
@@ -140,7 +142,7 @@ export class DumbMessage extends Component<Props, State> {
                 nickname: this.props.user?.nickname ?? '',
                 avatar: this.props.user?.avatar ?? '',
                 body: this.props.message.body,
-                image: this.props.message.image_url,
+                image: this.props.message.attachments.length > 0,
             }),
             'text/html'
         ).body.firstChild;
