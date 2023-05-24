@@ -6,7 +6,8 @@
 }
 
 .chat-card:hover {
-    background: #0F0F0F;
+    background: #3A3D4D;
+    border-radius: 15px;
 }
 
 .chat-avatar {
@@ -27,6 +28,9 @@
 .chat-last-message {
     font-size: 14px;
     color: #999;
-    min-width: 100%;
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
   

@@ -1,4 +1,4 @@
-import { AJAX_METHODS } from '@config/ajax'
+import { AJAX_METHODS } from '@config/ajax';
 
 const BACKEND_URL = 'https://technogramm.ru';
 // const BACKEND_URL_LOCAL = 'http://127.0.0.1:8081'
@@ -25,7 +25,7 @@ export const CSRF = createCSRF();
 const ajax = (
     url: string,
     method: string,
-    body: anyObject | null | undefined
+    body: Record<string, unknown> | null | undefined
 ) => {
     return fetch(BACKEND_URL + '/api/v1' + url, {
         method,
@@ -59,16 +59,12 @@ const ajax = (
             return { status, parsedBody };
         })
         .catch((err) => {
-            const { status } = err;
-
-            let parsedBody;
-            if (status !== 204) {
-                parsedBody = err.json();
-            }
-
+            const { status, body } = err;
+            const parsedBody = body;
+            console.error(err);
             return { status, parsedBody };
         });
-}
+};
 
 /**
  * Отправляет HTTP запросы
@@ -77,14 +73,10 @@ const ajax = (
  * @param {json} body - тело запроса
  * @returns {Promise} - промис
  */
-const ajaxMultipartForm = (
-    url: string,
-    method: string,
-    body: File
-) => {
+const ajaxMultipartForm = (url: string, method: string, body: File) => {
     const formData = new FormData();
     formData.append('image', body);
-    
+
     return fetch(BACKEND_URL + '/api/v1' + url, {
         method,
         headers: {
@@ -114,22 +106,16 @@ const ajaxMultipartForm = (
 
             return { status, parsedBody };
         });
-}
+};
 
 /**
  * Отправляет GET-запросы
  * @param {string} url - url
  * @returns {Promise} - промис
  */
-export const get = (
-    url: string
-) => {
-    return ajax(
-        url,
-        AJAX_METHODS.GET,
-        undefined,
-    );
-}
+export const get = (url: string) => {
+    return ajax(url, AJAX_METHODS.GET, undefined);
+};
 
 /**
  * Отправляет POST-запросы
@@ -139,29 +125,19 @@ export const get = (
  */
 export const post = (
     url: string,
-    body: anyObject | null | undefined,
+    body: Record<string, unknown> | null | undefined
 ) => {
-    return ajax(
-        url,
-        AJAX_METHODS.POST,
-        body,
-    );
-}
+    return ajax(url, AJAX_METHODS.POST, body);
+};
 
 /**
  * Отправляет DELETE-запрос (удаляет текущую пользовательскую сессию)
  * @param {string} url - url
  * @returns {Promise} - тело запроса
  */
-export const deleteSession = (
-    url: string,
-) => {
-    return ajax(
-        url,
-        AJAX_METHODS.DELETE,
-        null,
-    );
-}
+export const deleteSession = (url: string) => {
+    return ajax(url, AJAX_METHODS.DELETE, null);
+};
 
 /**
  * Отправляет PUT-запрос
@@ -171,14 +147,10 @@ export const deleteSession = (
  */
 export const put = (
     url: string,
-    body: anyObject | null | undefined,
-): Promise<any> => {
-    return ajax(
-        url,
-        AJAX_METHODS.PUT,
-        body,
-    );
-}
+    body: Record<string, unknown> | null | undefined
+): Promise<Record<string, unknown>> => {
+    return ajax(url, AJAX_METHODS.PUT, body);
+};
 
 /**
  * Отправляет PUT-запрос
@@ -188,11 +160,7 @@ export const put = (
  */
 export const postMultipartForm = (
     url: string,
-    body: File,
-): Promise<any> => {
-    return ajaxMultipartForm(
-        url,
-        AJAX_METHODS.POST,
-        body,
-    );
-}
+    body: File
+): Promise<Record<string, unknown>> => {
+    return ajaxMultipartForm(url, AJAX_METHODS.POST, body);
+};

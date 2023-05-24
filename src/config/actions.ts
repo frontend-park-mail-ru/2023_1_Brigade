@@ -11,6 +11,7 @@ export const constantsOfActions = {
     moveToChats: 'moveToChats',
     moveToChat: 'moveToChat',
     moveToCreateGroup: 'moveToCreateGroup',
+    moveToCreateChannel: 'moveToCreateChannel',
     moveToEditChat: 'moveToEditChat',
     deleteState: 'deleteState',
     render: 'render',
@@ -22,4 +23,12 @@ export const constantsOfActions = {
     deleteChat: 'deleteChat',
     editChat: 'editChat',
     isNotRendered: 'isNotRendered',
-}
+    moveToHomePage: 'moveToHomePage',
+    setSearchedChats: 'setSearchedChats',
+    deleteSearchedChats: 'deleteSearchedChats',
+    addUserInChat: 'addUserInChat',
+    deleteUserInChat: 'deleteUserInChat',
+    addMessage: 'addMessage',
+    editMessage: 'editMessage',
+    deleteMessage: 'deleteMessage',
+};

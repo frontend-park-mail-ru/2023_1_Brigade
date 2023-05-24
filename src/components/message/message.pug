@@ -1,18 +1,10 @@
-if Side
-    .messages__message.message-right.flex
-        .message__avatar.flex
-            !=MessageAvatar
-            .message__right-side.flex
-                .message__right-side__username
-                    !=Username
-                .message__right-side__text-content
-                    !=MessageText
-else
-    .messages__message.message-left.flex
-        .message__avatar.flex
-            !=MessageAvatar
-            .message__right-side.flex
-                .message__right-side__username
-                    !=Username
-                .message__right-side__text-content
-                    !=MessageText
+.message(class=className, style=style, id=id).flex
+    if (avatar != '')
+        .message__avatar
+    .message__content.flex
+        if (nickname != '')
+            span.message__nickname= nickname
+        if (image)
+            .message__image
+        if (body != '')
+            .message__body= body

@@ -1,44 +1,52 @@
-import { Container } from "@containers/container";
+import { Component } from '@framework/component';
 
+interface Props {}
 
-export interface SmartError {
-    state: {
-        isSubscribed: boolean,
-        domElements: {
-            backButton: HTMLInputElement | null,
-        }
-    }
+interface State {
+    isMounted: boolean;
+    domElements: {
+        backButton: HTMLInputElement | null;
+    };
 }
 
 /**
-* Отрисовывает логин.
-* Прокидывает actions в стору для логина
-* Также подписывается на изменения статуса логина,
-* для корректного рендера ошибки
-*
-*/
-export class SmartError extends Container {
+ * Отрисовывает логин.
+ * Прокидывает actions в стору для логина
+ * Также подписывается на изменения статуса логина,
+ * для корректного рендера ошибки
+ *
+ */
+export class SmartError extends Component<Props, State> {
     /**
      * Cохраняет props
      * @param {Object} props - параметры компонента
      */
-    constructor(props :componentProps) {
+    constructor(props: Record<string, unknown>) {
         super(props);
 
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             domElements: {
                 backButton: null,
             },
         };
+
+        this.componentDidMount();
+    }
+
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartError is not mounted');
+        }
     }
 
     /**
      * Рендерит ошибку
      */
     render() {
-        if (this.state.isSubscribed) {
-            
+        if (this.state.isMounted) {
         }
     }
 
@@ -46,14 +54,15 @@ export class SmartError extends Container {
      * Навешивает переданные обработчики на валидацию и кнопки
      */
     componentDidMount() {
-        if (!this.state.isSubscribed) {
-            // this.unsubscribe.push(store.subscribe(this.constructor.name, (pr: componentProps) => {
-            //     this.props = pr;
+        if (!this.state.isMounted) {
+            // this.unsubscribe.push(store.subscribe(this.constructor.name, (props: Record<string, unknown>) => {
+            //     this.props = props;
 
             //     this.render();
             // }));
-
-            this.state.isSubscribed = true;
+            if (this.state.isMounted === false) {
+                this.state.isMounted = true;
+            }
         }
     }
 
@@ -61,9 +70,9 @@ export class SmartError extends Container {
      * Удаляет все подписки
      */
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
-            this.unsubscribe.forEach((uns) => uns());
-            this.state.isSubscribed = false;
+        if (this.state.isMounted) {
+            this.unsubscribe();
+            this.state.isMounted = false;
         }
     }
 }

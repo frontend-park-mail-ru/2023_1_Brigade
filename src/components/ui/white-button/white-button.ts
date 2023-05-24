@@ -1,9 +1,23 @@
-import { Component } from "@/components/component";
-import "@components/ui/white-button/white-button.scss";
-import template from "@components/ui/white-button/white-button.pug";
+import '@components/ui/white-button/white-button.scss';
+import template from '@components/ui/white-button/white-button.pug';
+import { Component } from '@framework/component';
 
-export class whiteButtonUI extends Component {
-    static renderTemplate(args : { className: string, buttonValue: string }) {
+interface Props {}
+
+interface State {}
+
+export class whiteButtonUI extends Component<Props, State> {
+    destroy() {}
+
+    componentDidMount(): void {
+        //
+    }
+
+    componentWillUnmount(): void {
+        //
+    }
+
+    static renderTemplate(args: { className: string; buttonValue: string }) {
         return template(args);
     }
 }

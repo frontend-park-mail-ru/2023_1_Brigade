@@ -3,6 +3,7 @@
       "baseUrl": ".",
       "paths": {
         "@/*": ["src/*"],
+        "@uikit/*": ["src/uikit/*"],
         "@utils/*":  ["src/utils/*"],
         "@services/*": ["src/services/*"],
         "@components/*":  ["src/components/*"],
@@ -17,6 +18,7 @@
         "@actions/*":  ["src/actions/*"],
         "@config/*": ["src/config/*"],
         "@containers/*": ["src/containers/*"],
+        "@framework/*": ["src/framework/*"],
       },
       "strict": true,
       "module": "commonjs",

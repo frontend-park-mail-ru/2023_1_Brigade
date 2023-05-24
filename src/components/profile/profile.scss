@@ -11,6 +11,17 @@
     margin-bottom: 50px;
 }
 
+.profile__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    image-rendering: pixelated;
+    background-repeat: no-repeat;
+    background: none;
+    object-fit: cover;
+    cursor: pointer;
+}
+
 .profile__user-description {
     min-height: 72px;
     flex-direction: column;

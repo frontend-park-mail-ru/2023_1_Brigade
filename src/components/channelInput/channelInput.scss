@@ -1,0 +1,36 @@
+.custom-input {
+    flex-direction: column;
+    min-width: 100%;
+}
+
+.custom-input__caption {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 24px;
+    min-width: 100%;
+}
+
+.input {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.custom-input__content {
+    width: 100%;
+    padding: 10px;
+    background: #1C1C24;
+    border: 1px solid #1B262C;
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: "SF Pro Display";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 19px;
+}

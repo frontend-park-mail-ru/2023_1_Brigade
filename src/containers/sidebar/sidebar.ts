@@ -1,21 +1,26 @@
-import { Container } from "@containers/container";
-import { store } from "@/store/store";
-import { DumbSidebar } from "@/components/sidebar/sidebar";
-import { createMoveToChatsAction, createMoveToContactsAction, createMoveToProfileAction, createRenderAction } from "@/actions/routeActions";
-import { createLogoutAction } from "@/actions/authActions";
+import { Component } from '@framework/component';
+import { store } from '@store/store';
+import { DumbSidebar } from '@components/new-sidebar/sidebar';
+import {
+    createMoveToChatsAction,
+    createMoveToContactsAction,
+    createMoveToProfileAction,
+} from '@actions/routeActions';
+import { createLogoutAction } from '@actions/authActions';
+import { Popup } from '@/components/popup/popup';
+import { List } from '@/uikit/list/list';
+import { Button } from '@/uikit/button/button';
 
+interface Props {
+    parent: HTMLElement;
+}
 
-export interface SmartSidebar {
-    state: {
-        isSubscribed: boolean,
-        domElements: {
-            messageButton: HTMLElement | null,
-            contactButton: HTMLElement | null,
-            logoutButton: HTMLElement | null,
-            avatarButton: HTMLElement | null,
-            //TODO: themeButton
-        } 
-    }
+interface State {
+    isMounted: boolean;
+    node?: DumbSidebar;
+    confirmBtn: Button | null;
+    cancelBtn: Button | null;
+    btnList: List | null;
 }
 
 /**
@@ -23,87 +28,155 @@ export interface SmartSidebar {
  * Прокидывает actions стору для создания диалога, удаление диалога, открыть диалог для просмотра
  * Также подписывается на изменения активного диалога и статуса диалога
  */
-export class SmartSidebar extends Container {
+export class SmartSidebar extends Component<Props, State> {
     /**
      * Сохраняет props
      * @param {Object} props - параметры компонента
      */
-    constructor(props: componentProps) {
+    constructor(props: Props) {
         super(props);
-        this.state = {
-            isSubscribed: false,
-            domElements: {
-                messageButton: null,
-                contactButton: null,
-                logoutButton: null,
-                avatarButton: null,
+        this.state.isMounted = false;
+        this.popup = null;
+        this.prevActive = null;
+
+        this.node = this.render() as HTMLElement;
+        this.componentDidMount();
+
+        this.state.btnList = null;
+        this.state.cancelBtn = null;
+        this.state.confirmBtn = null;
+    }
+
+    private popup: Popup | undefined | null;
+    private prevActive: HTMLElement | undefined | null;
+
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartSidebar is not mounted');
+        }
+    }
+
+    render() {
+        return this.props.parent;
+    }
+
+    isActive() {
+        console.log('check classname: ', this.prevActive?.className.includes('sidebar-header__chats-btn'));
+        console.log('check classname: ', this.prevActive?.className.includes('sidebar-header__contacts-btn'));
+
+        if (this.prevActive) {
+            this.prevActive.removeAttribute('id');
+        }
+
+        // if (this.prevActive?.className)
+
+        const items = document.querySelectorAll('.sidebar-header__list__item');
+        for (let item of items) {
+            if (item === document.activeElement) {
+                this.prevActive = item as HTMLElement;
+                item.id = 'active-btn';
             }
         }
     }
 
-    /**
-     * Рендерит чат
-     */
-    render() {
-        if (this.state.isSubscribed) {
-            const navbar = new DumbSidebar({ 
-                ...this.props.user,
-            });
-
-            this.rootNode.innerHTML = navbar.render();
-
-            this.state.domElements.avatarButton = document.querySelector('.header__user-photo');
-            this.state.domElements.avatarButton?.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                store.dispatch(createMoveToProfileAction());
-            });
-
-            this.state.domElements.contactButton = document.querySelector('.nav-item__contact-btn');
-            this.state.domElements.contactButton?.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                store.dispatch(createMoveToContactsAction());
-            });
-            
-            this.state.domElements.messageButton = document.querySelector('.nav-item__message-btn');
-            this.state.domElements.messageButton?.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                store.dispatch(createMoveToChatsAction());
-            });
-
-            this.state.domElements.logoutButton = document.querySelector('.logout-btn');
-            this.state.domElements.logoutButton?.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                store.dispatch(createLogoutAction());
-            });
-        }
-    }
-
-
     componentDidMount() {
-        if (!this.state.isSubscribed) {
-            this.unsubscribe.push(store.subscribe(this.constructor.name, (pr: componentProps) => {
-                this.props = pr;
-                
-                this.render();
-            }))
+        if (!this.node) {
+            return;
+        }
 
-            this.state.isSubscribed = true;
+        this.state.node = new DumbSidebar({
+            parent: this.node,
+            avatar: this.hookAvatar(store.getState()) ?? '',
+            avatarOnClick: this.avatarOnClick.bind(this),
+            chatsOnClick: this.chatsOnClick.bind(this),
+            contactsOnClick: this.contactsOnClick.bind(this),
+            logoutOnClick: this.logoutOnClick.bind(this),
+            hookAvatar: this.hookAvatar.bind(this),
+        });
 
-            store.dispatch(createRenderAction());
+        this.prevActive = document.querySelector('.sidebar-header__chats-btn') as HTMLElement;
+        if (this.prevActive) {
+            this.prevActive.id = 'active-btn';
         }
     }
 
-    /**
-     * Удаляет все подписки
-     */
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
-            this.unsubscribe.forEach((uns) => uns());
-            this.state.isSubscribed = false;
+        if (!this.node) {
+            return;
+        }
+
+        if (this.popup) {
+            this.popup?.destroy();
+        }
+
+        this.state?.confirmBtn?.destroy();
+        this.state?.cancelBtn?.destroy();
+        this.state?.btnList?.destroy();
+        
+        this.state.isMounted = false;
+    }
+
+    hookAvatar(state: StoreState) {
+        return state.user?.avatar ?? '';
+    }
+
+    avatarOnClick() {
+        // this.isActive();
+        store.dispatch(createMoveToProfileAction());
+    }
+
+    chatsOnClick() {
+        this.isActive();
+        store.dispatch(createMoveToChatsAction());
+    }
+
+    contactsOnClick() {
+        this.isActive();
+        store.dispatch(createMoveToContactsAction());
+    }
+
+    logoutOnClick() {
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: 'Вы действительно хотите выйти из приложения ?',
+                className: 'logout-popup',
+            });
+
+            const popContent: HTMLElement | null = document.querySelector('.popup__content') as HTMLElement;
+
+            if (popContent) {
+                this.state.btnList = new List({
+                    parent: popContent,
+                    className: 'popup__btn-list',
+                });
+
+                this.state?.btnList.getNode()?.classList.remove('list');
+        
+                this.state.confirmBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn confirm__btn button-S',
+                    label: 'Подтвердить',
+                    onClick: () => {
+                        store.dispatch(createLogoutAction());
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+        
+                this.state.cancelBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });   
+            }
         }
     }
 }

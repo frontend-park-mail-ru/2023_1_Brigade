@@ -1,0 +1,7 @@
+if Caption
+    figure(class=CaptionBlockStyle).flex
+        img(class=ClassName, style=style, src=Src, alt=Alt)
+        figcaption(class=CaptionStyle)
+            !=Caption
+else
+    img(class=ClassName, style=style, src=Src, alt=Alt)

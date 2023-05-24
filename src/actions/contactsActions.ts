@@ -1,31 +1,61 @@
-import {constantsOfActions} from "@config/actions";
-import {createChat, getContacts} from "@utils/api";
+import { constantsOfActions } from '@config/actions';
+import { getContacts } from '@utils/api';
 
-export const createSetContactsAction = (state: anyObject) : Action => {
+/**
+ * Создает экшен setContacts
+ * @param {User[]} state - Объект, содержащий данные о контактах
+ * @returns {Action} - Экшен
+ */
+export const createSetContactsAction = (state: User[]) => {
     return {
         type: constantsOfActions.setContacts,
         payload: state,
-    }
-}
+    };
+};
 
-export const createGetContactsAction = () : AsyncAction => {
-    return async (dispatch: (action: Action) => void, state: Function) => {
+// export const createFindContactsByString = (string: string): AsyncAction => {
+//     return async (dispatch: Dispatch) => {
+//         const { status, body } = await getContactsByString(string);
+//         const jsonBody = await body;
+//         switch (status) {
+//             case 200:
+//             // return dispatch(createSetContactsAction(jsonBody));
+//             case 401:
+//             // TODO: отрендерить ошибку
+//             case 404:
+//             // TODO: отрендерить ошибку
+//             case 500:
+//             // TODO: отрендерить ошибку
+//             case 0:
+//             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
+//             default:
+//             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
+//         }
+//     };
+// };
+
+/**
+ * Создает асинхронный экшен для получения контактов
+ * @returns {AsyncAction} - Асинхронная функция, которая вызывает экшен для установки контактов или отображает ошибку
+ */
+export const createGetContactsAction = (): AsyncAction => {
+    return async (dispatch: Dispatch) => {
         const { status, body } = await getContacts();
-        let jsonBody = await body;
+        const jsonBody = await body;
 
         switch (status) {
             case 200:
                 return dispatch(createSetContactsAction(jsonBody));
             case 401:
-                // TODO: отрендерить ошибку
-            case 404:         
-                // TODO: отрендерить ошибку       
+            // TODO: отрендерить ошибку
+            case 404:
+            // TODO: отрендерить ошибку
             case 500:
-                // TODO: отрендерить ошибку
+            // TODO: отрендерить ошибку
             case 0:
-                // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
+            // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
             default:
-                // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
+            // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
         }
     };
-}
+};

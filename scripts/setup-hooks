@@ -1,0 +1,8 @@
+#!/bin/bash
+
+repo="$(git rev-parse --show-toplevel)"
+if cp "$repo"/scripts/{pre-commit,pre-push} "$repo"/.git/hooks/; then 
+	echo Hooks installed: {pre-commit,pre-push}
+else
+	echo Hooks installation failed
+fi

@@ -1,90 +1,116 @@
-import { Container } from "@containers/container";
-import { DumbLogin } from "@/pages/login/login";
-import { checkEmail, checkPassword, addErrorToClass } from "@/utils/validator";
-import { store } from "@/store/store";
-import { emailErrorTypes, passwordErrorTypes } from "@/config/errors";
-import { createLoginAction } from "@/actions/authActions";
-import { createMoveToSignUpAction, createRenderAction } from "@/actions/routeActions";
-import { DYNAMIC, LOGIN, SIDEBAR, STATIC } from "@/config/config";
+import { Component } from '@framework/component';
+import { DumbLogin } from '@components/login/login';
+import { checkEmail, checkPassword, addErrorToClass } from '@utils/validator';
+import { store } from '@store/store';
+import { emailErrorTypes, passwordErrorTypes } from '@config/errors';
+import { createLoginAction } from '@actions/authActions';
+import {
+    createMoveToSignUpAction,
+    createRenderAction,
+} from '@actions/routeActions';
+import { DYNAMIC, LOGIN, ROOT, SIDEBAR, STATIC } from '@config/config';
 
+import { createInvalidEmailAction } from '@/actions/userActions';
 
-export interface SmartLogin {
-    state: {
-        isSubscribed: boolean,
-        domElements: {
-            email: HTMLInputElement | null,
-            password: HTMLInputElement | null,
-            loginButton: HTMLButtonElement | null,
-            moveToSignUp: HTMLElement | null,
-        }
-        valid: {
-            emailIsValid: boolean,
-            passwordIsValid: boolean,
-            isValid: () => boolean,
-        },
-    }
+interface Props {
+    invalidEmail?: boolean;
+}
+
+interface State {
+    isMounted: boolean;
+    domElements: {
+        email: HTMLInputElement | null;
+        password: HTMLInputElement | null;
+        loginButton: HTMLButtonElement | null;
+        moveToSignUp: HTMLElement | null;
+    };
+    valid: {
+        emailIsValid: boolean;
+        passwordIsValid: boolean;
+        isValid: () => boolean | undefined;
+    };
 }
 
 /**
-* Отрисовывает логин.
-* Прокидывает actions в стору для логина
-* Также подписывается на изменения статуса логина,
-* для корректного рендера ошибки
-*
-*/
-export class SmartLogin extends Container {
+ * Отрисовывает логин.
+ * Прокидывает actions в стору для логина
+ * Также подписывается на изменения статуса логина,
+ * для корректного рендера ошибки
+ *
+ */
+export class SmartLogin extends Component<Props, State> {
     /**
      * Cохраняет props
      * @param {Object} props - параметры компонента
      */
-    constructor(props :componentProps) {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
-            isSubscribed: false,
+            isMounted: false,
             valid: {
                 emailIsValid: false,
                 passwordIsValid: false,
-                isValid: () =>  {
-                    return this.state.valid.emailIsValid && 
-                           this.state.valid.passwordIsValid;
-                }
+                isValid: () => {
+                    return (
+                        this.state.valid.emailIsValid &&
+                        this.state.valid.passwordIsValid
+                    );
+                },
             },
             domElements: {
                 email: null,
-                password:  null,
+                password: null,
                 loginButton: null,
-                moveToSignUp: null
+                moveToSignUp: null,
             },
         };
+
+        this.node = ROOT(); // я бы для ноды вызывал метод render(), типо рендер текущей компоненты
+
+        this.componentDidMount();
+    }
+
+    destroy() {
+        if (this.state.isMounted) {
+            this.componentWillUnmount();
+        } else {
+            console.error('SmartLogin is not mounted');
+        }
     }
 
     /**
      * Рендерит логин
      */
     render() {
-        if (this.state.isSubscribed && !LOGIN()) {
-            const LoginUI = new DumbLogin({ 
-                ...this.props,
-            });
-    
-            SIDEBAR.innerHTML = STATIC.innerHTML = DYNAMIC.innerHTML = '';
-            
-            this.rootNode.insertAdjacentHTML("afterbegin", LoginUI.render());
+        if (this.state.isMounted && !LOGIN()) {
+            STATIC().innerHTML = DYNAMIC().innerHTML = SIDEBAR().innerHTML = '';
 
-            this.state.domElements.loginButton = document.querySelector('.login-but');
-            this.state.domElements.loginButton?.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                this.handleClickLogin();
+            new DumbLogin({
+                parent: ROOT(),
             });
 
-            this.state.domElements.moveToSignUp = document.querySelector('.login-ques');
-            this.state.domElements.moveToSignUp?.addEventListener('click', (e) => {
-                e.preventDefault();
+            this.state.domElements.loginButton =
+                document.querySelector('.login__form__btn');
+            this.state.domElements.loginButton?.addEventListener(
+                'click',
+                (e) => {
+                    e.preventDefault();
 
-                this.handleClickMoveToSignUp();
-            });
+                    this.handleClickLogin();
+                }
+            );
+
+            this.state.domElements.moveToSignUp =
+                document.querySelector('.login-ques');
+            this.state.domElements.moveToSignUp?.addEventListener(
+                'click',
+                (e) => {
+                    e.preventDefault();
+
+                    this.handleClickMoveToSignUp();
+                }
+            );
 
             this.state.domElements.email = document.querySelector('.email');
             this.state.domElements.email?.addEventListener('input', (e) => {
@@ -93,7 +119,8 @@ export class SmartLogin extends Container {
                 this.validateEmail();
             });
 
-            this.state.domElements.password = document.querySelector('.password')
+            this.state.domElements.password =
+                document.querySelector('.password');
             this.state.domElements.password?.addEventListener('input', (e) => {
                 e.preventDefault();
 
@@ -106,9 +133,18 @@ export class SmartLogin extends Container {
      * Показывает, что была введа незарегистрированная почта
      */
     invalidEmail() {
-        if (this.state.isSubscribed && this.props?.invalidEmail) {
-            this.state.domElements.email?.classList.add('login-reg__input_error');
+        if (this.state.isMounted && this.props?.invalidEmail) {
+            this.state.domElements.email?.classList.add(
+                'login-reg__input_error'
+            );
             addErrorToClass('invalid-email', emailErrorTypes);
+
+            this.state.domElements.password?.classList.add(
+                'login-reg__input_error'
+            );
+            addErrorToClass('incorrect-password', passwordErrorTypes);
+
+            store.dispatch(createInvalidEmailAction(false));
         }
     }
 
@@ -116,15 +152,18 @@ export class SmartLogin extends Container {
      * Навешивает переданные обработчики на валидацию и кнопки
      */
     componentDidMount() {
-        if (!this.state.isSubscribed) {
-            this.unsubscribe.push(store.subscribe(this.constructor.name, (pr: componentProps) => {
-                this.props = pr;
+        if (this.state.isMounted === false) {
+            this.unsubscribe = store.subscribe(
+                this.constructor.name,
+                (props: Props) => {
+                    this.props = props;
 
-                this.render();
-                this.invalidEmail();
-            }));
+                    this.render();
+                    this.invalidEmail();
+                }
+            );
 
-            this.state.isSubscribed = true;
+            this.state.isMounted = true;
 
             store.dispatch(createRenderAction());
         }
@@ -134,9 +173,9 @@ export class SmartLogin extends Container {
      * Удаляет все подписки
      */
     componentWillUnmount() {
-        if (this.state.isSubscribed) {
-            this.unsubscribe.forEach((uns) => uns());
-            this.state.isSubscribed = false;
+        if (this.state.isMounted) {
+            this.unsubscribe();
+            this.state.isMounted = false;
 
             LOGIN().remove();
         }
@@ -150,9 +189,9 @@ export class SmartLogin extends Container {
             const user = {
                 email: this.state.domElements.email?.value,
                 password: this.state.domElements.password?.value,
-            } as anyObject;
+            } as Record<string, unknown>;
 
-            store.dispatch(createLoginAction(user))
+            store.dispatch(createLoginAction(user));
         }
     }
 
@@ -167,37 +206,58 @@ export class SmartLogin extends Container {
      * Проверяет пользовательский ввод почты
      */
     validateEmail() {
-        this.state.domElements.email?.classList.remove('login-reg__input_error');
+        this.state.domElements.email?.classList.remove(
+            'login-reg__input_error'
+        );
         addErrorToClass('', emailErrorTypes);
 
-        const { isError, errorClass } = checkEmail(this.state.domElements.email?.value ?? '');
+        const { isError, errorClass } = checkEmail(
+            this.state.domElements.email?.value ?? ''
+        );
 
         if (isError) {
-            this.state.domElements.email?.classList.add('login-reg__input_error');
+            this.state.domElements.email?.classList.add(
+                'login-reg__input_error'
+            );
             addErrorToClass(errorClass, emailErrorTypes);
-            this.state.valid.emailIsValid = false;
+            if (this.state.valid.emailIsValid) {
+                this.state.valid.emailIsValid = false;
+            }
             return;
         }
 
-        this.state.valid.emailIsValid = true;
+        if (this.state.valid.emailIsValid === false) {
+            this.state.valid.emailIsValid = true;
+        }
     }
 
     /**
      * Проверяет пользовательский ввод пароля
      */
     validatePassword() {
-        this.state.domElements.password?.classList.remove('login-reg__input_error');
+        this.state.domElements.password?.classList.remove(
+            'login-reg__input_error'
+        );
         addErrorToClass('', passwordErrorTypes);
 
-        const { isError, errorClass } = checkPassword(this.state.domElements.password?.value ?? '');
+        const { isError, errorClass } = checkPassword(
+            this.state.domElements.password?.value ?? ''
+        );
 
         if (isError) {
-            this.state.domElements.password?.classList.add('login-reg__input_error');
+            this.state.domElements.password?.classList.add(
+                'login-reg__input_error'
+            );
             addErrorToClass(errorClass, passwordErrorTypes);
-            this.state.valid.passwordIsValid = false;
+            if (this.state.valid.passwordIsValid) {
+                this.state.valid.passwordIsValid = false;
+            }
+
             return;
         }
 
-        this.state.valid.passwordIsValid = true;
+        if (this.state.valid.passwordIsValid === false) {
+            this.state.valid.passwordIsValid = true;
+        }
     }
 }

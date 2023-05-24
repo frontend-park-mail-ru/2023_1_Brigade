@@ -1,0 +1,131 @@
+#active-btn {
+    background-color: var(--primary);
+}
+
+.button {
+    font-size: 1.2rem;
+    margin-bottom: 5%;
+    padding: 8px 15px;
+    height: 40px;
+    background-color: var(--primary);
+    border-radius: 5%;
+    border: none;
+    transition-duration: .2s;
+    transition: background-color 0.3s ease-in-out;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--primary-hover);
+    }
+
+    &:focus {
+        background-color: var(--primary);
+    }
+
+    &:active {
+        background-color: var(--primary);
+    }
+
+    &-primary {
+        &:hover {
+            background: var(--primary-hover);
+        }
+    }
+    
+    &-secondary {
+        background: var(--secondary);
+
+        &:hover {
+            background: var(--secondary-hover);
+        }
+    }
+
+    &-border-radius {
+        &-S {
+            border-radius: 10px;
+        }
+
+        &-M {
+            border-radius: 20px;
+        }
+
+        &-L {
+            border-radius: 30px;
+        }
+    }
+
+    &-transparent {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    &-active {
+        background: var(--active);
+    }
+
+    &-S {
+        padding: 4px 8px;
+        height: 30px;
+        width: 120px;
+    }
+
+    &-M {
+        padding: 8px 15px;
+        height: 40px;
+        width: 150px;
+    }
+    
+    &-L {
+        padding: 13px 20px;
+        height: 50px;
+        width: 200px;
+    }
+}
+
+.profile__header__back-btn {
+    margin: 0px;
+    align-self: center;
+    background: none;
+    margin-right: 40%;
+}
+
+.profile__header__back-btn:hover {
+    background: none;
+}
+
+.sidebar-header__logout-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    flex: none;
+    order: 3;
+    flex-grow: 0;
+}
+
+.login__form__btn {
+    background-color: (0, 0, 0, 0.3);
+    width: 80%;
+}
+
+.reg__form__btn {
+    background-color: (0, 0, 0, 0.3);
+    width: 80%;
+}
+
+.popup__btn {
+    min-width: 50px;
+    min-height: 25px;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    background-color: #B3B3B3;
+}
+
+.profile__form__btn:not(:last-child) {
+    margin-right: 50px;
+}
+
+.profile__form__unlock-btn {
+    align-self: flex-end;
+    margin-bottom: 1%;
+}

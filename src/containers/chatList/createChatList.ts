@@ -1,4 +1,3 @@
-import { STATIC } from "@/config/config";
-import { SmartChatList } from "@containers/chatList/chatList";
+import { SmartChatList } from '@containers/chatList/chatList';
 
-export const Chats = new SmartChatList({ rootNode: STATIC });
+export const Chats = new SmartChatList({});

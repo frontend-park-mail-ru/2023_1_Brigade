@@ -1,10 +1,28 @@
-import { UITool } from "@components/ui/uiTool";
-import "@components/ui/dataInputReadOnly/dataInputReadOnly.scss";
-import template from "@components/ui/dataInputReadOnly/dataInputReadOnly.pug";
+import '@components/ui/dataInputReadOnly/dataInputReadOnly.scss';
+import template from '@components/ui/dataInputReadOnly/dataInputReadOnly.pug';
+import { Component } from '@framework/component';
 
+interface Props {}
 
-export class dataInputReadOnlyUI extends UITool {
-    static renderTemplate(args: { className: string, inputType: string, inputPlaceholder: string, value: string }) {
+interface State {}
+
+export class dataInputReadOnlyUI extends Component<Props, State> {
+    destroy() {}
+
+    componentDidMount(): void {
+        //
+    }
+
+    componentWillUnmount(): void {
+        //
+    }
+
+    static renderTemplate(args: {
+        className: string;
+        inputType: string;
+        inputPlaceholder: string;
+        value: string;
+    }) {
         return template(args);
     }
 }

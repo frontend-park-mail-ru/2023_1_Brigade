@@ -1,0 +1,13 @@
+main.main.flex
+    section.header-offset.create-channel.flex
+        .create-channel__header.flex
+            button.btn-reset.create-channel__header__back Назад
+            .create-channel__header__text Новый канал
+            button.btn-reset.create-channel__heder__done-btn Готово
+        .channel__avatar!=ChannelAvatar
+        .create-channel__form.flex
+            .create__channel__form__fields.flex
+                .create-channel__form__name-section.flex
+                    !=NameInput
+                .create-channel__form__description-section.flex
+                    !=DescrInput

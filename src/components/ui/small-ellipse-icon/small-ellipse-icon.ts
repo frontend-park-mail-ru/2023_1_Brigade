@@ -1,9 +1,23 @@
-import { Component } from "@/components/component";
-import "@components/ui/small-ellipse-icon/small-ellipse-icon.scss";
-import template from "@components/ui/small-ellipse-icon/small-ellipse-icon.pug";
+import '@components/ui/small-ellipse-icon/small-ellipse-icon.scss';
+import template from '@components/ui/small-ellipse-icon/small-ellipse-icon.pug';
+import { Component } from '@framework/component';
 
-export class smallEllipseIconUI extends Component {
-    static renderTemplate(args: { imgSrc: string, altMsg: string }) {
+interface Props {}
+
+interface State {}
+
+export class smallEllipseIconUI extends Component<Props, State> {
+    destroy() {}
+
+    componentDidMount(): void {
+        //
+    }
+
+    componentWillUnmount(): void {
+        //
+    }
+
+    static renderTemplate(args: { imgSrc: string; altMsg: string }) {
         return template(args);
     }
 }

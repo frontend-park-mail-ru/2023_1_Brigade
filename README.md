@@ -5,6 +5,7 @@
 [Репозиторий бэка]()
 
 ## Ссылка на проект
+[tecnogramm.ru](https://technogramm.ru)
 
 ## Состав
 

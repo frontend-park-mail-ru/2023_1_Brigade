@@ -1,139 +1,176 @@
-import { auth, login, signUp, logout, csrf } from "@/utils/api";
-import { createSetUserAction, createInvalidEmailAction, createOccupiedEmailAction, createDeleteStateAction } from "@actions/userActions";
-import { router } from "@/router/router";
-import { Contacts } from "@/containers/contacts/createContacts";
-import { Chats } from "@/containers/chatList/createChatList";
-import { Sidebar } from "@/containers/sidebar/createSidebar";
-import { getWs } from "@/utils/ws";
+import { auth, login, signUp, logout } from '@utils/api';
+import {
+    createSetUserAction,
+    createInvalidEmailAction,
+    createOccupiedEmailAction,
+    createDeleteStateAction,
+} from '@actions/userActions';
+import { router } from '@router/createRouter';
+import { Contacts } from '@containers/contacts/createContacts';
+import { Chats } from '@containers/chatList/createChatList';
+import { getSidebar } from '@containers/sidebar/createSidebar';
+import { getNotificationWs, getWs } from '@utils/ws';
+import { DYNAMIC } from '@/config/config';
 
-export const createAuthAction = () : AsyncAction => {
-    return async (dispatch: (action: Action) => void, state: Function) => {
+/**
+ * Создает экшн для авторизации пользователя.
+ * @returns {AsyncAction} Возвращает асинхронную функцию, выполняющую обновление состояния.
+ */
+export const createAuthAction = (): AsyncAction => {
+    return async (dispatch: Dispatch) => {
         const { status, body } = await auth();
-        
+
         switch (status) {
-        case 200:
-            const jsonBody = await body;
-            csrf();
-            dispatch(createSetUserAction(jsonBody));
+            case 200:
+                const jsonBody = await body;
+                dispatch(createSetUserAction(jsonBody));
 
-            getWs();
-            
-            Sidebar.componentDidMount();
-            Chats.componentDidMount();
+                getWs();
+                getNotificationWs();
 
-            router.route(window.location.pathname);
+                if (
+                    window.location.pathname !== '/signup' &&
+                    window.location.pathname !== '/login'
+                ) {
+                    getSidebar();
+                    Chats.componentDidMount();
+                    DYNAMIC().classList.add('flex-grow-1');
+                }
 
-            break;
-        case 401:
-            if (window.location.pathname == '/signup') {
-                router.route('/signup');
-            } else {
-                router.route('/login');
-            }
-            break;
-        case 500:
+                router.route(window.location.pathname);
+
+                break;
+            case 401:
+                if (window.location.pathname == '/signup') {
+                    router.route('/signup');
+                } else {
+                    router.route('/login');
+                }
+                break;
+            case 500:
             // TODO: отрендерить ошибку
-        case 0:
+            case 0:
             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
-        default:
+            default:
             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
         }
     };
 };
 
-export const createLoginAction = (user: anyObject) : AsyncAction => {
-    return async (dispatch: (action: Action) => void, state: Function) => {
+/**
+ * Создает экшн для входа пользователя в систему.
+ * @returns {AsyncAction} Возвращает асинхронную функцию, выполняющую действие при успешном входе или сообщение об ошибке.
+ */
+export const createLoginAction = (
+    user: Record<string, unknown>
+): AsyncAction => {
+    return async (dispatch: Dispatch) => {
         const { status, body } = await login(user);
 
         switch (status) {
-        case 200:
-            const jsonBody = await body;
-            csrf();
-            dispatch(createSetUserAction(jsonBody));
+            case 200:
+                const jsonBody = await body;
+                dispatch(createSetUserAction(jsonBody));
 
-            getWs();
+                getWs();
+                getNotificationWs();
 
-            Sidebar.componentDidMount();
-            Chats.componentDidMount();
+                getSidebar();
+                Chats.componentDidMount();
+                DYNAMIC().classList.add('flex-grow-1');
 
-            router.route('/');
+                router.route('/');
 
-            break;
-        case 404:
-            dispatch(createInvalidEmailAction());
-            break;
-        case 409:
+                break;
+            case 404:
+                dispatch(createInvalidEmailAction(true));
+                break;
+            case 409:
             // TODO: отрендерить ошибку
-        case 500:
+            case 500:
             // TODO: отрендерить ошибку
-        case 0:
+            case 0:
             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
-        default:
+            default:
             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
         }
     };
 };
 
-export const createSignUpAction = (user: anyObject) : AsyncAction => {
-    return async (dispatch: (action: Action) => void, state: Function) => {
+/**
+ * Создает экшн для регистрации нового пользователя.
+ * @param {Record<string, unknown>} user - Информация о пользователе
+ * @returns {AsyncAction} Возвращает асинхронную функцию, выполняющую обработку регистрации или сообщение об ошибке.
+ */
+export const createSignUpAction = (
+    user: Record<string, unknown>
+): AsyncAction => {
+    return async (dispatch: Dispatch) => {
         const { status, body } = await signUp(user);
 
         switch (status) {
-        case 201:
-            const jsonBody = await body;
-            csrf();
-            dispatch(createSetUserAction(jsonBody));
+            case 201:
+                const jsonBody = await body;
+                dispatch(createSetUserAction(jsonBody));
 
-            getWs();
-            
-            Sidebar.componentDidMount();
-            Chats.componentDidMount();
+                getWs();
+                getNotificationWs();
 
-            router.route('/');
+                getSidebar();
+                Chats.componentDidMount();
+                DYNAMIC().classList.add('flex-grow-1');
 
-            break;
-        case 400:
+                router.route('/');
+
+                break;
+            case 400:
             // TODO: отрендерить ошибку
-        case 409:
-            dispatch(createOccupiedEmailAction());
-            break;
-        case 500:
+            case 409:
+                dispatch(createOccupiedEmailAction(true));
+                break;
+            case 500:
             // TODO: отрендерить ошибку
-        case 0:
+            case 0:
             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
-        default:
+            default:
             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
         }
     };
 };
 
-export const createLogoutAction = () : AsyncAction => {
-    return async (dispatch: (action: Action) => void, state: Function) => {
-        const { status, body } = await logout();
+/**
+ * Создает экшн для выхода текущего пользователя из системы.
+ * @returns {AsyncAction} Возвращает асинхронную функцию, выполняющую действие при успешном выходе или сообщение об ошибке.
+ */
+export const createLogoutAction = (): AsyncAction => {
+    return async (dispatch: Dispatch) => {
+        const { status } = await logout();
 
         switch (status) {
-        case 204:
-            Sidebar.componentWillUnmount();
-            Contacts.componentWillUnmount();
-            Chats.componentWillUnmount();
+            case 204:
+                getSidebar().destroy();
+                Contacts.componentWillUnmount();
+                Chats.componentWillUnmount();
 
-            const ws = getWs();
-            ws.close();
+                getWs().close();
+                getNotificationWs().close();
 
-            router.route('/login');
+                DYNAMIC().classList.remove('flex-grow-1');
 
-            dispatch(createDeleteStateAction());
+                router.route('/login');
 
-            break;
-        case 401:
+                dispatch(createDeleteStateAction());
+
+                break;
+            case 401:
             // TODO: вроде на все нужно login отрендерить
-        case 404:
+            case 404:
             // TODO: вроде на все нужно login отрендерить
-        case 500:
+            case 500:
             // TODO: отрендерить ошибку
-        case 0:
+            case 0:
             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
-        default:
+            default:
             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
         }
     };

@@ -1,80 +1,272 @@
-import template from "@components/chat/chat.pug"
-import "@components/chat/chat.scss";
-import { Component } from "@components/component";
-import { svgButtonUI } from "@components/ui/button/button";
-import { chatAvatarUi } from "@/components/ui/chatAvatar/chatAvatar";
-import { inputUi } from "@components/ui/input/input";
-import { Message } from "@components/message/message";
-import { ChatTypes } from "@/config/enum";
+import template from '@components/chat/chat.pug';
+import '@components/chat/chat.scss';
+import { Component } from '@framework/component';
+import { svgButtonUI } from '@/components/ui/icon/button';
+import { chatAvatarUi } from '@components/ui/chatAvatar/chatAvatar';
+import { ChatTypes, MessageTypes } from '@config/enum';
+import { DumbMessage } from '@components/message/message';
+import { MessageInput } from '@components/message-input/message-input';
+import { List } from '@uikit/list/list';
+import { Attachment } from '@components/attachment/attachment';
 
-export class DumbChat extends Component {
-    constructor(props: any) {
+interface Props {
+    chatData: OpenedChat;
+    chatAvatar: string;
+    chatTitle: string;
+    userId: number;
+    userAvatar: string;
+    onDeleteMessage: (message: DumbMessage) => void;
+    onEditMessage: (message: DumbMessage) => void;
+    onSendMessage: (message: {
+        type: MessageTypes;
+        body: string;
+        attachments: {
+            url: string;
+            name: string;
+        }[];
+    }) => void;
+}
+
+interface State {
+    isMounted: boolean;
+    messages: DumbMessage[];
+    messageInput: MessageInput | undefined;
+    attachmentsList: List | undefined;
+    attachments: Attachment[];
+}
+
+export class DumbChat extends Component<Props, State> {
+    private editBtn: string;
+    private deleteChatBtn: string;
+    private channelInput: string;
+    private subscribeBtnText: string;
+    private leaveGroup: string;
+
+    constructor(props: Props) {
         super(props);
+        this.state = {
+            isMounted: false,
+            messages: [],
+            messageInput: undefined,
+            attachmentsList: undefined,
+            attachments: [],
+        };
+        this.editBtn = '';
+        this.deleteChatBtn = '';
+        this.channelInput = '';
+        this.subscribeBtnText = '';
+        this.leaveGroup = '';
     }
 
-    #getMessageData(message: {author_id: number}) : {messageAvatar: string, messageUsername: string} {
-        let messageAvatar;
-        let messageUsername;
-        for (let member of this.props.chatData.members) { // TODO: можно лучше
-            if (member.id === message.author_id) {
-                messageAvatar = member.avatar;
-                messageUsername = member.nickname;
+    destroy() {
+        this.state.messages.forEach((message) => message.destroy());
+        this.state.attachments.forEach((attachments) => attachments.destroy());
+        this.state.attachmentsList?.destroy();
+        this.state.messageInput?.destroy();
+        this.state.isMounted = false;
+    }
+
+    componentDidMount(): void {
+        //TODO
+    }
+
+    componentWillUnmount(): void {
+        //TODO
+    }
+
+    getAuthor(message: Message) {
+        let author: User | undefined = undefined;
+
+        for (const member of this.props.chatData.members) {
+            if (
+                member.id === message.author_id &&
+                member.id !== this.props.userId
+            ) {
+                author = member;
             }
         }
 
-        return {
-            messageAvatar: messageAvatar,
-            messageUsername: messageUsername,
+        return author;
+    }
+
+    addMessage(parent: HTMLElement, message: Message) {
+        const messageComponent = new DumbMessage({
+            message,
+            hookMessage: (state) => {
+                let updatedMessage: Message | undefined = undefined;
+
+                state.openedChat?.messages.forEach((newMessage) => {
+                    if (newMessage.id === message.id) {
+                        updatedMessage = newMessage;
+                    }
+                });
+
+                return updatedMessage;
+            },
+            user:
+                this.props.chatData.type === ChatTypes.Group
+                    ? this.getAuthor(message)
+                    : undefined,
+            place: message.author_id === this.props.userId ? 'right' : 'left',
+            onDelete:
+                message.author_id === this.props.userId
+                    ? this.props.onDeleteMessage
+                    : undefined,
+            onEdit:
+                message.author_id === this.props.userId
+                    ? this.props.onEditMessage
+                    : undefined,
+            parent,
+        });
+
+        this.state.messages.push(messageComponent);
+    }
+
+    setMessageList() {
+        const parent = document.querySelector(
+            '.view-chat__messages'
+        ) as HTMLElement;
+        if (!parent) {
+            return;
+        }
+
+        this.props.chatData?.messages?.forEach((message) => {
+            this.addMessage(parent, message);
+        });
+    }
+
+    addAttachment(parent: HTMLElement, message: Message) {
+        if (
+            message.type === MessageTypes.Sticker ||
+            message.attachments.length < 1
+        ) {
+            return;
+        }
+
+        message.attachments.forEach((attachment, index) => {
+            const attachmentComponent = new Attachment({
+                src: attachment,
+                isSticker: MessageTypes.notSticker,
+                hookAttachment: (state) => {
+                    const updatedMessage = state.openedChat?.messages.find(
+                        (newMessage) => newMessage.id === message.id
+                    );
+
+                    return updatedMessage?.attachments[index];
+                },
+                parent,
+            });
+
+            this.state.attachments.push(attachmentComponent);
+        });
+    }
+
+    setAttachmentList() {
+        let parent = document.querySelector('.attachments') as HTMLElement;
+        if (!parent) {
+            return;
+        }
+
+        this.state.attachmentsList = new List({
+            className: 'attachments__list',
+            parent,
+        });
+
+        parent = this.state.attachmentsList?.getNode() as HTMLElement;
+        if (!parent) {
+            return;
+        }
+
+        this.props.chatData?.messages?.forEach((message) => {
+            this.addAttachment(parent, message);
+        });
+    }
+
+    setInput() {
+        if (this.channelInput !== '') {
+            const parent = document.querySelector(
+                '.view-chat__message-input'
+            ) as HTMLElement;
+
+            this.state.messageInput = new MessageInput({
+                onSend: this.props.onSendMessage,
+                parent,
+            });
         }
     }
 
-    getMessageList() {
-        const messages: Message[] = [];
-        
-        if (this.props.chatData?.messages) {
-            for (let message of this.props.chatData.messages) {
-                let messageData: {messageAvatar: string, messageUsername: string} = this.#getMessageData(message);
-                messages.push(new Message({
-                    messageSide: message.author_id === this.props.userId,
-                    messageAvatar: messageData.messageAvatar,
-                    username: messageData.messageUsername,
-                    messageContent: message.body,
-                }).render());
+    private checkRights(): boolean {
+        if (this.props?.chatData?.master_id === this.props?.userId) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @returns {Boolean} - состоит ли пользователь в канале
+     */
+    private isMember(): boolean {
+        for (const member of this.props?.chatData?.members) {
+            if (member.id == this.props.userId) {
+                return true;
             }
         }
 
-        return messages.reverse();
+        return false;
     }
 
     render() {
-        let editBtnClassName: string = "";
-        if (this.props.chatData.type === ChatTypes.Group) {
-            editBtnClassName = 'edit-chat';
+        if (this.isMember()) {
+            this.subscribeBtnText = 'Unsubscribe';
+        } else {
+            this.subscribeBtnText = 'Subscribe';
         }
+
+        if (
+            this.checkRights() &&
+            this.props.chatData.type !== ChatTypes.Dialog
+        ) {
+            this.editBtn = 'edit-chat';
+            this.deleteChatBtn = 'delete-btn';
+            this.channelInput = 'yes';
+        }
+
+        if (this.props.chatData.type !== ChatTypes.Channel) {
+            if (this.props.chatData.type !== ChatTypes.Group) {
+                this.deleteChatBtn = 'delete-btn';
+            }
+            this.channelInput = 'yes';
+
+            this.subscribeBtnText = '';
+        }
+
+        if (this.props.chatData.type === ChatTypes.Group) {
+            this.leaveGroup = 'Выйти из группы';
+            this.channelInput = 'yes';
+        }
+
+        this.state.isMounted = true;
         return template({
-            MoreInfoBtn: svgButtonUI.renderTemplate({svgClassName: editBtnClassName}),
-            SendMessageBtn: svgButtonUI.renderTemplate({svgClassName: 'view-chat__send-message-button'}),
-            DeleteChatBtn: svgButtonUI.renderTemplate({svgClassName: 'delete-btn'}),
+            EditBtn: svgButtonUI.renderTemplate({ svgClassName: this.editBtn }),
+            LeaveGroupBtn: this.leaveGroup,
+            SendMessageBtn: svgButtonUI.renderTemplate({
+                svgClassName: 'view-chat__send-message-button',
+            }),
+            DeleteChatBtn: svgButtonUI.renderTemplate({
+                svgClassName: this.deleteChatBtn,
+            }),
             HeaderUserAvatar: chatAvatarUi.renderTemplate({
                 ClassName: 'header__companion__ava',
-                PathToUserImage: this.props.chatAvatar,
-                UserName: this.props.chatTitle,
+                PathToUserImage: this.props?.chatAvatar ?? '',
+                UserName: this.props?.chatTitle ?? '',
                 UserStatus: '',
-                Online: false, // нет this.props?.userOnline,
+                Online: false,
             }),
-            MessageList: this.getMessageList(),
-            Input: new inputUi({
-                inputClassName: 'view-chat__input-message',
-                userImage: chatAvatarUi.renderTemplate({
-                    ClassName: 'input-message__user-avatar',
-                    PathToUserImage: this.props.userAvatar,
-                    UserName: '', // не надо
-                    UserStatus: '', // не надо
-                    Online: false, // не надо
-                }),
-                sendBtn: svgButtonUI.renderTemplate({svgClassName: 'view-chat__send-message-button'}),
-                placeholder: 'Type something...',
-            }).render()
+            Subscriberes: this.props?.chatData?.members?.length,
+            // Input: this.channelInput,
+            SubsribeBtnText: this.subscribeBtnText,
         });
     }
 }

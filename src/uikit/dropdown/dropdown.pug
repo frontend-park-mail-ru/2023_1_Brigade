@@ -1,0 +1,5 @@
+.new-dropdown(class=className)
+    .new-dropdown-toggle!= icon
+    .new-dropdown-menu
+        for element in elements
+            .new-dropdown-item(class= element.className)= element.label

@@ -1,0 +1,399 @@
+:root { 
+    --primary: #004DE6;
+    --primary-hover: #0044CC;
+    --secondary: #EBECF2;
+    --secondary-hover: #D8DAE5;
+}
+
+$active: #003CB2;
+$surface-0: #fff;
+$surface-50: #eef1f2;
+$surface-100: #dde2e4;
+$surface-200: #bbc5ca;
+$surface-300: #98a8af;
+$surface-400: #768b95;
+$surface-500: #546e7a;
+$surface-600: #435862;
+$surface-700: #324249;
+$surface-800: #222c31;
+$surface-900: #111618;
+$gray-50: #eef1f2;
+$gray-100: #dde2e4;
+$gray-200: #bbc5ca;
+$gray-300: #98a8af;
+$gray-400: #768b95;
+$gray-500: #546e7a;
+$gray-600: #435862;
+$gray-700: #324249;
+$gray-800: #222c31;
+$gray-900: #111618;
+$blue-50: #f3f8fc;
+$blue-100: #c6dcef;
+$blue-200: #98c1e3;
+$blue-300: #6ba5d7;
+$blue-400: #3d8aca;
+$blue-500: #106ebe;
+$blue-600: #0e5ea2;
+$blue-700: #0b4d85;
+$blue-800: #093d69;
+$blue-900: #062c4c;
+$green-50: #f7fbf6;
+$green-100: #d6ead1;
+$green-200: #b6d9ad;
+$green-300: #96c889;
+$green-400: #76b765;
+$green-500: #56a641;
+$green-600: #498d37;
+$green-700: #3c742e;
+$green-800: #2f5b24;
+$green-900: #22421a;
+$yellow-50: #fffcf5;
+$yellow-100: #fdefcd;
+$yellow-200: #fbe3a6;
+$yellow-300: #f9d67f;
+$yellow-400: #f8ca57;
+$yellow-500: #f6bd30;
+$yellow-600: #d1a129;
+$yellow-700: #ac8422;
+$yellow-800: #87681a;
+$yellow-900: #624c13;
+$cyan-50: #f4fbfd;
+$cyan-100: #ccebf5;
+$cyan-200: #a4dbed;
+$cyan-300: #7ccce5;
+$cyan-400: #54bcdd;
+$cyan-500: #2cacd5;
+$cyan-600: #2592b5;
+$cyan-700: #1f7895;
+$cyan-800: #185f75;
+$cyan-900: #124555;
+$pink-50: #fdf4f9;
+$pink-100: #f6cce0;
+$pink-200: #eea3c7;
+$pink-300: #e77aae;
+$pink-400: #df5296;
+$pink-500: #d8297d;
+$pink-600: #b8236a;
+$pink-700: #971d58;
+$pink-800: #771745;
+$pink-900: #561032;
+$indigo-50: #f4f6fd;
+$indigo-100: #ccd3f5;
+$indigo-200: #a4b0ed;
+$indigo-300: #7c8de5;
+$indigo-400: #546add;
+$indigo-500: #2c47d5;
+$indigo-600: #253cb5;
+$indigo-700: #1f3295;
+$indigo-800: #182775;
+$indigo-900: #121c55;
+$teal-50: #f6fbfa;
+$teal-100: #d1eae5;
+$teal-200: #add9d1;
+$teal-300: #89c8bd;
+$teal-400: #65b7a8;
+$teal-500: #41a694;
+$teal-600: #378d7e;
+$teal-700: #2e7468;
+$teal-800: #245b51;
+$teal-900: #1a423b;
+$orange-50: #fff9f5;
+$orange-100: #fde4cd;
+$orange-200: #fbcfa6;
+$orange-300: #f9ba7f;
+$orange-400: #f8a457;
+$orange-500: #f68f30;
+$orange-600: #d17a29;
+$orange-700: #ac6422;
+$orange-800: #874f1a;
+$orange-900: #623913;
+$bluegray-50: #f7f8f9;
+$bluegray-100: #dae0e3;
+$bluegray-200: #bdc7cd;
+$bluegray-300: #a0aeb6;
+$bluegray-400: #8295a0;
+$bluegray-500: #657c8a;
+$bluegray-600: #566975;
+$bluegray-700: #475761;
+$bluegray-800: #38444c;
+$bluegray-900: #283237;
+$purple-50: #f9f8fd;
+$purple-100: #e1dff7;
+$purple-200: #cac5f1;
+$purple-300: #b2abeb;
+$purple-400: #9b92e4;
+$purple-500: #8378de;
+$purple-600: #6f66bd;
+$purple-700: #5c549b;
+$purple-800: #48427a;
+$purple-900: #343059;
+$red-50: #fdf4f3;
+$red-100: #f6ccc6;
+$red-200: #eea39a;
+$red-300: #e77b6d;
+$red-400: #df5240;
+$red-500: #d82a13;
+$red-600: #b82410;
+$red-700: #971d0d;
+$red-800: #77170a;
+$red-900: #561108;
+
+$mobile: 768px;
+
+html {
+    box-sizing: border-box;
+}
+
+/* Стилизация полосы прокрутки */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #222;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    object-fit: cover;
+}
+
+li {
+    list-style-type: none;
+}
+
+ul {
+    padding-left: 0px;
+}
+
+figure {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    transition: all 0.3s ease-in-out;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+h2 {
+    padding: 0px;
+    margin: 0px;
+}
+
+h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+hr {
+    margin: 0px;
+    padding: 0px;
+}
+
+h4 {
+    margin: 0px;
+    padding: 0px;
+}
+
+section {
+    margin: 0px;
+    padding: 0px;
+}
+
+.relative {
+    position: relative;
+}
+
+.chat-page {
+    width: 100%;
+    min-width: 500px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    background: #131318;
+}
+
+.list-reset {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.btn-reset {
+    padding: 0px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
+.indents-reset {
+    margin: 0px;
+    padding: 0px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.flex {
+    display: flex;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0px 15px;
+}
+
+.position-fixed {
+    position: fixed;
+}
+
+.vertical-container {
+    min-width: 1920px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.header-offset {
+    margin-bottom: 0px;
+}
+
+.section-offset {
+    margin: 0px;
+    padding: 0px;
+}
+
+main {
+    width: 100%;
+}
+
+.main {
+    height: 100vh;
+}
+
+#root {
+    padding: 0px;
+    min-width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;    
+    background-color: #131318;
+}
+
+#sidebar {
+    
+}
+
+#static {
+    @media (max-width: $mobile) {
+        flex-grow: 1;
+    }
+}
+
+#dynamic {
+    // flex-grow: 1;
+    background-color: #131318;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.font-size-1 {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    /* identical to box height */
+
+    color: #FFFFFF;
+}
+
+.font-size-2 {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    /* identical to box height */
+
+    color: #696969;
+}
+
+.font-size-3 {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: #696969;
+}
+
+.font-size-4 {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: #FFFFFF;
+}
+
+.font-size-5 {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #696969;
+}
+
+.font-size-6 {
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 29px;
+    color: #FFFFFF;
+}

@@ -1,0 +1,5 @@
+.dropdown
+    !=icon
+    ul.dropdown-menu.flex
+        for i in list 
+            li(class = i.className, name = id).dropdown-toggle!= i.value

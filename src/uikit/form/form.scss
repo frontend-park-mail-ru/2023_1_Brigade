@@ -1,0 +1,13 @@
+.form {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile__form {
+    width: 50%;
+    height: 50%;
+    padding: 20px;
+    max-height: 500px;
+}

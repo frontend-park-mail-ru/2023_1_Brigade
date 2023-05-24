@@ -4,8 +4,20 @@ main.main.flex
             .view-chat__header__companion.flex
                 !=HeaderUserAvatar
             ul.view-chat__header__icons.flex
-                !=MoreInfoBtn
-                !=DeleteChatBtn
+                !=EditBtn
+                if DeleteChatBtn
+                    !=DeleteChatBtn
+                else
+                    .view-chat__header__icons__leave-group!=LeaveGroupBtn
+                if Subscriberes > 2
+                    .channel__subscribers Участники 
+                        !=Subscriberes
         .view-chat__messages.flex
-            !=MessageList
-        !=Input
+        .view-chat__message-input
+            //- if Input
+            //-     !=Input
+        if SubsribeBtnText
+            button.btn-reset.subscribe-btn.flex!=SubsribeBtnText
+    section.attachments.flex
+        .attachments__heder.flex
+            span= 'Вложения'
