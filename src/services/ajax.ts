@@ -57,6 +57,7 @@ const ajax = (
         .then((response) => {
             const { status } = response;
             csrf = document.cookie;
+            console.log('csrf:   ', csrf);
             let parsedBody;
             if (status !== 204) {
                 parsedBody = response.json();
