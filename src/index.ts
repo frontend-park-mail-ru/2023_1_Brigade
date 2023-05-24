@@ -2,7 +2,7 @@ import '@/index.scss';
 import { createAuthAction } from '@actions/authActions';
 import { store } from '@store/store';
 import { router } from '@router/createRouter';
-import { csrf } from '@services/ajax';
+// import { csrf } from '@services/ajax';
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -24,5 +24,5 @@ Notification.requestPermission();
 
 router.start();
 
-csrf();
+// csrf();
 store.dispatch(createAuthAction());
