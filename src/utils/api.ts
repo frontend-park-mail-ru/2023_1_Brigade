@@ -4,13 +4,8 @@ import {
     deleteSession,
     put,
     postMultipartForm,
-    CSRF,
 } from '@services/ajax';
 import { config } from '@config/api';
-
-export const csrf = () => {
-    return get(config.csrf);
-};
 
 /**
  * Отправляет запрос авторизации и обрабатывает ответ

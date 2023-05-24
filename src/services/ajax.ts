@@ -1,19 +1,32 @@
+import { config } from '@/config/api';
 import { AJAX_METHODS } from '@config/ajax';
 
 const BACKEND_URL = 'https://technogramm.ru';
 // const BACKEND_URL_LOCAL = 'http://127.0.0.1:8081'
+
 const createCSRF = () => {
-    let csrf : string = '';
+    let csrf = '';
 
     return {
         getToken: () => csrf,
         setToken: (gettingCSRF: string) => {
             csrf = gettingCSRF;
+            console.log(csrf);
         },
-    }
-}
+    };
+};
 
-export const CSRF = createCSRF();
+const CSRF = createCSRF();
+
+export const csrf = () => {
+    return get(config.csrf).then(({ status, parsedBody }) => {
+        if (status === 200) {
+            parsedBody.then((csrf: string) => {
+                CSRF.setToken(csrf);
+            });
+        }
+    });
+};
 
 /**
  * Отправляет HTTP запросы
@@ -33,7 +46,7 @@ const ajax = (
             Accept: 'application/json',
             Host: BACKEND_URL,
             'Content-Type': 'application/json',
-            'X-Csrf-Token': CSRF.getToken(), 
+            'X-CSRF-Token': CSRF.getToken(),
         },
         credentials: 'include',
         mode: 'cors',
@@ -42,18 +55,13 @@ const ajax = (
         .then((response) => {
             const { status } = response;
 
+            if (status === 403) {
+                csrf();
+            }
+
             let parsedBody;
             if (status !== 204) {
                 parsedBody = response.json();
-            }
-            
-            for (const [name, value] of response.headers) {
-                console.log(`${name}: ${value}`);
-            }
-
-            if (response.headers.get('X-Csrf-Token')) {
-                console.log('CSRF:', response.headers.get('X-Csrf-Token'))
-                CSRF.setToken(response.headers.get('X-Csrf-Token') as string);
             }
 
             return { status, parsedBody };
