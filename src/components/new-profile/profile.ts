@@ -177,7 +177,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
 
         this.state.name = new Input({
             label: 'Почтовый адрес',
-            parent: this.state.form.getNode()  as HTMLElement,
+            parent: this.state.form.getNode() as HTMLElement,
             className: 'input-container profile__form__input',
             placeholder: this.props.user?.email,
             value: this.props.user?.email,
@@ -227,7 +227,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         });
 
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            const prevProps = {...this.props};
+            const prevProps = { ...this.props };
             this.props.user = this.props.hookUser(state);
 
             if (this.props.user !== prevProps.user) {

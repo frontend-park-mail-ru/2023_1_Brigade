@@ -63,8 +63,14 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     isActive() {
-        console.log('check classname: ', this.prevActive?.className.includes('sidebar-header__chats-btn'));
-        console.log('check classname: ', this.prevActive?.className.includes('sidebar-header__contacts-btn'));
+        console.log(
+            'check classname: ',
+            this.prevActive?.className.includes('sidebar-header__chats-btn')
+        );
+        console.log(
+            'check classname: ',
+            this.prevActive?.className.includes('sidebar-header__contacts-btn')
+        );
 
         if (this.prevActive) {
             this.prevActive.removeAttribute('id');
@@ -73,7 +79,7 @@ export class SmartSidebar extends Component<Props, State> {
         // if (this.prevActive?.className)
 
         const items = document.querySelectorAll('.sidebar-header__list__item');
-        for (let item of items) {
+        for (const item of items) {
             if (item === document.activeElement) {
                 this.prevActive = item as HTMLElement;
                 item.id = 'active-btn';
@@ -96,7 +102,9 @@ export class SmartSidebar extends Component<Props, State> {
             hookAvatar: this.hookAvatar.bind(this),
         });
 
-        this.prevActive = document.querySelector('.sidebar-header__chats-btn') as HTMLElement;
+        this.prevActive = document.querySelector(
+            '.sidebar-header__chats-btn'
+        ) as HTMLElement;
         if (this.prevActive) {
             this.prevActive.id = 'active-btn';
         }
@@ -114,7 +122,7 @@ export class SmartSidebar extends Component<Props, State> {
         this.state?.confirmBtn?.destroy();
         this.state?.cancelBtn?.destroy();
         this.state?.btnList?.destroy();
-        
+
         this.state.isMounted = false;
     }
 
@@ -146,7 +154,9 @@ export class SmartSidebar extends Component<Props, State> {
                 className: 'logout-popup',
             });
 
-            const popContent: HTMLElement | null = document.querySelector('.popup__content') as HTMLElement;
+            const popContent: HTMLElement | null = document.querySelector(
+                '.popup__content'
+            ) as HTMLElement;
 
             if (popContent) {
                 this.state.btnList = new List({
@@ -155,7 +165,7 @@ export class SmartSidebar extends Component<Props, State> {
                 });
 
                 this.state?.btnList.getNode()?.classList.remove('list');
-        
+
                 this.state.confirmBtn = new Button({
                     parent: this.state.btnList.getNode() as HTMLElement,
                     className: 'popup__btn confirm__btn button-S',
@@ -166,7 +176,7 @@ export class SmartSidebar extends Component<Props, State> {
                         this.popup = null;
                     },
                 });
-        
+
                 this.state.cancelBtn = new Button({
                     parent: this.state.btnList.getNode() as HTMLElement,
                     className: 'popup__btn cancel__btn button-S',
@@ -175,7 +185,7 @@ export class SmartSidebar extends Component<Props, State> {
                         this.popup?.destroy();
                         this.popup = null;
                     },
-                });   
+                });
             }
         }
     }
