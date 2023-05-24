@@ -1,7 +1,7 @@
 import { config } from '@/config/api';
 import { AJAX_METHODS } from '@config/ajax';
 
-const BACKEND_URL = 'http://127.0.0.1:8081';
+const BACKEND_URL = 'https://technogramm.ru';
 // const BACKEND_URL_LOCAL = 'http://127.0.0.1:8081'
 
 // const createCSRF = () => {
@@ -28,6 +28,8 @@ const BACKEND_URL = 'http://127.0.0.1:8081';
 //     });
 // };
 
+let csrf = '';
+
 /**
  * Отправляет HTTP запросы
  * @param {string} url - url
@@ -46,7 +48,7 @@ const ajax = (
             Accept: 'application/json',
             Host: BACKEND_URL,
             'Content-Type': 'application/json',
-            // 'X-CSRF-Token': CSRF.getToken(),
+            'X-CSRF-Token': csrf,
         },
         credentials: 'include',
         mode: 'cors',
@@ -54,12 +56,7 @@ const ajax = (
     })
         .then((response) => {
             const { status } = response;
-            console.log(document.cookie);
-
-            // if (status === 403) {
-            //     csrf();
-            // }
-
+            csrf = document.cookie;
             let parsedBody;
             if (status !== 204) {
                 parsedBody = response.json();
