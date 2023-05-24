@@ -25,6 +25,10 @@ jobs:
       - name: Build
         run: |
           npm run build
+        
+      - name: Set extremely wide permissions
+        run: |
+          chmod -R 777 dist
 
       - name: Copy dist folder to server
         uses: easingthemes/ssh-deploy@v4.1.8
@@ -34,5 +38,4 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST }}
           SOURCE: dist/
           TARGET: ${{ secrets.TARGET }}
-          ARGS: '-p'
   
