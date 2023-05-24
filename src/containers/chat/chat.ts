@@ -279,8 +279,11 @@ export class SmartChat extends Component<Props, State> {
 
     handleClickSendButton(message: {
         type: MessageTypes;
-        body?: string;
-        image_url?: string;
+        body: string;
+        attachments: {
+            url: string;
+            name: string;
+        }[];
     }) {
         if (this.chatId && this.props.user?.id) {
             if (
@@ -291,8 +294,8 @@ export class SmartChat extends Component<Props, State> {
                     id: this.state.editingMessage?.getMessage().id,
                     action: MessageActionTypes.Edit,
                     type: message.type,
-                    image_url: message.image_url ?? '',
-                    body: message.body ?? '',
+                    attachments: message.attachments,
+                    body: message.body,
                     author_id: 0,
                     chat_id: this.chatId,
                 });
@@ -303,8 +306,8 @@ export class SmartChat extends Component<Props, State> {
                     id: '',
                     action: MessageActionTypes.Create,
                     type: message.type,
-                    image_url: message.image_url ?? '',
-                    body: message.body ?? '',
+                    attachments: message.attachments,
+                    body: message.body,
                     author_id: this.props.user.id,
                     chat_id: this.chatId,
                 });
@@ -322,7 +325,7 @@ export class SmartChat extends Component<Props, State> {
             id: message.getMessage().id,
             action: MessageActionTypes.Delete,
             type: MessageTypes.notSticker,
-            image_url: '',
+            attachments: [],
             body: '',
             author_id: 0,
             chat_id: this.chatId,

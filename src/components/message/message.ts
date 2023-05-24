@@ -6,6 +6,7 @@ import { MessageTypes } from '@config/enum';
 import { store } from '@store/store';
 import { Dropdown } from '@uikit/dropdown/dropdown';
 import { ROOT } from '@config/config';
+import { Attachment } from '../attachment/attachment';
 
 interface Props {
     message: Message;
@@ -22,7 +23,7 @@ interface Props {
 
 interface State {
     avatar?: Img;
-    img?: Img;
+    attachment?: Attachment;
 }
 
 export class DumbMessage extends Component<Props, State> {
@@ -90,23 +91,20 @@ export class DumbMessage extends Component<Props, State> {
             }
         }
 
-        if (this.props.message.image_url) {
+        if (this.props.message.attachments.length > 0) {
             const messageImage = this.node.querySelector(
                 '.message__image'
             ) as HTMLElement;
 
-            if (messageImage) {
-                this.state.img = new Img({
-                    src: this.props.message.image_url,
-                    borderRadius: '5',
-                    size:
-                        this.props.message.type === MessageTypes.notSticker
-                            ? 'XL'
-                            : 'L',
-                    alt: '',
-                    parent: messageImage,
-                });
-            }
+            this.props.message.attachments.forEach((attachment) => {
+                if (messageImage) {
+                    this.state.attachment = new Attachment({
+                        src: attachment,
+                        isSticker: this.props.message.type,
+                        parent: messageImage,
+                    });
+                }
+            });
         }
 
         if (this.props.place === 'left') {
@@ -126,7 +124,7 @@ export class DumbMessage extends Component<Props, State> {
         }
 
         this.state.avatar?.destroy();
-        this.state.img?.destroy();
+        this.state.attachment?.destroy();
 
         this.node.removeEventListener('contextmenu', this.onRightClick);
     }
@@ -144,7 +142,7 @@ export class DumbMessage extends Component<Props, State> {
                 nickname: this.props.user?.nickname ?? '',
                 avatar: this.props.user?.avatar ?? '',
                 body: this.props.message.body,
-                image: this.props.message.image_url,
+                image: this.props.message.attachments.length > 0,
             }),
             'text/html'
         ).body.firstChild;

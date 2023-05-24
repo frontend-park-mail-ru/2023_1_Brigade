@@ -27,6 +27,10 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
         }
     }
 
+    getNode() {
+        return this.node;
+    }
+
     destroy() {
         this.componentWillUnmount();
         this.node?.remove();

@@ -134,7 +134,10 @@ interface Message {
     id: string;
     action: MessageActionType;
     type: MessageTypes;
-    image_url: string;
+    attachments: {
+        url: string;
+        name: string;
+    }[];
     body: string;
     chat_id: number;
     author_id: number;

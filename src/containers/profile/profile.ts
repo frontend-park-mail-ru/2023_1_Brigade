@@ -4,10 +4,12 @@ import { DYNAMIC } from '@config/config';
 import { router } from '@router/createRouter';
 import { Popup } from '@components/popup/popup';
 import { store } from '@/store/store';
-import { createLogoutAction } from '@/actions/authActions';
 import { createUpdateUserAction } from '@/actions/userActions';
 import { Input } from '@uikit/input/input';
-import { passwordErrorTypes } from '@/config/errors';
+import { confirmPasswordErrorTypes, emailErrorTypes, newPasswordErrorTypes, nicknameErrorTypes, passwordErrorTypes, usernameErrorTypes } from '@/config/errors';
+import { addErrorToClass, checkConfirmPassword, checkEmail, checkNewPassword, checkNickname, checkPassword } from '@/utils/validator';
+import { List } from '@/uikit/list/list';
+import { Button } from '@/uikit/button/button';
 
 interface Props {
     parent: HTMLElement;
@@ -22,20 +24,15 @@ interface State {
     repeatPassword: Input;
     isMounted: boolean;
     node?: DumbProfile;
-    valid: {
-        currentPasswordIsValid: boolean;
-        newPasswordIsValid: boolean;
+    btnList?: List;
+    confirmBtn?: Button;
+    cancelBtn?: Button;
+    valid?: {
+        emailIsValid: boolean;
+        passwordIsValid: boolean;
+        confirmPasswordIsValid: boolean;
         nicknameIsValid: boolean;
         isValid: () => boolean | undefined;
-    };
-    domElements: {
-        avatar: HTMLInputElement | null;
-        username: HTMLInputElement | null;
-        nickname: HTMLInputElement | null;
-        status: HTMLInputElement | null;
-        current_password: HTMLInputElement | null;
-        new_password: HTMLInputElement | null;
-        saveButton: HTMLInputElement | null;
     };
 }
 
@@ -52,7 +49,12 @@ export class SmartProfile extends Component<Props, State> {
         DYNAMIC().innerHTML = '';
         super(props);
         this.state.isMounted = false;
+        this.user = null;
         this.profile = null;
+
+        // this.state.valid: {
+            
+        // }
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -61,6 +63,8 @@ export class SmartProfile extends Component<Props, State> {
     private profile: DumbProfile | null;
     private popup: Popup | undefined | null;
     private image: File | undefined;
+    private user: Object | null; 
+
     destroy() {
         if (this.state.isMounted) {
             this.componentWillUnmount();
@@ -128,30 +132,33 @@ export class SmartProfile extends Component<Props, State> {
     handleConfirmChanges(e?: Event) {
         e?.preventDefault();
 
-        const user = {
-            email: (document.querySelector('.email') as HTMLInputElement).value,
-            new_avatar_url: store.getState()?.user?.avatar ?? '',
-            nickname: (document.querySelector('.nickname') as HTMLInputElement)
-                .value,
-            status: (document.querySelector('.status') as HTMLInputElement)
-                .value,
-            current_password: (
-                document.querySelector('.old-password') as HTMLInputElement
-            ).value,
-            new_password: (
-                document.querySelector('.new-password') as HTMLInputElement
-            ).value,
-        };
+        // if (this.state.valid.isValid()) {
+            const user = {
+                email: (document.querySelector('.email') as HTMLInputElement).value,
+                new_avatar_url: store.getState()?.user?.avatar ?? '',
+                nickname: (document.querySelector('.nickname') as HTMLInputElement)
+                    .value,
+                status: (document.querySelector('.status') as HTMLInputElement)
+                    .value,
+                current_password: '',
+                new_password: '',
+            };
 
-        const forUpdate = {
-            image: this.image,
-            user,
-        };
-
-        store.dispatch(createUpdateUserAction(forUpdate));
-
-        this.popup?.destroy();
-        this.popup = null;
+            if (this.popup) {
+                user.current_password = (document.querySelector('.old-password') as HTMLInputElement)?.value;
+                user.new_password = (document.querySelector('.new-password') as HTMLInputElement)?.value;
+            }
+    
+            const forUpdate = {
+                image: this.image,
+                user,
+            };
+    
+            store.dispatch(createUpdateUserAction(forUpdate));
+    
+            this.popup?.destroy();
+            this.popup = null;
+        // }
     }
 
     handleCancelChanges(e?: Event) {
@@ -164,57 +171,133 @@ export class SmartProfile extends Component<Props, State> {
      */
     handleUnlockClick(e?: Event) {
         e?.preventDefault();
-        console.log('unlock clicked: ', this.state?.node);
 
         const root = document.getElementById('root');
         if (!this.popup) {
             this.popup = new Popup({
                 parent: root as HTMLElement,
                 title: 'Смена пароля',
-                confirmBtnText: 'Подтвердить',
-                cancelBtnText: 'Отмена',
                 className: 'profile-popup',
-                confirmLogoutOnClick: () => {
-                    const user = {
-                        email: (
-                            document.querySelector('.email') as HTMLInputElement
-                        ).value,
-                        new_avatar_url: store.getState()?.user?.avatar ?? '',
-                        nickname: (
-                            document.querySelector(
-                                '.nickname'
-                            ) as HTMLInputElement
-                        ).value,
-                        status: (
-                            document.querySelector(
-                                '.status'
-                            ) as HTMLInputElement
-                        ).value,
-                        current_password: (
-                            document.querySelector(
-                                '.old-password'
-                            ) as HTMLInputElement
-                        ).value,
-                        new_password: (
-                            document.querySelector(
-                                '.new-password'
-                            ) as HTMLInputElement
-                        ).value,
-                    };
-
-                    store.dispatch(
-                        createUpdateUserAction({ image: this.image, user })
-                    );
-
-                    this.popup?.destroy();
-                    this.popup = null;
-                },
-
-                cancelLogoutOnClick: () => {
-                    this.popup?.destroy();
-                    this.popup = null;
-                },
             });
+
+            const popContent: HTMLElement | null = document.querySelector('.popup__content') as HTMLElement;
+
+            if (popContent) {
+                this.state.oldPassword = new Input({
+                    label: 'Старый пароль',
+                    parent: popContent as HTMLElement,
+                    className: 'input-container profile__form__input',
+                    placeholder: 'введите старый пароль',
+                    errors: passwordErrorTypes,
+                    uniqClassName: 'old-password',
+                    type: 'password',
+                });
+        
+                this.state.newPassword = new Input({
+                    label: 'Новый пароль',
+                    parent: popContent as HTMLElement,
+                    className: 'input-container profile__form__input',
+                    placeholder: 'введите новый пароль',
+                    errors: passwordErrorTypes,
+                    uniqClassName: 'new-password',
+                    type: 'password',
+                });
+        
+                this.state.repeatPassword = new Input({
+                    label: 'Повторите пароль',
+                    parent: popContent as HTMLElement,
+                    className: 'input-container profile__form__input',
+                    placeholder: 'повторите пароль',
+                    errors: confirmPasswordErrorTypes,
+                    uniqClassName: 'repeat-password',
+                    type: 'password',
+                    onChange: (e) => {
+                        e?.preventDefault();
+    
+                        this.validateConfirmPassword.bind(this);
+                    }
+                });
+
+
+                // TODO addEventListner для input-ов на валидацию
+                this.state.oldPassword?.getNode()?.addEventListener('input', (e) => {
+                    e.preventDefault();
+
+                    // TODO: validation function
+                });
+
+                this.state.newPassword?.getNode()?.addEventListener('input', (e) => {
+                    e.preventDefault();
+
+                    // TODO: validation function
+                });
+
+                this.state.repeatPassword?.getNode()?.addEventListener('input', (e) => {
+                    e.preventDefault();
+
+                    this.validateConfirmPassword();
+                });
+    
+                this.state.btnList = new List({
+                    parent: popContent as HTMLElement,
+                    className: 'popup__btn-list',
+                });
+                this.state.btnList.getNode()?.classList.remove('list');
+    
+                this.state.confirmBtn = new Button({
+                    parent: document.querySelector('.popup__btn-list') as HTMLElement,
+                    className: 'popup__btn confirm__btn button-S',
+                    label: 'Подтвердить',
+                    onClick: () => {
+                        // if (this.state.valid.isValid()) {
+                            const user = {
+                                email: (
+                                    document.querySelector('.email') as HTMLInputElement
+                                ).value,
+                                new_avatar_url: store.getState()?.user?.avatar ?? '',
+                                nickname: (
+                                    document.querySelector(
+                                        '.nickname'
+                                    ) as HTMLInputElement
+                                ).value,
+                                status: (
+                                    document.querySelector(
+                                        '.status'
+                                    ) as HTMLInputElement
+                                ).value,
+                                current_password: (
+                                    document.querySelector(
+                                        '.old-password'
+                                    ) as HTMLInputElement
+                                ).value,
+                                new_password: (
+                                    document.querySelector(
+                                        '.new-password'
+                                    ) as HTMLInputElement
+                                ).value,
+                            };
+
+                            store.dispatch(
+                                createUpdateUserAction({ image: this.image, user })
+                            );
+
+                            this.popup?.destroy();
+                            this.popup = null;
+                        // }
+                    },
+                });
+        
+                this.state.cancelBtn = new Button({
+                    parent: document.querySelector('.popup__btn-list') as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+            }
+            
         }
     }
 
@@ -235,7 +318,6 @@ export class SmartProfile extends Component<Props, State> {
 
         input.addEventListener('change', () => {
             this.image = input?.files?.[0];
-            console.log('image after change: ', this.image);
             if (this.image) {
                 const reader = new FileReader();
                 reader.readAsDataURL(this.image);
@@ -250,5 +332,41 @@ export class SmartProfile extends Component<Props, State> {
         });
 
         input.click();
+    }
+
+    /**
+     * Проверяет пользовательский ввод подтверждения пароля
+     */
+    validateConfirmPassword() {
+        console.log('validate has been called');
+        // удаляем ошибку
+        this.state.repeatPassword.getNode()?.classList.remove(
+            'login-reg__input_error'
+        );
+
+        // делаем все ошибки невидимыми
+        addErrorToClass('', confirmPasswordErrorTypes);
+        const { isError, errorClass } = checkConfirmPassword(
+            this.state.newPassword?.getNode()?.value ?? '',
+            this.state.repeatPassword?.getNode()?.value ?? '',
+        );
+
+        if (isError) {
+            this.state.repeatPassword.getNode()?.classList.add(
+                'login-reg__input_error'
+            );
+            addErrorToClass(errorClass, passwordErrorTypes);
+
+            // если было true, то теперь есть ошибка и false
+            if (this?.state?.valid?.confirmPasswordIsValid) {
+                this.state.valid.confirmPasswordIsValid = false;
+            }
+            return;
+        }
+
+        // если было false и была ошщибка, то теперь ошибки нет
+        if (this?.state?.valid?.confirmPasswordIsValid === false) {
+            this.state.valid.confirmPasswordIsValid = true;
+        }
     }
 }
