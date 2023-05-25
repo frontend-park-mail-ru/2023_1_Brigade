@@ -1,10 +1,9 @@
 .attachments {
     flex-direction: column;
-    width: 25%;
+    min-width: 25%;
     background: #181B23;
 
-    // margin-right: 0%;
-    transition: width 0.3s;
+    transition: min-width 0.3s;
 
     &__heder {
         overflow: hidden;
@@ -22,7 +21,8 @@
 
     &--disabled {
         width: 0;
-        transition: width 0.3s;
+        min-width: 0;
+        transition: min-width 0.3s;
     }
 }
 

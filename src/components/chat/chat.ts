@@ -29,6 +29,7 @@ interface Props {
 
 interface State {
     isMounted: boolean;
+    attachmentsIsMounted: boolean;
     messages: DumbMessage[];
     messageInput: MessageInput | undefined;
     attachmentsList: List | undefined;
@@ -46,6 +47,7 @@ export class DumbChat extends Component<Props, State> {
         super(props);
         this.state = {
             isMounted: false,
+            attachmentsIsMounted: false,
             messages: [],
             messageInput: undefined,
             attachmentsList: undefined,
@@ -177,7 +179,7 @@ export class DumbChat extends Component<Props, State> {
     }
 
     toggleAttachmentList() {
-        if (this.state.attachments.length > 0) {
+        if (this.state.attachmentsIsMounted) {
             document
                 .querySelector('.attachments')
                 ?.classList.toggle('attachments--disabled');
@@ -190,6 +192,7 @@ export class DumbChat extends Component<Props, State> {
 
                 this.state.attachmentsList?.destroy();
                 this.state.attachmentsList = undefined;
+                this.state.attachmentsIsMounted = false;
             }, 125);
         } else {
             let parent = document.querySelector('.attachments') as HTMLElement;
@@ -214,6 +217,8 @@ export class DumbChat extends Component<Props, State> {
             document
                 .querySelector('.attachments')
                 ?.classList.toggle('attachments--disabled');
+
+            this.state.attachmentsIsMounted = true;
         }
     }
 
