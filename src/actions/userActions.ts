@@ -114,7 +114,8 @@ export const createUpdateUserAction = (user: {
                 dispatch(createIncorrectPasswordAction(true));
                 break;
             case 409:
-                dispatch(createOccupiedUsernameAction(true));
+                // dispatch(createOccupiedUsernameAction(true));
+                dispatch(createOccupiedEmailAction(true));
                 break;
             case 500:
             // TODO:

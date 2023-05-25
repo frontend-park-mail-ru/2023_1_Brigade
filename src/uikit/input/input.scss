@@ -72,11 +72,26 @@ input {
 }
 
 .login-reg__input_error {
+  top: 100px;
   border: 0.8px solid red;
   &:focus {
     outline: none;
     border: 0.8px solid rgb(154, 7, 7);
   }
+}
+
+.default-error {
+  top: 100px;
+  border: 0.8px solid red;
+  &:focus {
+    outline: none;
+    border: 0.8px solid rgb(154, 7, 7);
+  }
+}
+
+.profile__input__errors {
+  top: 100%;
+  font-size: 1.2rem;
 }
 
 .input_error {

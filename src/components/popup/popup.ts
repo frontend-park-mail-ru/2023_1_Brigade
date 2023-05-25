@@ -9,7 +9,11 @@ interface Props {
     parent: HTMLElement;
     title?: string;
     className?: string;
+    content?: () => void;
+    user?: User;
+    hookUser?: (state: StoreState) => User | undefined;
     style?: Record<string, string | number>;
+    incorrectPassword?: () => void;
 }
 
 interface State {
@@ -25,6 +29,10 @@ export class Popup extends Component<Props, State, HTMLElement> {
         this.props.parent.appendChild(this.node);
         this.componentDidMount();
         this.update.bind(this);
+    }
+
+    hookUser(state: StoreState): User | undefined {
+        return state.user ?? undefined;
     }
 
     getNode() {
@@ -60,12 +68,22 @@ export class Popup extends Component<Props, State, HTMLElement> {
             return;
         }
 
+        if (this.props.content) {
+            this.props.content();
+        }
+
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            const prevProps = this.props;
+            const prevProps = { ...this.props };
 
-            // TODO: hook, который пробрасывается пропсой и чекает состояние стора.
+            if (this.props.incorrectPassword) {
+                this.props.incorrectPassword();
+            }
 
-            if (this.props !== prevProps) {
+            if (this.props.hookUser) {
+                this.props.user = this.props.hookUser(state);
+            }
+
+            if (this.props.user !== prevProps.user) {
                 this.update();
             }
         });

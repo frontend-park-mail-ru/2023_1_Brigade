@@ -4,7 +4,7 @@ div(class=ClassName)
     input(class=UniqClassName)(type=Type, placeholder=Placeholder, value=Value)
     !=Caption
     if Errors
-        .input__errors.flex
+        div(class=ErrorsClassName).input__errors.flex
             each error in Errors
                 span(class=error.class).login-reg__error.invisible
                     !=error.message

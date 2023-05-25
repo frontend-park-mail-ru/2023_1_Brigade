@@ -20,6 +20,7 @@ import { Popup } from '@components/popup/popup';
 interface Props {
     parent: HTMLElement;
     user: User | undefined;
+    popup?: Popup | undefined;
     style?: Record<string, string | number>;
     avatarOnClick?: (e?: Event) => void;
     backOnClick?: (e?: Event) => void;
@@ -29,25 +30,25 @@ interface Props {
     emailOnChange?: (e?: Event) => void;
     nicknameOnChange?: (e?: Event) => void;
     statusOnChange?: (e?: Event) => void;
-    oldPasswordOnChange?: (e?: Event) => void;
-    newPasswordOnChange?: (e?: Event) => void;
-    repeatPasswordOnChange?: (e?: Event) => void;
-    hookUpdatePopup: (
-        popupRoot: HTMLElement
-    ) => Popup | HTMLElement | undefined;
+    emailValidate?: (e?: Event) => void;
+    nicknameValidate?: (e?: Event) => void;
+    occupiedEmail?: () => void;
+    hookUpdatePopup?: (popupRoot: HTMLElement) => Popup | undefined;
     hookUser: (state: StoreState) => User | undefined;
+    // oldPasswordOnChange?: (e?: Event) => void;
+    // newPasswordOnChange?: (e?: Event) => void;
+    // repeatPasswordOnChange?: (e?: Event) => void;
 }
 
 interface State {
     isMounted: boolean;
     parent?: HTMLElement | undefined;
-    popup?: Popup | HTMLElement | undefined;
     header?: Header;
     backButton?: Button;
     avatar?: Avatar;
     form?: Form;
     unlockBtn?: Button;
-    name?: Input;
+    email?: Input;
     nickname?: Input;
     status?: Input;
     btnList?: List;
@@ -59,6 +60,8 @@ interface State {
 }
 
 export class DumbProfile extends Component<Props, State, HTMLElement> {
+    private popup?: Popup | undefined;
+
     constructor(props: Props) {
         super(props);
         this.state.isMounted = false;
@@ -66,6 +69,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.headerText = null;
         this.profileUsername = null;
         this.profileStatus = null;
+        this.popup = undefined;
 
         if (this.props.parent) {
             this.node = this.render() as HTMLElement;
@@ -95,10 +99,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
 
             this.componentWillUnmount();
             this.node = this.render() as HTMLElement;
-            console.log('profile method updated has been called');
             this.componentDidMount();
-
-            console.log('this.node after update: ', this.node);
 
             prevNode?.replaceWith(this.node);
         } else {
@@ -121,7 +122,6 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         );
 
         if (this.props.user?.nickname) {
-            console.log('nickname: ', this.props.user.nickname);
             this.profileUsername.textContent = this.props.user?.nickname;
         }
 
@@ -175,7 +175,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             onClick: this.props.unlockOnClick,
         });
 
-        this.state.name = new Input({
+        this.state.email = new Input({
             label: 'Почтовый адрес',
             parent: this.state.form.getNode() as HTMLElement,
             className: 'input-container profile__form__input',
@@ -183,6 +183,8 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             value: this.props.user?.email,
             uniqClassName: 'email',
             errors: emailErrorTypes,
+            errorsClassName: 'profile__input__errors',
+            onChange: this.props.emailValidate,
         });
 
         this.state.nickname = new Input({
@@ -193,6 +195,8 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             value: this.props.user?.nickname,
             uniqClassName: 'nickname',
             errors: nicknameErrorTypes,
+            errorsClassName: 'profile__input__errors',
+            onChange: this.props.nicknameValidate,
         });
 
         this.state.status = new Input({
@@ -249,7 +253,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.state?.saveBtn?.destroy();
         this.state?.cancelBtn?.destroy();
         this.state?.btnList?.destroy();
-        this.state?.name?.destroy();
+        this.state?.email?.destroy();
         this.state?.nickname?.destroy();
         this.state?.status?.destroy();
         this.state?.form?.destroy();
