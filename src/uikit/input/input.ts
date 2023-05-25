@@ -9,6 +9,7 @@ interface Props {
     uniqClassName?: string;
     type?: string;
     errors?: ErrorTypes[];
+    errorsClassName?: string;
     label?: string;
     caption?: string;
     onChange?: (e?: Event) => void;
@@ -33,6 +34,7 @@ export class Input extends Component<Props, State, HTMLInputElement> {
         };
 
         if (this.state.node) {
+            console.log('input did mount');
             this.componentDidMount();
             this.state.parent?.appendChild(this.state.node);
         }
@@ -48,14 +50,45 @@ export class Input extends Component<Props, State, HTMLInputElement> {
         this.node = undefined;
     }
 
+    // update() {
+    //     if (this.state.isMounted) {
+    //         const prevNode = this.node;
+
+    //         this.componentWillUnmount();
+    //         this.node = this.render() as HTMLElement;
+    //         this.componentDidMount();
+
+    //         prevNode?.replaceWith(this.node);
+    //     } else {
+    //         console.error('Input is not mounted');
+    //     }
+    // }
+
     componentDidMount() {
-        if (!this.node) {
+        if (!this.state.node) {
             return;
         }
 
         if (this.props.onChange) {
-            this.node.addEventListener('input', this.props.onChange);
+            this.state.node.addEventListener('input', this.props.onChange);
         }
+
+        // подписать input-ы на изменения стора
+        // this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
+        //     const prevProps = { ...this.props };
+
+        //     if (this.props.incorrectPassword) {
+        //         this.props.incorrectPassword();
+        //     }
+
+        //     if (this.props.hookUser) {
+        //         this.props.user = this.props.hookUser(state);
+        //     }
+
+        //     if (this.props.user !== prevProps.user) {
+        //         this.update();
+        //     }
+        // });
     }
 
     componentWillUnmount() {
@@ -81,6 +114,7 @@ export class Input extends Component<Props, State, HTMLInputElement> {
                 contentType: this.props.contentType ?? '',
                 style: this.props.style ?? '',
                 Type: this.props.type ?? 'text',
+                ErrorsClassName: this.props.errorsClassName ?? '',
             }),
             'text/html'
         ).body.firstChild;

@@ -18,13 +18,11 @@ interface State {
 export class Header extends Component<Props, State, HTMLElement> {
     constructor(props: Props) {
         super(props);
-        console.log('header constructor has been called');
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
         this.props.parent.appendChild(this.node);
     }
-
 
     getNode() {
         return this.node;
