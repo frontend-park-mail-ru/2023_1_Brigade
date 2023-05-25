@@ -21,6 +21,14 @@ export const emailErrorTypes: ErrorTypes[] = [
     },
 ];
 
+export const oldPasswordErrorTypes: ErrorTypes[] = [
+    {
+        param: 'incorrectOldPassword',
+        class: 'incorrect-old-password',
+        message: 'Введен неверный пароль',
+    },
+];
+
 export const passwordErrorTypes: ErrorTypes[] = [
     {
         param: 'emptyPassword',

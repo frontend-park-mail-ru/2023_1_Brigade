@@ -34,7 +34,6 @@ export class Input extends Component<Props, State, HTMLInputElement> {
         };
 
         if (this.state.node) {
-            console.log('input did mount');
             this.componentDidMount();
             this.state.parent?.appendChild(this.state.node);
         }
@@ -50,20 +49,6 @@ export class Input extends Component<Props, State, HTMLInputElement> {
         this.node = undefined;
     }
 
-    // update() {
-    //     if (this.state.isMounted) {
-    //         const prevNode = this.node;
-
-    //         this.componentWillUnmount();
-    //         this.node = this.render() as HTMLElement;
-    //         this.componentDidMount();
-
-    //         prevNode?.replaceWith(this.node);
-    //     } else {
-    //         console.error('Input is not mounted');
-    //     }
-    // }
-
     componentDidMount() {
         if (!this.state.node) {
             return;
@@ -72,23 +57,6 @@ export class Input extends Component<Props, State, HTMLInputElement> {
         if (this.props.onChange) {
             this.state.node.addEventListener('input', this.props.onChange);
         }
-
-        // подписать input-ы на изменения стора
-        // this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-        //     const prevProps = { ...this.props };
-
-        //     if (this.props.incorrectPassword) {
-        //         this.props.incorrectPassword();
-        //     }
-
-        //     if (this.props.hookUser) {
-        //         this.props.user = this.props.hookUser(state);
-        //     }
-
-        //     if (this.props.user !== prevProps.user) {
-        //         this.update();
-        //     }
-        // });
     }
 
     componentWillUnmount() {

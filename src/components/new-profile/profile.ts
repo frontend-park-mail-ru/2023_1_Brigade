@@ -77,8 +77,6 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             this.componentDidMount();
             this.update.bind(this);
         }
-
-        console.log('dumb profile this node: ', this.node);
     }
 
     private headerText: HTMLElement | null;
@@ -101,7 +99,6 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
 
             this.componentWillUnmount();
             this.node = this.render() as HTMLElement;
-            console.log('profile method updated has been called');
             this.componentDidMount();
 
             prevNode?.replaceWith(this.node);
@@ -125,7 +122,6 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         );
 
         if (this.props.user?.nickname) {
-            console.log('nickname: ', this.props.user.nickname);
             this.profileUsername.textContent = this.props.user?.nickname;
         }
 
