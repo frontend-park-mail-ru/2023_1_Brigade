@@ -113,7 +113,6 @@ export class SmartChat extends Component<Props, State> {
                     this.node.innerHTML = this.state.chat.render();
                     this.state.chat.setMessageList();
                     this.state.chat.setInput();
-                    this.state.chat.setAttachmentList();
                 }
 
                 this.state.domElements.input = document.querySelector(
@@ -233,6 +232,13 @@ export class SmartChat extends Component<Props, State> {
                     );
                 }
 
+                // Открытие вложений
+                document
+                    .querySelector('.view-chat__header__companion')
+                    ?.addEventListener('click', () => {
+                        this.state.chat?.toggleAttachmentList();
+                    });
+
                 store.dispatch(createIsNotRenderedAction());
 
                 this.unsubscribe();
@@ -264,10 +270,10 @@ export class SmartChat extends Component<Props, State> {
                     message
                 );
 
-                this.state.chat?.addAttachment(
-                    document.querySelector('.attachments__list') as HTMLElement,
-                    message
-                );
+            // this.state.chat?.addAttachment(
+            //     document.querySelector('.attachments__list') as HTMLElement,
+            //     message
+            // );
         }
     }
 

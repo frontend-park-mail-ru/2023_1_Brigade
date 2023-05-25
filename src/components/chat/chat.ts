@@ -176,31 +176,45 @@ export class DumbChat extends Component<Props, State> {
         });
     }
 
-    setAttachmentList() {
-        let parent = document.querySelector('.attachments') as HTMLElement;
-        if (!parent) {
-            return;
+    toggleAttachmentList() {
+        if (this.state.attachments.length > 0) {
+            document
+                .querySelector('.attachments')
+                ?.classList.toggle('attachments--disabled');
+
+            setTimeout(() => {
+                this.state.attachments.forEach((attachment) =>
+                    attachment.destroy()
+                );
+                this.state.attachments = [];
+
+                this.state.attachmentsList?.destroy();
+                this.state.attachmentsList = undefined;
+            }, 125);
+        } else {
+            let parent = document.querySelector('.attachments') as HTMLElement;
+            if (!parent) {
+                return;
+            }
+
+            this.state.attachmentsList = new List({
+                className: 'attachments__list',
+                parent,
+            });
+
+            parent = this.state.attachmentsList?.getNode() as HTMLElement;
+            if (!parent) {
+                return;
+            }
+
+            this.props.chatData?.messages?.forEach((message) => {
+                this.addAttachment(parent, message);
+            });
+
+            document
+                .querySelector('.attachments')
+                ?.classList.toggle('attachments--disabled');
         }
-
-        const listStyles = {
-            // 'flex-wrap': 'wrap',
-            'align-items': 'center',
-        };
-
-        this.state.attachmentsList = new List({
-            className: 'attachments__list',
-            style: listStyles,
-            parent,
-        });
-
-        parent = this.state.attachmentsList?.getNode() as HTMLElement;
-        if (!parent) {
-            return;
-        }
-
-        this.props.chatData?.messages?.forEach((message) => {
-            this.addAttachment(parent, message);
-        });
     }
 
     setInput() {

@@ -1,5 +1,3 @@
-import { constantsOfActions } from '@/config/actions';
-
 /**
  * оздает хранилище с помощью заданных редьюсеров и возвращает объект Store (состояние, функцию dispatch и функцию subscribe).
  * @param {Map<string, Reducer>} reducers - объект типа Map, содержащий редьюсеры в качестве значений и их имена в качестве ключей.
