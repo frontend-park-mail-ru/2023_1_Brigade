@@ -335,12 +335,8 @@ export class SmartChat extends Component<Props, State> {
     handleEditMessage(message: DumbMessage) {
         this.state.editingMessage = message;
 
-        if (!this.state.domElements.input) {
-            return;
-        }
-
-        this.state.domElements.input.value = message.getMessage().body;
-        this.state.domElements.input.focus();
+        this.state.chat?.getInput()?.setMessage(message.getMessage());
+        this.state.domElements.input?.focus();
     }
 
     handleClickDeleteButton() {

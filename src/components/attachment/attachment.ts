@@ -6,6 +6,8 @@ import { store } from '@store/store';
 import { FileUi } from '@uikit/file/file';
 import { MessageTypes } from '@config/enum';
 import { Files } from '@/config/images_urls';
+import { Button } from '@/uikit/button/button';
+import { svgButtonUI } from '../ui/icon/button';
 
 interface Props {
     src: { url: string; name: string };
@@ -13,6 +15,7 @@ interface Props {
     hookAttachment?: (
         state: StoreState
     ) => { url: string; name: string } | undefined;
+    onDelete?: () => void;
     className?: string;
     style?: Record<string, string | number>;
     parent: HTMLElement;
@@ -21,6 +24,7 @@ interface Props {
 interface State {
     isMounted: boolean;
     attachments: (Img | FileUi)[];
+    deleteButton?: Button;
 }
 
 export class Attachment extends Component<Props, State> {
@@ -131,6 +135,32 @@ export class Attachment extends Component<Props, State> {
                 );
         }
 
+        if (this.state.attachments.length > 0 && this.props.onDelete) {
+            const style = {
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                font: 'inherit',
+                'line-height': 'normal',
+                overflow: 'visible',
+                padding: 0,
+                'text-align': 'inherit',
+                'font-size': '1.6rem',
+                'margin-bottom': 0,
+                height: 'auto',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+            };
+
+            this.state.deleteButton = new Button({
+                icon: svgButtonUI.renderTemplate({ svgClassName: 'cross' }),
+                onClick: this.props.onDelete.bind(this),
+                style,
+                parent: this.node,
+            });
+        }
+
         this.state.isMounted = true;
     }
 
@@ -140,6 +170,7 @@ export class Attachment extends Component<Props, State> {
         }
 
         this.state.attachments.forEach((attachment) => attachment.destroy());
+        this.state.deleteButton?.destroy();
 
         this.state.isMounted = false;
     }

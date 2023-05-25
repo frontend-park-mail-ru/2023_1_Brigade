@@ -36,6 +36,10 @@ interface State {
     attachments: Attachment[];
 
     attachmentFiles: File[];
+    attachmentUrls: {
+        url: string;
+        name: string;
+    }[];
 }
 
 export class MessageInput extends Component<Props, State> {
@@ -55,6 +59,7 @@ export class MessageInput extends Component<Props, State> {
             attachments: [],
 
             attachmentFiles: [],
+            attachmentUrls: [],
         };
 
         this.inputFocus = this.inputFocus.bind(this);
@@ -223,12 +228,16 @@ export class MessageInput extends Component<Props, State> {
 
     async onSend() {
         const text = this.state.input?.value ?? '';
-        const attachments: { url: string; name: string }[] = [];
 
-        if (!text?.trim() && this.state.attachmentFiles.length < 1) {
+        if (
+            !text?.trim() &&
+            this.state.attachmentFiles.length < 1 &&
+            this.state.attachmentUrls.length < 1
+        ) {
             return;
         }
 
+        const attachments: { url: string; name: string }[] = [];
         const promises: Promise<any>[] = [];
 
         this.state.attachmentFiles.forEach(async (attachment) => {
@@ -248,6 +257,10 @@ export class MessageInput extends Component<Props, State> {
                     }
                 });
 
+                this.state.attachmentUrls.forEach((att) =>
+                    attachments.push(att)
+                );
+
                 if (!text?.trim() && attachments.length < 1) {
                     // TODO:
                     console.error('Ошибка загрузки файла');
@@ -262,6 +275,7 @@ export class MessageInput extends Component<Props, State> {
                 if (this.state.input) {
                     this.state.input.value = '';
                     this.state.attachmentFiles = [];
+                    this.state.attachmentUrls = [];
                     this.state.attachments.forEach((attachment) =>
                         attachment.destroy()
                     );
@@ -299,13 +313,30 @@ export class MessageInput extends Component<Props, State> {
                     '.message-input__attachment'
                 ) as HTMLElement;
 
-                this.state.attachments.push(
-                    new Attachment({
-                        src: { url, name: file.name },
-                        isSticker: MessageTypes.notSticker,
-                        parent,
-                    })
-                );
+                const addedAttachment: Attachment = new Attachment({
+                    src: { url, name: file.name },
+                    onDelete: () => {
+                        addedAttachment.destroy();
+                        this.state.attachmentFiles.splice(
+                            this.state.attachmentFiles.findIndex(
+                                (attachmentFile) => attachmentFile === file
+                            ),
+                            1
+                        );
+                        this.state.attachmentUrls.length < 1 &&
+                        this.state.attachmentFiles.length < 1
+                            ? this.node
+                                  ?.querySelector('.message-input__attachment')
+                                  ?.classList.remove(
+                                      'message-input__attachment--show'
+                                  )
+                            : undefined;
+                    },
+                    isSticker: MessageTypes.notSticker,
+                    parent,
+                });
+
+                this.state.attachments.push(addedAttachment);
             };
 
             this.node
@@ -372,6 +403,58 @@ export class MessageInput extends Component<Props, State> {
             }),
             'text/html'
         ).body.firstChild;
+    }
+
+    setMessage(message: Message) {
+        this.state.attachmentFiles = [];
+        this.state.attachmentUrls = [];
+        this.state.attachments.forEach((attachment) => attachment.destroy());
+        this.node
+            ?.querySelector('.message-input__attachment')
+            ?.classList.remove('message-input__attachment--show');
+
+        message.attachments.forEach((attachment) => {
+            this.state.attachmentUrls.push(attachment);
+
+            const parent = document.querySelector(
+                '.message-input__attachment'
+            ) as HTMLElement;
+
+            const addedAttachment: Attachment = new Attachment({
+                src: { url: attachment.url, name: attachment.name },
+                onDelete: () => {
+                    addedAttachment.destroy();
+                    this.state.attachmentUrls.splice(
+                        this.state.attachmentUrls.findIndex(
+                            (attachmentUrl) => attachmentUrl === attachment
+                        ),
+                        1
+                    );
+                    this.state.attachmentUrls.length < 1 &&
+                    this.state.attachmentFiles.length < 1
+                        ? this.node
+                              ?.querySelector('.message-input__attachment')
+                              ?.classList.remove(
+                                  'message-input__attachment--show'
+                              )
+                        : undefined;
+                },
+                isSticker: MessageTypes.notSticker,
+                parent,
+            });
+
+            this.state.attachments.push(addedAttachment);
+        });
+
+        if (message.attachments.length > 0) {
+            this.node
+                ?.querySelector('.message-input__attachment')
+                ?.classList.add('message-input__attachment--show');
+        }
+
+        if (this.state.input) {
+            this.state.input.value = message.body;
+        }
     }
 
     update() {

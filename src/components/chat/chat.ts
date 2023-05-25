@@ -195,6 +195,10 @@ export class DumbChat extends Component<Props, State> {
         }
     }
 
+    getInput() {
+        return this.state.messageInput;
+    }
+
     private checkRights(): boolean {
         if (this.props?.chatData?.master_id === this.props?.userId) {
             return true;

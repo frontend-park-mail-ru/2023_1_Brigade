@@ -28,7 +28,7 @@ interface State {
 }
 
 export class DumbSidebar extends Component<Props, State, HTMLElement> {
-    private prevProps: any;
+    private prevProps: Props | null;
 
     constructor(props: Props) {
         super(props);
@@ -113,7 +113,8 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
 
         this.state.logoutButton = new Button({
             parent: this.node,
-            className: 'sidebar-header__logout-btn sidebar-header__list__item button-transparent',
+            className:
+                'sidebar-header__logout-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'logout-btn' ?? '',
             }),
@@ -121,7 +122,7 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         });
 
         this.state.isMounted = true;
-        
+
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
             this.prevProps = { ...this.props };
             this.props.avatar = this.props.hookAvatar(state);

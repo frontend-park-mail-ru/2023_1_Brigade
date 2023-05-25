@@ -6,8 +6,22 @@ import { Popup } from '@components/popup/popup';
 import { store } from '@/store/store';
 import { createUpdateUserAction } from '@/actions/userActions';
 import { Input } from '@uikit/input/input';
-import { confirmPasswordErrorTypes, emailErrorTypes, newPasswordErrorTypes, nicknameErrorTypes, passwordErrorTypes, usernameErrorTypes } from '@/config/errors';
-import { addErrorToClass, checkConfirmPassword, checkEmail, checkNewPassword, checkNickname, checkPassword } from '@/utils/validator';
+import {
+    confirmPasswordErrorTypes,
+    emailErrorTypes,
+    newPasswordErrorTypes,
+    nicknameErrorTypes,
+    passwordErrorTypes,
+    usernameErrorTypes,
+} from '@/config/errors';
+import {
+    addErrorToClass,
+    checkConfirmPassword,
+    checkEmail,
+    checkNewPassword,
+    checkNickname,
+    checkPassword,
+} from '@/utils/validator';
 import { List } from '@/uikit/list/list';
 import { Button } from '@/uikit/button/button';
 
@@ -53,7 +67,7 @@ export class SmartProfile extends Component<Props, State> {
         this.profile = null;
 
         // this.state.valid: {
-            
+
         // }
 
         this.node = this.render() as HTMLElement;
@@ -63,7 +77,7 @@ export class SmartProfile extends Component<Props, State> {
     private profile: DumbProfile | null;
     private popup: Popup | undefined | null;
     private image: File | undefined;
-    private user: Object | null; 
+    private user: Object | null;
 
     destroy() {
         if (this.state.isMounted) {
@@ -133,31 +147,35 @@ export class SmartProfile extends Component<Props, State> {
         e?.preventDefault();
 
         // if (this.state.valid.isValid()) {
-            const user = {
-                email: (document.querySelector('.email') as HTMLInputElement).value,
-                new_avatar_url: store.getState()?.user?.avatar ?? '',
-                nickname: (document.querySelector('.nickname') as HTMLInputElement)
-                    .value,
-                status: (document.querySelector('.status') as HTMLInputElement)
-                    .value,
-                current_password: '',
-                new_password: '',
-            };
+        const user = {
+            email: (document.querySelector('.email') as HTMLInputElement).value,
+            new_avatar_url: store.getState()?.user?.avatar ?? '',
+            nickname: (document.querySelector('.nickname') as HTMLInputElement)
+                .value,
+            status: (document.querySelector('.status') as HTMLInputElement)
+                .value,
+            current_password: '',
+            new_password: '',
+        };
 
-            if (this.popup) {
-                user.current_password = (document.querySelector('.old-password') as HTMLInputElement)?.value;
-                user.new_password = (document.querySelector('.new-password') as HTMLInputElement)?.value;
-            }
-    
-            const forUpdate = {
-                image: this.image,
-                user,
-            };
-    
-            store.dispatch(createUpdateUserAction(forUpdate));
-    
-            this.popup?.destroy();
-            this.popup = null;
+        if (this.popup) {
+            user.current_password = (
+                document.querySelector('.old-password') as HTMLInputElement
+            )?.value;
+            user.new_password = (
+                document.querySelector('.new-password') as HTMLInputElement
+            )?.value;
+        }
+
+        const forUpdate = {
+            image: this.image,
+            user,
+        };
+
+        store.dispatch(createUpdateUserAction(forUpdate));
+
+        this.popup?.destroy();
+        this.popup = null;
         // }
     }
 
@@ -180,7 +198,9 @@ export class SmartProfile extends Component<Props, State> {
                 className: 'profile-popup',
             });
 
-            const popContent: HTMLElement | null = document.querySelector('.popup__content') as HTMLElement;
+            const popContent: HTMLElement | null = document.querySelector(
+                '.popup__content'
+            ) as HTMLElement;
 
             if (popContent) {
                 this.state.oldPassword = new Input({
@@ -192,7 +212,7 @@ export class SmartProfile extends Component<Props, State> {
                     uniqClassName: 'old-password',
                     type: 'password',
                 });
-        
+
                 this.state.newPassword = new Input({
                     label: 'Новый пароль',
                     parent: popContent as HTMLElement,
@@ -202,7 +222,7 @@ export class SmartProfile extends Component<Props, State> {
                     uniqClassName: 'new-password',
                     type: 'password',
                 });
-        
+
                 this.state.repeatPassword = new Input({
                     label: 'Повторите пароль',
                     parent: popContent as HTMLElement,
@@ -213,82 +233,94 @@ export class SmartProfile extends Component<Props, State> {
                     type: 'password',
                     onChange: (e) => {
                         e?.preventDefault();
-    
-                        this.validateConfirmPassword.bind(this);
-                    }
-                });
 
+                        this.validateConfirmPassword.bind(this);
+                    },
+                });
 
                 // TODO addEventListner для input-ов на валидацию
-                this.state.oldPassword?.getNode()?.addEventListener('input', (e) => {
-                    e.preventDefault();
+                this.state.oldPassword
+                    ?.getNode()
+                    ?.addEventListener('input', (e) => {
+                        e.preventDefault();
 
-                    // TODO: validation function
-                });
+                        // TODO: validation function
+                    });
 
-                this.state.newPassword?.getNode()?.addEventListener('input', (e) => {
-                    e.preventDefault();
+                this.state.newPassword
+                    ?.getNode()
+                    ?.addEventListener('input', (e) => {
+                        e.preventDefault();
 
-                    // TODO: validation function
-                });
+                        // TODO: validation function
+                    });
 
-                this.state.repeatPassword?.getNode()?.addEventListener('input', (e) => {
-                    e.preventDefault();
+                this.state.repeatPassword
+                    ?.getNode()
+                    ?.addEventListener('input', (e) => {
+                        e.preventDefault();
 
-                    this.validateConfirmPassword();
-                });
-    
+                        this.validateConfirmPassword();
+                    });
+
                 this.state.btnList = new List({
                     parent: popContent as HTMLElement,
                     className: 'popup__btn-list',
                 });
                 this.state.btnList.getNode()?.classList.remove('list');
-    
+
                 this.state.confirmBtn = new Button({
-                    parent: document.querySelector('.popup__btn-list') as HTMLElement,
+                    parent: document.querySelector(
+                        '.popup__btn-list'
+                    ) as HTMLElement,
                     className: 'popup__btn confirm__btn button-S',
                     label: 'Подтвердить',
                     onClick: () => {
                         // if (this.state.valid.isValid()) {
-                            const user = {
-                                email: (
-                                    document.querySelector('.email') as HTMLInputElement
-                                ).value,
-                                new_avatar_url: store.getState()?.user?.avatar ?? '',
-                                nickname: (
-                                    document.querySelector(
-                                        '.nickname'
-                                    ) as HTMLInputElement
-                                ).value,
-                                status: (
-                                    document.querySelector(
-                                        '.status'
-                                    ) as HTMLInputElement
-                                ).value,
-                                current_password: (
-                                    document.querySelector(
-                                        '.old-password'
-                                    ) as HTMLInputElement
-                                ).value,
-                                new_password: (
-                                    document.querySelector(
-                                        '.new-password'
-                                    ) as HTMLInputElement
-                                ).value,
-                            };
+                        const user = {
+                            email: (
+                                document.querySelector(
+                                    '.email'
+                                ) as HTMLInputElement
+                            ).value,
+                            new_avatar_url:
+                                store.getState()?.user?.avatar ?? '',
+                            nickname: (
+                                document.querySelector(
+                                    '.nickname'
+                                ) as HTMLInputElement
+                            ).value,
+                            status: (
+                                document.querySelector(
+                                    '.status'
+                                ) as HTMLInputElement
+                            ).value,
+                            current_password: (
+                                document.querySelector(
+                                    '.old-password'
+                                ) as HTMLInputElement
+                            ).value,
+                            new_password: (
+                                document.querySelector(
+                                    '.new-password'
+                                ) as HTMLInputElement
+                            ).value,
+                        };
 
-                            store.dispatch(
-                                createUpdateUserAction({ image: this.image, user })
-                            );
+                        store.dispatch(
+                            createUpdateUserAction({ image: this.image, user })
+                        );
 
-                            this.popup?.destroy();
-                            this.popup = null;
+                        this.popup?.destroy();
+                        this.popup = null;
                         // }
                     },
                 });
-        
+
                 this.state.cancelBtn = new Button({
-                    parent: document.querySelector('.popup__btn-list') as HTMLElement,
+                    parent: document.querySelector(
+                        '.popup__btn-list'
+                    ) as HTMLElement,
                     className: 'popup__btn cancel__btn button-S',
                     label: 'Отмена',
                     onClick: () => {
@@ -297,7 +329,6 @@ export class SmartProfile extends Component<Props, State> {
                     },
                 });
             }
-            
         }
     }
 
@@ -340,21 +371,21 @@ export class SmartProfile extends Component<Props, State> {
     validateConfirmPassword() {
         console.log('validate has been called');
         // удаляем ошибку
-        this.state.repeatPassword.getNode()?.classList.remove(
-            'login-reg__input_error'
-        );
+        this.state.repeatPassword
+            .getNode()
+            ?.classList.remove('login-reg__input_error');
 
         // делаем все ошибки невидимыми
         addErrorToClass('', confirmPasswordErrorTypes);
         const { isError, errorClass } = checkConfirmPassword(
             this.state.newPassword?.getNode()?.value ?? '',
-            this.state.repeatPassword?.getNode()?.value ?? '',
+            this.state.repeatPassword?.getNode()?.value ?? ''
         );
 
         if (isError) {
-            this.state.repeatPassword.getNode()?.classList.add(
-                'login-reg__input_error'
-            );
+            this.state.repeatPassword
+                .getNode()
+                ?.classList.add('login-reg__input_error');
             addErrorToClass(errorClass, passwordErrorTypes);
 
             // если было true, то теперь есть ошибка и false
