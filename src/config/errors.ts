@@ -84,6 +84,11 @@ export const nicknameErrorTypes: ErrorTypes[] = [
         class: 'invalid-nickname',
         message: 'Никнейм должен быть длиннее двух символов',
     },
+    {
+        param: 'invalidNicknameSymbols',
+        class: 'invalid-nickname-symbols',
+        message: 'Никнейм должен содержать буквы английского или русского алфавита',
+    },
 ];
 
 export const usernameErrorTypes: ErrorTypes[] = [

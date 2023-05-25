@@ -6,24 +6,21 @@ import { Popup } from '@components/popup/popup';
 import { store } from '@/store/store';
 import {
     createIncorrectPasswordAction,
-    createOccupiedEmailAction,
+    createInvalidEmailAction,
     createUpdateUserAction,
 } from '@/actions/userActions';
 import { Input } from '@uikit/input/input';
 import {
     confirmPasswordErrorTypes,
     emailErrorTypes,
-    newPasswordErrorTypes,
     nicknameErrorTypes,
     oldPasswordErrorTypes,
     passwordErrorTypes,
-    usernameErrorTypes,
 } from '@/config/errors';
 import {
     addErrorToClass,
     checkConfirmPassword,
     checkEmail,
-    checkNewPassword,
     checkNickname,
     checkPassword,
 } from '@/utils/validator';
@@ -141,6 +138,9 @@ export class SmartProfile extends Component<Props, State> {
         this.state.nickname = document.querySelector(
             '.nickname'
         ) as HTMLInputElement;
+
+        this.validateEmail();
+        this.validateNickname();
     }
 
     /**
@@ -322,6 +322,7 @@ export class SmartProfile extends Component<Props, State> {
         e?.preventDefault();
 
         if (this.state.valid?.isDefaultValid()) {
+            console.log('save on clicked has been called');
             const user = {
                 email: (document.querySelector('.email') as HTMLInputElement)
                     .value,
@@ -340,10 +341,29 @@ export class SmartProfile extends Component<Props, State> {
                 user,
             };
 
-            store.dispatch(createUpdateUserAction(forUpdate));
+            // TODO: сделать все что ниже асинхронной функцией
+            const updateUserPromise = new Promise((resolve, reject) => {
+                resolve(store.dispatch(createUpdateUserAction(forUpdate)));
+            });
 
-            this.popup?.destroy();
-            this.popup = null;
+            updateUserPromise
+                .then(() => {
+                    const occupiedEmail = store.getState().occupiedEmail;
+                    if (occupiedEmail) {
+                        document
+                            .querySelector('.email')
+                            ?.classList.add('login-reg__input_error');
+
+                        addErrorToClass('occupied-email', emailErrorTypes);
+                        store.dispatch(createInvalidEmailAction(false));
+                    } else if (this.state.valid) {
+                        this.state.valid.oldPasswordIsValid = true;
+                        store.dispatch(createInvalidEmailAction(false));
+                    }
+                })
+                .catch((error) => {
+                    console.error('update user error: ', error);
+                });
         }
     }
 
@@ -424,6 +444,7 @@ export class SmartProfile extends Component<Props, State> {
             if (this.state.valid?.emailIsValid) {
                 this.state.valid.emailIsValid = false;
             }
+
             return;
         }
 
