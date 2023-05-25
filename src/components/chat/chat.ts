@@ -93,15 +93,13 @@ export class DumbChat extends Component<Props, State> {
         const messageComponent = new DumbMessage({
             message,
             hookMessage: (state) => {
-                let updatedMessage: Message | undefined = undefined;
+                const index = state.openedChat?.messages.findIndex(
+                    (newMessage) => newMessage.id === message.id
+                );
 
-                state.openedChat?.messages.forEach((newMessage) => {
-                    if (newMessage.id === message.id) {
-                        updatedMessage = newMessage;
-                    }
-                });
-
-                return updatedMessage;
+                return (index && index !== -1) || index === 0
+                    ? state.openedChat?.messages[index]
+                    : undefined;
             },
             user:
                 this.props.chatData.type === ChatTypes.Group
@@ -143,16 +141,33 @@ export class DumbChat extends Component<Props, State> {
             return;
         }
 
-        message.attachments.forEach((attachment, index) => {
+        message.attachments.forEach((attachment) => {
             const attachmentComponent = new Attachment({
                 src: attachment,
                 isSticker: MessageTypes.notSticker,
                 hookAttachment: (state) => {
-                    const updatedMessage = state.openedChat?.messages.find(
+                    const index = state.openedChat?.messages.findIndex(
                         (newMessage) => newMessage.id === message.id
                     );
 
-                    return updatedMessage?.attachments[index];
+                    const mes =
+                        (index && index !== -1) || index === 0
+                            ? state.openedChat?.messages[index]
+                            : undefined;
+
+                    if (!mes) {
+                        return undefined;
+                    }
+
+                    const attIndex = mes.attachments.findIndex(
+                        (att) => att.url === attachment.url
+                    );
+
+                    const att =
+                        (attIndex && attIndex !== -1) || attIndex === 0
+                            ? mes.attachments[attIndex]
+                            : undefined;
+                    return att;
                 },
                 parent,
             });
@@ -167,8 +182,14 @@ export class DumbChat extends Component<Props, State> {
             return;
         }
 
+        const listStyles = {
+            // 'flex-wrap': 'wrap',
+            'align-items': 'center',
+        };
+
         this.state.attachmentsList = new List({
             className: 'attachments__list',
+            style: listStyles,
             parent,
         });
 

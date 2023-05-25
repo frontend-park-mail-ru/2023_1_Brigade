@@ -243,12 +243,6 @@ export class SmartChat extends Component<Props, State> {
     }
 
     renderIncomingMessage(message: Message) {
-        console.log(
-            'message.chat_id !== this.props.openedChat?.id',
-            message.chat_id,
-            '!==',
-            this.props.openedChat?.id
-        );
         if (message.chat_id !== this.props.openedChat?.id) {
             return;
         }

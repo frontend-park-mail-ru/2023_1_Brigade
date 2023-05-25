@@ -39,15 +39,14 @@ export class Attachment extends Component<Props, State> {
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
-        this.props.parent.appendChild(this.node);
+        this.props.parent.insertBefore(this.node, this.props.parent.firstChild);
 
         this.unsubscribe = store.subscribe(
-            `${this.constructor.name}:${this.props.src}`,
+            `${this.constructor.name}:${this.props.src.url}`,
             (state) => {
                 if (!this.props.hookAttachment) {
                     return;
                 }
-
                 const prevProps = { ...this.props };
 
                 const updatedAttachment = this.props.hookAttachment(state);
@@ -55,8 +54,6 @@ export class Attachment extends Component<Props, State> {
                     this.destroy();
                     return;
                 }
-
-                this.props.src = updatedAttachment;
 
                 if (this.props !== prevProps) {
                     this.update();
