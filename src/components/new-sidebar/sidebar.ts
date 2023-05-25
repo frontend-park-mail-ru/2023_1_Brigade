@@ -28,7 +28,7 @@ interface State {
 }
 
 export class DumbSidebar extends Component<Props, State, HTMLElement> {
-    private prevProps: any;
+    private prevProps: Props | null;
 
     constructor(props: Props) {
         super(props);
