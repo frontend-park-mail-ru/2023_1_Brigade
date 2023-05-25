@@ -8,15 +8,22 @@
     width: 100%;
 
     &__attachment {
-        display: none;
+        overflow: hidden;
+        max-height: 30vh;
         width: 100%;
-        padding: 18px 18px 18px 18px;
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
 
-        &--show {
-            display: flex; 
+        transition: max-height 0.3s;
+
+        &--disabled {
+            max-height: 0;
+            transition: max-height 0.3s;
+        }
+
+        .attachment {
+            margin: 18px;
         }
     }
 
@@ -49,23 +56,30 @@
     }
 
     &__emoji-stickers {
-        display: none;
+        overflow: hidden;
         max-height: 30vh;
         overflow: auto;
+        padding: 18px;
 
-        &--show {
-            display: block; 
+        transition: max-height 0.3s;
+
+        &--disabled {
+            padding: 0;
+            max-height: 0;
+            transition: max-height 0.3s;
         }
     }
 
     &__emoji {
+        height: fit-content;
         flex-wrap: wrap;
-        padding: 18px 18px 18px 18px;
+        padding: 18px;
     }
 
     &__stickers {
+        height: fit-content;
         flex-wrap: wrap;
-        padding: 18px 18px 18px 18px;
+        padding: 18px;
     }
 }
 

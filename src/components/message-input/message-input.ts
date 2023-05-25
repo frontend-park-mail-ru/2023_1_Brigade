@@ -272,17 +272,19 @@ export class MessageInput extends Component<Props, State> {
                     });
                 }
 
-                if (this.state.input) {
-                    this.state.input.value = '';
-                    this.state.attachmentFiles = [];
-                    this.state.attachmentUrls = [];
-                    this.state.attachments.forEach((attachment) =>
-                        attachment.destroy()
-                    );
-                    this.node
-                        ?.querySelector('.message-input__attachment')
-                        ?.classList.remove('message-input__attachment--show');
-                }
+                this.node
+                    ?.querySelector('.message-input__attachment')
+                    ?.classList.add('message-input__attachment--disabled');
+                setTimeout(() => {
+                    if (this.state.input) {
+                        this.state.input.value = '';
+                        this.state.attachmentFiles = [];
+                        this.state.attachmentUrls = [];
+                        this.state.attachments.forEach((attachment) =>
+                            attachment.destroy()
+                        );
+                    }
+                }, 150);
             });
         });
     }
@@ -290,7 +292,7 @@ export class MessageInput extends Component<Props, State> {
     onEmoji() {
         this.node
             ?.querySelector('.message-input__emoji-stickers')
-            ?.classList.toggle('message-input__emoji-stickers--show');
+            ?.classList.toggle('message-input__emoji-stickers--disabled');
     }
 
     onAttachment() {
@@ -316,7 +318,6 @@ export class MessageInput extends Component<Props, State> {
                 const addedAttachment: Attachment = new Attachment({
                     src: { url, name: file.name },
                     onDelete: () => {
-                        addedAttachment.destroy();
                         this.state.attachmentFiles.splice(
                             this.state.attachmentFiles.findIndex(
                                 (attachmentFile) => attachmentFile === file
@@ -327,10 +328,13 @@ export class MessageInput extends Component<Props, State> {
                         this.state.attachmentFiles.length < 1
                             ? this.node
                                   ?.querySelector('.message-input__attachment')
-                                  ?.classList.remove(
-                                      'message-input__attachment--show'
+                                  ?.classList.add(
+                                      'message-input__attachment--disabled'
                                   )
                             : undefined;
+                        setTimeout(() => {
+                            addedAttachment.destroy();
+                        }, 150);
                     },
                     isSticker: MessageTypes.notSticker,
                     parent,
@@ -341,7 +345,7 @@ export class MessageInput extends Component<Props, State> {
 
             this.node
                 ?.querySelector('.message-input__attachment')
-                ?.classList.add('message-input__attachment--show');
+                ?.classList.remove('message-input__attachment--disabled');
         });
 
         input.click();
@@ -406,12 +410,12 @@ export class MessageInput extends Component<Props, State> {
     }
 
     setMessage(message: Message) {
+        this.node
+            ?.querySelector('.message-input__attachment')
+            ?.classList.add('message-input__attachment--disabled');
         this.state.attachmentFiles = [];
         this.state.attachmentUrls = [];
         this.state.attachments.forEach((attachment) => attachment.destroy());
-        this.node
-            ?.querySelector('.message-input__attachment')
-            ?.classList.remove('message-input__attachment--show');
 
         message.attachments.forEach((attachment) => {
             this.state.attachmentUrls.push(attachment);
@@ -423,7 +427,6 @@ export class MessageInput extends Component<Props, State> {
             const addedAttachment: Attachment = new Attachment({
                 src: { url: attachment.url, name: attachment.name },
                 onDelete: () => {
-                    addedAttachment.destroy();
                     this.state.attachmentUrls.splice(
                         this.state.attachmentUrls.findIndex(
                             (attachmentUrl) => attachmentUrl === attachment
@@ -434,10 +437,13 @@ export class MessageInput extends Component<Props, State> {
                     this.state.attachmentFiles.length < 1
                         ? this.node
                               ?.querySelector('.message-input__attachment')
-                              ?.classList.remove(
-                                  'message-input__attachment--show'
+                              ?.classList.add(
+                                  'message-input__attachment--disabled'
                               )
                         : undefined;
+                    setTimeout(() => {
+                        addedAttachment.destroy();
+                    }, 150);
                 },
                 isSticker: MessageTypes.notSticker,
                 parent,
@@ -449,7 +455,7 @@ export class MessageInput extends Component<Props, State> {
         if (message.attachments.length > 0) {
             this.node
                 ?.querySelector('.message-input__attachment')
-                ?.classList.add('message-input__attachment--show');
+                ?.classList.remove('message-input__attachment--disabled');
         }
 
         if (this.state.input) {
