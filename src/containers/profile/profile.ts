@@ -87,7 +87,8 @@ export class SmartProfile extends Component<Props, State> {
                 isValid: () => {
                     return (
                         this?.state?.valid?.passwordIsValid &&
-                        this.state.valid.confirmPasswordIsValid
+                        this.state.valid.confirmPasswordIsValid &&
+                        this.state.valid.oldPasswordIsValid
                     );
                 },
                 isDefaultValid: () => {
@@ -187,6 +188,11 @@ export class SmartProfile extends Component<Props, State> {
                 errorsClassName: 'profile__input__errors',
                 uniqClassName: 'old-password',
                 type: 'password',
+                onChange: (e) => {
+                    e?.preventDefault();
+
+                    this.validateOldPassword.bind(this)();
+                },
             });
 
             this.state.newPassword = new Input({
@@ -236,6 +242,10 @@ export class SmartProfile extends Component<Props, State> {
                 onClick: () => {
                     if (this.state?.valid?.isValid()) {
                         this.updateUserPassword.bind(this)();
+                    } else {
+                        this.validateOldPassword.bind(this)();
+                        this.validatePassword.bind(this)();
+                        this.validateConfirmPassword.bind(this)();
                     }
                 },
             });
@@ -503,6 +513,25 @@ export class SmartProfile extends Component<Props, State> {
 
         if (this.state.valid?.confirmPasswordIsValid === false) {
             this.state.valid.confirmPasswordIsValid = true;
+        }
+    }
+
+    validateOldPassword() {
+        addErrorToClass('', oldPasswordErrorTypes);
+        const oldPassword = document.querySelector('.old-password') as HTMLInputElement;
+        oldPassword?.classList.remove('login-reg__input_error');
+
+        if (oldPassword.value === '') {
+            oldPassword?.classList.add('login-reg__input_error');
+            addErrorToClass('incorrect-old-password', oldPasswordErrorTypes);
+            if (this.state.valid?.oldPasswordIsValid) {
+                this.state.valid.oldPasswordIsValid = false;
+            }
+            return;
+        }
+
+        if (this.state.valid?.oldPasswordIsValid === false) {
+            this.state.valid.oldPasswordIsValid = true;
         }
     }
 }
