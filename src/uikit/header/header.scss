@@ -9,7 +9,7 @@
         // height: 20%;
         min-height: 80px;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: center;
         background-color: #181B23;
         color: #ffffff;
         font-family: 'Actor';
@@ -27,6 +27,7 @@
         font-size: 26px;
         line-height: 30px;
         letter-spacing: 0.1rem;
+        margin: auto;
     }
 }
 
