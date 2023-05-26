@@ -25,14 +25,7 @@ jobs:
       - name: Build
         run: |
           npm run build
-
+        
       - name: Copy dist folder to server
-        uses: easingthemes/ssh-deploy@v4.1.8
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          REMOTE_HOST: ${{ secrets.HOST }}
-          SOURCE: dist/
-          TARGET: ${{ secrets.TARGET }}
-          ARGS: "-rlDzvc -i --no-o --no-g --no-perms"
-  
+        run: |
+          scp -i <(echo ${{ secrets.SSH_PRIVATE_KEY }} -r dist ${{ secrets.USERNAME}}@${{ secrets.HOST }}:${{ secrets.TARGET }}
