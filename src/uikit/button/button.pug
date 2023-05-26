@@ -1,2 +1,10 @@
-button.btn-reset.button(class=className, style=style)!= label
-    !=icon
+case iconPosition 
+    when "left"
+        button.btn-reset.button(class=className, type=type, style=style)
+            !=icon
+            | #{label}
+    when ""
+        button.btn-reset.button(class=className, type=type, style=style)
+            | #{label}
+            !=icon
+

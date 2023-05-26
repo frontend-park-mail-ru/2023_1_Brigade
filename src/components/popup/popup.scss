@@ -48,11 +48,8 @@
         background-color: #f0f0f0;
   
         &__title {
-          margin: 0;
-          // font-size: 20px;
-          // font-weight: 500;
-          // color: #ffffff;
-          margin-bottom: 10%;
+          margin: 0px;
+          margin-bottom: 20px;
           font-family: 'Actor';
           font-style: normal;
           font-weight: 400;
@@ -83,9 +80,8 @@
   
 .popup__title {
   margin: 0;
-  // font-size: 20px;
   color: #ffffff;
-  margin-bottom: 10%;
+  margin-bottom: 20px;
   z-index: 1;
   font-family: 'Actor';
   font-style: normal;

@@ -5,6 +5,7 @@ import { Component } from '@framework/component';
 interface Props {
     label?: string;
     icon?: string;
+    iconPosition?: 'left' | 'right';
     type?: 'primary' | 'secondary';
     className?: string;
     size?: 'S' | 'M' | 'L';
@@ -68,6 +69,7 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
                 label: this.props.label ?? '',
                 style: this.props.style ?? '',
                 icon: this.props.icon ?? '',
+                iconPosition: this.props.iconPosition ?? '',
             }),
             'text/html'
         ).body.firstChild;

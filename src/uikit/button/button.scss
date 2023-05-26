@@ -14,6 +14,7 @@
     transition: background-color 0.3s ease-in-out;
     color: #ffffff;
     cursor: pointer;
+    right: 50px;
 
     &:hover {
         background-color: var(--primary-hover);
@@ -83,14 +84,34 @@
 }
 
 .profile__header__back-btn {
+    // margin-right: 40%;
     margin: 0px;
     align-self: center;
+    justify-content: center;
+    font-family: "Actor";
+    font-style: normal;
+    letter-spacing: 0.08rem;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
     background: none;
-    margin-right: 40%;
+    color: #ffffff; //46474C
+    transition: color 0.3s ease-in-out;
 }
 
 .profile__header__back-btn:hover {
-    background: none;
+    background-color: transparent;
+    color: #0782C7;
+}
+
+.profile__header__back-btn:active {
+    background-color: transparent;
+    color: #095581;
+}
+
+.profile__header__back-btn:focus {
+    background-color: transparent;
+    color: #166490;
 }
 
 .sidebar-header__logout-btn {
