@@ -73,7 +73,7 @@ export class Router {
         //     return;
         // }
 
-
+        
         this.currentComponent?.destroy();
         this.currentComponent = this.currentRoute.component(
             this.currentDynamicParams
