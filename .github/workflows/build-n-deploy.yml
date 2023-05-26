@@ -34,5 +34,5 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST }}
           SOURCE: dist/
           TARGET: ${{ secrets.TARGET }}
-          ARGS: "-rlDzvc -i"
+          ARGS: "-rlDzvc -i --no-o --no-g --no-perms"
   
