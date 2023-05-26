@@ -28,7 +28,7 @@ interface State {
 }
 
 export class DumbSidebar extends Component<Props, State, HTMLElement> {
-    private prevProps: any;
+    private prevProps: Props | null;
 
     constructor(props: Props) {
         super(props);
@@ -128,7 +128,6 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
             this.props.avatar = this.props.hookAvatar(state);
 
             if (this.props.avatar !== this.prevProps.avatar) {
-                console.log('udapapdks');
                 this.update();
             }
         });

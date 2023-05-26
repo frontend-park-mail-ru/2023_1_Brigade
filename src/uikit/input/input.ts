@@ -9,6 +9,7 @@ interface Props {
     uniqClassName?: string;
     type?: string;
     errors?: ErrorTypes[];
+    errorsClassName?: string;
     label?: string;
     caption?: string;
     onChange?: (e?: Event) => void;
@@ -49,12 +50,12 @@ export class Input extends Component<Props, State, HTMLInputElement> {
     }
 
     componentDidMount() {
-        if (!this.node) {
+        if (!this.state.node) {
             return;
         }
 
         if (this.props.onChange) {
-            this.node.addEventListener('input', this.props.onChange);
+            this.state.node.addEventListener('input', this.props.onChange);
         }
     }
 
@@ -81,6 +82,7 @@ export class Input extends Component<Props, State, HTMLInputElement> {
                 contentType: this.props.contentType ?? '',
                 style: this.props.style ?? '',
                 Type: this.props.type ?? 'text',
+                ErrorsClassName: this.props.errorsClassName ?? '',
             }),
             'text/html'
         ).body.firstChild;

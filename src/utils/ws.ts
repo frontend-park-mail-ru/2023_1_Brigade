@@ -15,7 +15,6 @@ const createWs = (url: string) => {
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
                 const e = JSON.parse(event.data);
-                console.log('onmessage', e);
                 const cb = subscribers.get(e.chat_id);
                 if (cb) {
                     cb(e);
@@ -41,7 +40,6 @@ const createWs = (url: string) => {
 
         return {
             send: (message: Message) => {
-                console.log('send:', message);
                 ws?.send(JSON.stringify(message));
             },
             subscribe: (chatId: number, cb: (message: Message) => void) => {
@@ -73,8 +71,6 @@ const createNotificationWs = (url: string) => {
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
                 const e = JSON.parse(event.data);
-
-                console.log('message:', e);
 
                 if (
                     Notification.permission !== 'granted' ||

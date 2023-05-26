@@ -29,6 +29,7 @@ interface Props {
 
 interface State {
     isMounted: boolean;
+    attachmentsIsMounted: boolean;
     messages: DumbMessage[];
     messageInput: MessageInput | undefined;
     attachmentsList: List | undefined;
@@ -46,6 +47,7 @@ export class DumbChat extends Component<Props, State> {
         super(props);
         this.state = {
             isMounted: false,
+            attachmentsIsMounted: false,
             messages: [],
             messageInput: undefined,
             attachmentsList: undefined,
@@ -93,15 +95,13 @@ export class DumbChat extends Component<Props, State> {
         const messageComponent = new DumbMessage({
             message,
             hookMessage: (state) => {
-                let updatedMessage: Message | undefined = undefined;
+                const index = state.openedChat?.messages.findIndex(
+                    (newMessage) => newMessage.id === message.id
+                );
 
-                state.openedChat?.messages.forEach((newMessage) => {
-                    if (newMessage.id === message.id) {
-                        updatedMessage = newMessage;
-                    }
-                });
-
-                return updatedMessage;
+                return (index && index !== -1) || index === 0
+                    ? state.openedChat?.messages[index]
+                    : undefined;
             },
             user:
                 this.props.chatData.type === ChatTypes.Group
@@ -143,16 +143,33 @@ export class DumbChat extends Component<Props, State> {
             return;
         }
 
-        message.attachments.forEach((attachment, index) => {
+        message.attachments.forEach((attachment) => {
             const attachmentComponent = new Attachment({
                 src: attachment,
                 isSticker: MessageTypes.notSticker,
                 hookAttachment: (state) => {
-                    const updatedMessage = state.openedChat?.messages.find(
+                    const index = state.openedChat?.messages.findIndex(
                         (newMessage) => newMessage.id === message.id
                     );
 
-                    return updatedMessage?.attachments[index];
+                    const mes =
+                        (index && index !== -1) || index === 0
+                            ? state.openedChat?.messages[index]
+                            : undefined;
+
+                    if (!mes) {
+                        return undefined;
+                    }
+
+                    const attIndex = mes.attachments.findIndex(
+                        (att) => att.url === attachment.url
+                    );
+
+                    const att =
+                        (attIndex && attIndex !== -1) || attIndex === 0
+                            ? mes.attachments[attIndex]
+                            : undefined;
+                    return att;
                 },
                 parent,
             });
@@ -161,25 +178,48 @@ export class DumbChat extends Component<Props, State> {
         });
     }
 
-    setAttachmentList() {
-        let parent = document.querySelector('.attachments') as HTMLElement;
-        if (!parent) {
-            return;
+    toggleAttachmentList() {
+        if (this.state.attachmentsIsMounted) {
+            document
+                .querySelector('.attachments')
+                ?.classList.toggle('attachments--disabled');
+
+            setTimeout(() => {
+                this.state.attachments.forEach((attachment) =>
+                    attachment.destroy()
+                );
+                this.state.attachments = [];
+
+                this.state.attachmentsList?.destroy();
+                this.state.attachmentsList = undefined;
+                this.state.attachmentsIsMounted = false;
+            }, 125);
+        } else {
+            let parent = document.querySelector('.attachments') as HTMLElement;
+            if (!parent) {
+                return;
+            }
+
+            this.state.attachmentsList = new List({
+                className: 'attachments__list',
+                parent,
+            });
+
+            parent = this.state.attachmentsList?.getNode() as HTMLElement;
+            if (!parent) {
+                return;
+            }
+
+            this.props.chatData?.messages?.forEach((message) => {
+                this.addAttachment(parent, message);
+            });
+
+            document
+                .querySelector('.attachments')
+                ?.classList.toggle('attachments--disabled');
+
+            this.state.attachmentsIsMounted = true;
         }
-
-        this.state.attachmentsList = new List({
-            className: 'attachments__list',
-            parent,
-        });
-
-        parent = this.state.attachmentsList?.getNode() as HTMLElement;
-        if (!parent) {
-            return;
-        }
-
-        this.props.chatData?.messages?.forEach((message) => {
-            this.addAttachment(parent, message);
-        });
     }
 
     setInput() {
@@ -193,6 +233,10 @@ export class DumbChat extends Component<Props, State> {
                 parent,
             });
         }
+    }
+
+    getInput() {
+        return this.state.messageInput;
     }
 
     private checkRights(): boolean {

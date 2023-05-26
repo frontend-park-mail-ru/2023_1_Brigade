@@ -138,6 +138,7 @@ export const checkConfirmPassword = (
 export const checkNickname = (nickname: string) => {
     const isNotEmpty = nickname.length > 0;
     const hasValidLength = nickname.length > 1;
+    const isValid = /^[a-zA-Zа-яА-Я]+$/.test(nickname);
 
     if (!isNotEmpty) {
         return {
@@ -150,6 +151,13 @@ export const checkNickname = (nickname: string) => {
         return {
             isError: true,
             errorClass: 'invalid-nickname',
+        };
+    }
+
+    if (!isValid) {
+        return {
+            isError: true,
+            errorClass: 'invalid-nickname-symbols',
         };
     }
 

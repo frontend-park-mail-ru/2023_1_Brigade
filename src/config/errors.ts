@@ -21,6 +21,14 @@ export const emailErrorTypes: ErrorTypes[] = [
     },
 ];
 
+export const oldPasswordErrorTypes: ErrorTypes[] = [
+    {
+        param: 'incorrectOldPassword',
+        class: 'incorrect-old-password',
+        message: 'Введен неверный пароль',
+    },
+];
+
 export const passwordErrorTypes: ErrorTypes[] = [
     {
         param: 'emptyPassword',
@@ -75,6 +83,11 @@ export const nicknameErrorTypes: ErrorTypes[] = [
         param: 'invalidNickname',
         class: 'invalid-nickname',
         message: 'Никнейм должен быть длиннее двух символов',
+    },
+    {
+        param: 'invalidNicknameSymbols',
+        class: 'invalid-nickname-symbols',
+        message: 'Никнейм должен содержать буквы английского или русского алфавита',
     },
 ];
 
