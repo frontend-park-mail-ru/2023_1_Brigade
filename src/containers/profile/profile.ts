@@ -162,18 +162,6 @@ export class SmartProfile extends Component<Props, State> {
         return state.user ?? undefined;
     }
 
-    /**
-     *
-     * @param popupRoot корень popup-a
-     * @returns {Popup | undefined} - созданный popup или обновленный popup или undefined
-     */
-    hookPopup(popupRoot: HTMLElement): Popup | HTMLElement | undefined {
-        if (popupRoot) {
-        }
-
-        return undefined;
-    }
-
     createPopupContent() {
         const content: HTMLElement | null = document.querySelector(
             '.popup__content'
@@ -322,7 +310,6 @@ export class SmartProfile extends Component<Props, State> {
         e?.preventDefault();
 
         if (this.state.valid?.isDefaultValid()) {
-            console.log('save on clicked has been called');
             const user = {
                 email: (document.querySelector('.email') as HTMLInputElement)
                     .value,

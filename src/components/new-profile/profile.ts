@@ -1,5 +1,4 @@
 import {
-    confirmPasswordErrorTypes,
     emailErrorTypes,
     nicknameErrorTypes,
     passwordErrorTypes,
@@ -35,9 +34,6 @@ interface Props {
     occupiedEmail?: () => void;
     hookUpdatePopup?: (popupRoot: HTMLElement) => Popup | undefined;
     hookUser: (state: StoreState) => User | undefined;
-    // oldPasswordOnChange?: (e?: Event) => void;
-    // newPasswordOnChange?: (e?: Event) => void;
-    // repeatPasswordOnChange?: (e?: Event) => void;
 }
 
 interface State {
@@ -138,10 +134,12 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
 
         this.state.backButton = new Button({
             parent: this.state.header.getNode() as HTMLElement,
-            className: 'profile__header__back-btn button-transparent',
-            icon: svgButtonUI.renderTemplate({
-                svgClassName: 'back-btn',
-            }),
+            className: 'button-transparent profile__header__back-btn flex',
+            label: 'Назад',
+            // icon: svgButtonUI.renderTemplate({
+            //     svgClassName: 'back-btn',
+            // }),
+            // iconPosition: 'left',
             onClick: this.props.backOnClick,
         });
         this.state.header.getNode()?.appendChild(this.headerText);
@@ -150,7 +148,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
             parent: this.node as HTMLElement,
             className:
                 'profile__avatar profile__avatar-border-radius-50 profile__avatar-L',
-            src: this.props.user?.avatar ?? './assets/img/defaultAva.png', // this.props.user.avatar
+            src: this.props.user?.avatar ?? './assets/img/defaultAva.png',
             alt: 'User avatar',
             caption: `${this.props.user?.email ?? ''}`,
             captionStyle: 'profile__avatar__caption flex col',
