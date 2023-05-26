@@ -28,4 +28,4 @@ jobs:
         
       - name: Copy dist folder to server
         run: |
-          scp -i <(echo ${{ secrets.SSH_PRIVATE_KEY }} -r dist ${{ secrets.USERNAME}}@${{ secrets.HOST }}:${{ secrets.TARGET }}
+          scp -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") -r dist ${{ secrets.USERNAME}}@${{ secrets.HOST }}:${{ secrets.TARGET }}
