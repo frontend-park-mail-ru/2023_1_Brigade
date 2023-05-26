@@ -28,4 +28,5 @@ jobs:
         
       - name: Copy dist folder to server
         run: |
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
           scp -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") -r dist ${{ secrets.USERNAME}}@${{ secrets.HOST }}:${{ secrets.TARGET }}
