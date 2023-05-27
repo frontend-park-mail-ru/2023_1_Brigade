@@ -63,15 +63,6 @@ export class SmartSidebar extends Component<Props, State> {
     }
 
     isActive() {
-        console.log(
-            'check classname: ',
-            this.prevActive?.className.includes('sidebar-header__chats-btn')
-        );
-        console.log(
-            'check classname: ',
-            this.prevActive?.className.includes('sidebar-header__contacts-btn')
-        );
-
         if (this.prevActive) {
             this.prevActive.removeAttribute('id');
         }

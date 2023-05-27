@@ -28,7 +28,7 @@ interface State {
     icons: string[];
     emojis: Button[];
     stickers: Img[];
-    input: HTMLInputElement | null;
+    input: HTMLElement | null;
     sendButton: HTMLElement | null;
     emojiButton: HTMLElement | null;
     attachmentButton: HTMLElement | null;
@@ -73,8 +73,8 @@ export class MessageInput extends Component<Props, State> {
     changeText(text: string) {
         const input = this.node?.querySelector(
             '.message-input__text-field__in'
-        ) as HTMLInputElement;
-        input.value = text;
+        ) as HTMLElement;
+        input.textContent = text;
     }
 
     destroy() {
@@ -95,6 +95,13 @@ export class MessageInput extends Component<Props, State> {
         this.state.input = this.node.querySelector(
             '.message-input__text-field__in'
         ) as HTMLInputElement;
+
+        // TODO: отписать
+        this.state.input?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
 
         document.addEventListener('keyup', this.inputFocus);
 
@@ -145,19 +152,29 @@ export class MessageInput extends Component<Props, State> {
                     new Button({
                         label: emoji,
                         onClick: () => {
-                            const cursor = this.state.input?.selectionStart;
+                            const selection = window.getSelection();
+                            const range = selection?.getRangeAt(0);
+                            const cursor = range?.startOffset;
 
                             if (this.state.input && (cursor || cursor === 0)) {
-                                this.state.input.value =
-                                    this.state.input.value.slice(0, cursor) +
-                                    emoji +
-                                    this.state.input.value.slice(cursor);
-
                                 this.state.input?.focus();
-                                this.state.input?.setSelectionRange(
-                                    cursor + emoji.length,
+                                this.state.input.textContent =
+                                    this.state.input.textContent?.slice(
+                                        0,
+                                        cursor
+                                    ) +
+                                    emoji +
+                                    this.state.input.textContent?.slice(cursor);
+
+                                const range = document.createRange();
+                                const selection = window.getSelection();
+                                range.setStart(
+                                    this.state.input?.childNodes[0],
                                     cursor + emoji.length
                                 );
+                                range.collapse(true);
+                                selection?.removeAllRanges();
+                                selection?.addRange(range);
                             }
                         },
                         parent: emojiContainer,
@@ -203,31 +220,46 @@ export class MessageInput extends Component<Props, State> {
     }
 
     inputFocus(e: KeyboardEvent) {
-        if (e.key === 'Enter') {
+        let symbol = e.key;
+
+        if (e.shiftKey && e.key === 'Enter') {
+            symbol = '\n';
+            if (this.state.input) {
+                this.state.input.textContent += symbol;
+            }
+        } else if (e.key === 'Enter') {
             this.onSend();
+            return;
+        }
+
+        if (symbol !== '\n' && symbol.length > 1) {
+            return;
         }
 
         if (document.activeElement === this.state.input) {
             return;
         }
 
-        this.state.input?.focus();
-        this.state.input?.setSelectionRange(
-            this.state.input.value.length,
-            this.state.input.value.length
-        );
-
-        if (e.key.length > 1) {
-            return;
+        if (this.state.input && symbol !== '\n') {
+            this.state.input.textContent += symbol;
         }
 
+        this.state.input?.focus();
         if (this.state.input) {
-            this.state.input.value += e.key;
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.setStart(
+                this.state.input.childNodes[0],
+                this.state.input.textContent?.length ?? 0
+            );
+            range.collapse(true);
+            selection?.removeAllRanges();
+            selection?.addRange(range);
         }
     }
 
     async onSend() {
-        const text = this.state.input?.value ?? '';
+        const text = this.state.input?.textContent ?? '';
 
         if (
             !text?.trim() &&
@@ -277,7 +309,7 @@ export class MessageInput extends Component<Props, State> {
                     ?.classList.add('message-input__attachment--disabled');
                 setTimeout(() => {
                     if (this.state.input) {
-                        this.state.input.value = '';
+                        this.state.input.textContent = '';
                         this.state.attachmentFiles = [];
                         this.state.attachmentUrls = [];
                         this.state.attachments.forEach((attachment) =>
@@ -459,7 +491,7 @@ export class MessageInput extends Component<Props, State> {
         }
 
         if (this.state.input) {
-            this.state.input.value = message.body;
+            this.state.input.textContent = message.body;
         }
     }
 
