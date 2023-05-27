@@ -132,6 +132,8 @@ export class SmartContacts extends Component<Props, State> {
 
                         this.state.domElements.items.push(contactItem);
                     });
+
+                    this.state.domElements.input?.focus();
                 } else {
                     this.props.contacts.forEach((contact) => {
                         const contactItem = new ContactItem({
