@@ -42,8 +42,8 @@ export class DumbContacts extends Component<Props, State> {
 
     render() {
         return template({
-            headContacts: new searchUi({
-                inputClassName: 'chats__header__input',
+            contactInput: new searchUi({
+                inputClassName: 'contacts__header__input',
                 placeholder: 'Поиск',
             }).render(),
             contacts: this.getContactsList(),

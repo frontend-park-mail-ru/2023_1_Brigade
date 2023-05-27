@@ -42,7 +42,6 @@ export class DumbChatList extends Component<Props, State> {
 
     render() {
         return template({
-            headChats: 'Чаты',
             dropdown: new Dropdown({
                 icon: 'create-btn',
                 list: [

@@ -120,14 +120,6 @@ export class SmartChatList extends Component<Props, State> {
                 this.handleSearch(e);
             });
 
-            this.state.domElements.input?.addEventListener('focus', () => {
-                this.handleInputFocus();
-            });
-
-            this.state.domElements.input?.addEventListener('blur', () => {
-                this.handleInputBlur();
-            });
-
             this.state.domElements.chats =
                 document.querySelector('.empty_chats');
             if (this.state.domElements.chats) {
@@ -348,10 +340,6 @@ export class SmartChatList extends Component<Props, State> {
             });
         }
     }
-
-    handleInputFocus() {}
-
-    handleInputBlur() {}
 
     handleSearch(e: KeyboardEvent) {
         e.stopPropagation();
