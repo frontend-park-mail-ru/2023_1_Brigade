@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
   build-n-deploy:
@@ -12,12 +16,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Use Node.js v19.6.0
         uses: actions/setup-node@v2
         with:
           node-version: '19.6.0'
-        
+
       - name: Install Dependencies
         run: |
           npm install
@@ -26,11 +30,11 @@ jobs:
         run: |
           npm run build
 
-      - name: Copy dist
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: dist
-          target: ${{ secrets.TARGET }}
+      - name: Copy dist folder to server
+        uses: easingthemes/ssh-deploy@v4.1.8
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          REMOTE_HOST: ${{ secrets.HOST }}
+          SOURCE: dist/
+          TARGET: ${{ secrets.TARGET }}
