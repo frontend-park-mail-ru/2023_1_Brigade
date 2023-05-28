@@ -1,16 +1,14 @@
 import { DYNAMIC } from '@config/config';
 import { store } from '@store/store';
 import { Component } from '@framework/component';
-import { DumbCreateChannel } from '@components/channelCreation/channel';
 import {
     createMoveToChatsAction,
     createMoveToHomePageAction,
 } from '@actions/routeActions';
-import { addErrorToClass, checkNickname } from '@utils/validator';
-import { nicknameErrorTypes } from '@config/errors';
+import { addErrorToClass, checkNewChatDescription, checkNewChatName } from '@utils/validator';
+import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
 import { createCreateChannelAction } from '@actions/chatActions';
-import { DumbProfile } from '@/components/new-profile/profile';
 import { DumbChannel } from '@/components/new-channel/new-channel';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
@@ -29,6 +27,8 @@ interface State {
     cancelBtn?: Button | null;
     btnList?: List | null;
     contacts?: User[];
+    nameIsValid?: boolean;
+    descriptionIsValid?: boolean;
 }
 
 export class SmartCreateChannel extends Component<Props, State> {
@@ -40,6 +40,8 @@ export class SmartCreateChannel extends Component<Props, State> {
             btnList: null,
             cancelBtn: null,
             confirmBtn: null,
+            nameIsValid: false,
+            descriptionIsValid: false,
         };
         this.state.contacts = this.getContacts();
 
@@ -84,8 +86,13 @@ export class SmartCreateChannel extends Component<Props, State> {
             contacts: this.state.contacts,
             hookContacts: this.hookContacts,
             hookUser: this.hookUser,
-            avatarOnClick: this.avatarOnClick,
-            backOnClick: this.backOnClick,
+            backOnClick: this.backOnClick.bind(this),
+            avatarOnClick: this.avatarOnClick.bind(this),
+            cancelOnClick: this.cancelOnClick.bind(this),
+            saveOnClick: this.saveOnClick.bind(this),
+            channelNameValidate: this.validateChannelName.bind(this),
+            channelDescriptionValidate:
+                this.validateChannelDescription.bind(this),
         });
     }
 
@@ -110,9 +117,9 @@ export class SmartCreateChannel extends Component<Props, State> {
         return state.user ?? undefined;
     }
 
-    // /**
-    //  * Обрабатывает нажатие кнопки аватарки
-    //  */
+    /**
+     * Обрабатывает нажатие кнопки аватарки
+     */
     avatarOnClick(e?: Event) {
         e?.preventDefault();
 
@@ -142,43 +149,85 @@ export class SmartCreateChannel extends Component<Props, State> {
         router.route('/');
     }
 
-    // handleClickDone() {
-    //     if (this.state.valid.isValid() && this.props.user) {
-    //         const newChannel = {
-    //             type: ChatTypes.Channel,
-    //             title: this.state.domElements.channelName?.value,
-    //             members: [this.props.user.id],
-    //             // TODO: когда на бэке сделают ручки
-    //             // avatar: this.state.domElements.channelImage,
-    //             // description: this.state.domElements.channelDescription?.value,
-    //             // master_id: this.props.user.id,
-    //         } as Record<string, unknown>;
+    cancelOnClick(e?: Event) {
+        e?.preventDefault();
+        router.route('/');
+    }
 
-    //         store.dispatch(createCreateChannelAction(newChannel));
-    //         store.dispatch(createMoveToChatsAction());
-    //         // TODO: store.dispatch(createChannelAvatarAction(this.#image));
-    //     }
-    // }
+    saveOnClick(e?: Event) {
+        e?.preventDefault();
+        if (this.isValid() && this.props.user) {
+            const newChannel = {
+                type: ChatTypes.Channel,
+                title: (
+                    document.querySelector('.channel-name') as HTMLInputElement
+                )?.value,
+                description: (
+                    document.querySelector('.channel-description') as HTMLInputElement
+                )?.value,
+                members: [this.props.user.id],
+            } as Record<string, unknown>;
+
+            store.dispatch(createCreateChannelAction(newChannel));
+            store.dispatch(createMoveToChatsAction());
+            // TODO: store.dispatch(createChannelAvatarAction(this.#image));
+        }
+    }
+
+    isValid(): boolean | undefined {
+        return this.state.nameIsValid && this.state.descriptionIsValid;
+    }
 
     /**
     //  * Проверяет пользовательский ввод
     //  */
-    // validateChannelName(validateInput: HTMLInputElement | null) {
-    //     validateInput?.classList.remove('data-input--error');
-    //     addErrorToClass('', nicknameErrorTypes);
+    validateChannelName(e?: Event) {
+        e?.preventDefault();
+        const channelName = document.querySelector('.channel-name') as HTMLInputElement;
+        channelName?.classList.remove('login-reg__input_error');
+        addErrorToClass('', chatNameErrorTypes);
 
-    //     const { isError, errorClass } = checkNickname(
-    //         validateInput?.value ?? ''
-    //     );
+        const { isError, errorClass } = checkNewChatName(
+            channelName.value ?? ''
+        );
 
-    //     if (isError) {
-    //         validateInput?.classList.add('data-input--error');
-    //         addErrorToClass(errorClass, nicknameErrorTypes);
-    //         this.state.valid.channelNameIsValid = false;
+        if (isError) {
+            channelName?.classList.add('login-reg__input_error');
+            addErrorToClass(errorClass, chatNameErrorTypes);
+            if (this.state.nameIsValid) {
+                this.state.nameIsValid = false;
+            }
 
-    //         return;
-    //     }
+            return;
+        }
 
-    //     this.state.valid.channelNameIsValid = true;
-    // }
+        if (this.state.nameIsValid === false) {
+            this.state.nameIsValid = true;
+        }
+    }
+
+    validateChannelDescription(e?: Event) {
+        e?.preventDefault();
+        const channelDescription = document.querySelector('.channel-description') as HTMLInputElement;
+        channelDescription?.classList.remove('login-reg__input_error');
+        addErrorToClass('', chatDescriptionErrorTypes);
+
+        const { isError, errorClass } = checkNewChatDescription(
+            channelDescription.value ?? ''
+        );
+
+        if (isError) {
+            channelDescription?.classList.add('login-reg__input_error');
+            addErrorToClass(errorClass, chatDescriptionErrorTypes);
+            if (this.state.descriptionIsValid) {
+                this.state.descriptionIsValid = false;
+            }
+
+            return;
+        }
+
+        if (this.state.descriptionIsValid === false) {
+            this.state.descriptionIsValid = true;
+        }
+    }
 }

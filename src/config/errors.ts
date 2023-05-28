@@ -106,3 +106,40 @@ export const countingMembersErrorTypes: ErrorTypes[] = [
         message: 'Для создания группы выберите хотя-бы одного участника',
     },
 ];
+
+export const chatNameErrorTypes: ErrorTypes[] = [
+    {
+        param: 'emptyName',
+        class: 'empty-name',
+        message: 'Поле не может быть пустым',
+    },
+    {
+        param: 'invalidName',
+        class: 'invalid-name',
+        message: 'Имя канала должно быть длиннее четырех символов',
+    },
+    {
+        param: 'invalidNameSymbols',
+        class: 'invalid-name-symbols',
+        message: "Имя канала может содержать только буквы, цифры и '_'",
+    },
+];
+
+export const chatDescriptionErrorTypes: ErrorTypes[] = [
+    {
+        param: 'emptyDescription',
+        class: 'empty-description',
+        message: 'Поле не может быть пустым',
+    },
+    {
+        param: 'invalidDescription',
+        class: 'invalid-description',
+        message: 'Описание канала должно быть длиннее двух символов',
+    },
+    {
+        param: 'invalidDescriptionSymbols',
+        class: 'invalid-description-symbols',
+        message:
+            'Описание канала может содержать буквы, цифры и некоторые спец. символы [-.,!?_]',
+    },
+];

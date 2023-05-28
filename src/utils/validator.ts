@@ -168,6 +168,80 @@ export const checkNickname = (nickname: string) => {
 };
 
 /**
+ * Проверяет корректность имени нового чата.
+ * @param {string} name - Имя чата, который будет проверен.
+ * @returns {Object} - Объект с параметрами isError и errorClass.
+ */
+export const checkNewChatName = (name: string) => {
+    const isNotEmpty = name.length > 0;
+    const hasValidLength = name.length > 4;
+    const isValid = /^[a-zA-Z0-9_]{5,32}$/.test(name);
+
+    if (!isNotEmpty) {
+        return {
+            isError: true,
+            errorClass: 'empty-name',
+        };
+    }
+
+    if (!hasValidLength) {
+        return {
+            isError: true,
+            errorClass: 'invalid-name',
+        };
+    }
+
+    if (!isValid) {
+        return {
+            isError: true,
+            errorClass: 'invalid-name-symbols',
+        };
+    }
+
+    return {
+        isError: false,
+        errorClass: '',
+    };
+};
+
+/**
+ * Проверяет корректность описания нового чата.
+ * @param {string} description - Описание чата, который будет проверен.
+ * @returns {Object} - Объект с параметрами isError и errorClass.
+ */
+export const checkNewChatDescription = (description: string) => {
+    const isNotEmpty = description.length > 0;
+    const hasValidLength = description.length > 1;
+    const isValid = /^[a-zA-Z0-9_\-.,!? ]{1,255}$/.test(description);
+
+    if (!isNotEmpty) {
+        return {
+            isError: true,
+            errorClass: 'empty-description',
+        };
+    }
+
+    if (!hasValidLength) {
+        return {
+            isError: true,
+            errorClass: 'invalid-description',
+        };
+    }
+
+    if (!isValid) {
+        return {
+            isError: true,
+            errorClass: 'invalid-description-symbols',
+        };
+    }
+
+    return {
+        isError: false,
+        errorClass: '',
+    };
+};
+
+/**
  * Функция добавляет классы invisible элементам из массива ErrorTypes и удаляет указанный класс у элемента по селектору
  * @param {string} classToRemoveInvisible - имя класса, который нужно удалить у элемента
  * @param {ErrorTypes[]} classesToAddInvisible - массив объектов типа ErrorTypes, содержащих имя класса элемента, которому нужно добавить класс 'invisible'

@@ -256,9 +256,7 @@ export class SmartProfile extends Component<Props, State> {
         }
     }
 
-    // TODO: check old password
     updateUserPassword() {
-        // вместо пустых строк отправлять старые данные.
         const user = {
             email: '',
             new_avatar_url: '',
@@ -272,7 +270,7 @@ export class SmartProfile extends Component<Props, State> {
             ).value,
         };
 
-        const updateUserPromise = new Promise((resolve, reject) => {
+        const updateUserPromise = new Promise((resolve) => {
             resolve(
                 store.dispatch(
                     createUpdateUserAction({
@@ -333,7 +331,7 @@ export class SmartProfile extends Component<Props, State> {
             };
 
             // TODO: сделать все что ниже асинхронной функцией
-            const updateUserPromise = new Promise((resolve, reject) => {
+            const updateUserPromise = new Promise((resolve) => {
                 resolve(store.dispatch(createUpdateUserAction(forUpdate)));
             });
 

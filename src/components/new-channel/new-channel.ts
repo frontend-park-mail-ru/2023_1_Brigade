@@ -1,8 +1,4 @@
-import {
-    emailErrorTypes,
-    nicknameErrorTypes,
-    passwordErrorTypes,
-} from '@/config/errors';
+import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@/config/errors';
 import { Component } from '@/framework/component';
 import { store } from '@/store/store';
 import { Avatar } from '@/uikit/avatar/avatar';
@@ -131,8 +127,8 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
             className: 'input-container channel__form__input',
             placeholder: 'введите название канала',
             uniqClassName: 'channel-name',
-            errors: [],
-            errorsClassName: 'channel__input__errors',
+            errors: chatNameErrorTypes,
+            errorsClassName: 'channel__form__input__errors',
             onChange: this.props.channelNameValidate,
         });
 
@@ -142,9 +138,9 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
             className: 'input-container channel__form__input',
             placeholder: 'введите описание канала',
             uniqClassName: 'channel-description',
-            errors: [],
-            errorsClassName: 'channel__input__errors',
-            onChange: this.props.channelNameValidate,
+            errors: chatDescriptionErrorTypes,
+            errorsClassName: 'channel__form__input__errors',
+            onChange: this.props.channelDescriptionValidate,
         });
 
         this.state.btnList = new List({
