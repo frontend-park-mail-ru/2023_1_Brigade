@@ -62,6 +62,7 @@ export class MessageInput extends Component<Props, State> {
             attachmentUrls: [],
         };
 
+        this.onInput = this.onInput.bind(this);
         this.inputFocus = this.inputFocus.bind(this);
         this.update = this.update.bind(this);
 
@@ -88,6 +89,8 @@ export class MessageInput extends Component<Props, State> {
         this.state.input = this.node.querySelector(
             '.message-input__text-field__in'
         ) as HTMLInputElement;
+
+        this.state.input?.addEventListener('keydown', this.onInput);
 
         document.addEventListener('keyup', this.inputFocus);
 
@@ -195,17 +198,29 @@ export class MessageInput extends Component<Props, State> {
         this.state.isMounted = true;
     }
 
+    onInput(e: KeyboardEvent) {
+        if (e.shiftKey && e.key === 'Enter') {
+            e.preventDefault();
+            if (this.state.input) {
+                this.state.input.value += '\n';
+            }
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            this.onSend();
+        }
+    }
+
     inputFocus(e: KeyboardEvent) {
+        if (document.activeElement === this.state.input) {
+            return;
+        }
+
         if (e.shiftKey && e.key === 'Enter') {
             if (this.state.input) {
                 this.state.input.value += '\n';
             }
         } else if (e.key === 'Enter') {
             this.onSend();
-        }
-
-        if (document.activeElement === this.state.input) {
-            return;
         }
 
         this.state.input?.focus();
@@ -356,6 +371,7 @@ export class MessageInput extends Component<Props, State> {
         }
 
         document.removeEventListener('keyup', this.inputFocus);
+        this.state.input?.removeEventListener('keydown', this.onInput);
         this.state.emojiButton?.removeEventListener(
             'click',
             this.onEmoji.bind(this)
