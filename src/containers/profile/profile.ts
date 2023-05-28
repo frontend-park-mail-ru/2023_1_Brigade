@@ -121,6 +121,10 @@ export class SmartProfile extends Component<Props, State> {
             return;
         }
 
+        if (this.state.isMounted === false) {
+            this.state.isMounted = true;
+        }
+
         this.state.node = new DumbProfile({
             parent: this.node,
             user: this.hookUser(store.getState()),
@@ -392,7 +396,7 @@ export class SmartProfile extends Component<Props, State> {
 
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.jpg';
+        input.accept = 'image/*';
 
         input.addEventListener('change', () => {
             this.image = input?.files?.[0];

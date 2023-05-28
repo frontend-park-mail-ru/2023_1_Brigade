@@ -58,6 +58,19 @@
 
     &-transparent {
         background-color: rgba(0, 0, 0, 0.0);
+
+        &:hover {
+            // background-color: var(--primary);
+            background-color: rgba(0, 0, 0, 0.0);
+        }
+    
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.0);
+        }
+    
+        &:active {
+            background-color: rgba(0, 0, 0, 0.0);
+        }
     }
 
     &-active {
@@ -149,4 +162,44 @@
 .profile__form__unlock-btn {
     align-self: flex-end;
     margin-bottom: 1%;
+}
+
+.cancel-btn {
+    background-color: #3A3D4D !important;
+    border: 1px solid #3A3D4D;
+    transition: border background-color 0.3s ease-in-out;
+    &:hover {
+        background-color: #1b1c24 !important;
+        border: 1px solid #1b1c24;
+    }
+}
+
+.cancel__btn {
+    background-color: #3A3D4D !important;
+    border: 1px solid #3A3D4D;
+    transition: border background-color 0.3s ease-in-out;
+    &:hover {
+        background-color: #1b1c24 !important;
+        border: 1px solid #1b1c24;
+    }
+}
+
+.confirm__btn {
+    background-color: #1f61e7 !important;
+    border: 1px solid #1f61e7;
+    transition: border background-color 0.3s ease-in-out;
+    &:hover {
+        background-color: #023bae !important;
+        border: 1px solid #023bae;
+    }
+}
+
+.save-btn {
+    background-color: #1f61e7 !important;
+    border: 1px solid #1f61e7;
+    transition: border background-color 0.4s ease-in-out;
+    &:hover {
+        background-color: #023bae !important;
+        border: 1px solid #023bae;
+    }
 }

@@ -12,6 +12,9 @@
     flex: none;
     order: 3;
     flex-grow: 0;
+    &:hover {
+        background-color: var(--primary) !important;
+    }
 }
 
 
@@ -25,7 +28,7 @@
 }
 
 .profile__form__list {
-    flex-direction: row;
-    justify-content: center; // space-between
+    justify-content: space-between;
     align-items: center;
+    min-width: 100%;
 }

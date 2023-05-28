@@ -7,6 +7,7 @@ import { SmartSignUp } from '@containers/signUp/signUp';
 import { SmartAddUserInGroup } from '@containers/group/group';
 import { SmartCreateChannel } from '@/containers/channel/channel';
 import { DYNAMIC } from './config';
+import { store } from '@/store/store';
 
 export const routes: Route[] = [
     {
@@ -38,7 +39,10 @@ export const routes: Route[] = [
     {
         path: /^\/create_channel$/,
         component: () => {
-            return new SmartCreateChannel({});
+            return new SmartCreateChannel({
+                parent: DYNAMIC(),
+                user: store.getState().user,
+            });
         },
     },
     {

@@ -87,7 +87,7 @@ export const nicknameErrorTypes: ErrorTypes[] = [
     {
         param: 'invalidNicknameSymbols',
         class: 'invalid-nickname-symbols',
-        message: 'Никнейм должен содержать буквы английского или русского алфавита',
+        message: 'Никнейм может содержать только буквы и цифры',
     },
 ];
 

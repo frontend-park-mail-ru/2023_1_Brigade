@@ -138,7 +138,7 @@ export const checkConfirmPassword = (
 export const checkNickname = (nickname: string) => {
     const isNotEmpty = nickname.length > 0;
     const hasValidLength = nickname.length > 1;
-    const isValid = /^[a-zA-Zа-яА-Я]+$/.test(nickname);
+    const isValid = /^[/^[a-zA-Zа-яА-Я0-9_-]{3,16}$/.test(nickname);
 
     if (!isNotEmpty) {
         return {
