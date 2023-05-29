@@ -157,20 +157,27 @@ export class SmartCreateChannel extends Component<Props, State> {
     saveOnClick(e?: Event) {
         e?.preventDefault();
         if (this.isValid() && this.props.user) {
-            const newChannel = {
+            const channel = {
                 type: ChatTypes.Channel,
                 title: (
                     document.querySelector('.channel-name') as HTMLInputElement
                 )?.value,
+                avatar: '',
                 description: (
                     document.querySelector('.channel-description') as HTMLInputElement
                 )?.value,
                 members: [this.props.user.id],
-            } as Record<string, unknown>;
+            };
 
-            store.dispatch(createCreateChannelAction(newChannel));
+            console.log('channel object debug: ', channel);
+
+            store.dispatch(
+                createCreateChannelAction({
+                    image: this.image,
+                    channel,
+                })
+            );
             store.dispatch(createMoveToChatsAction());
-            // TODO: store.dispatch(createChannelAvatarAction(this.#image));
         }
     }
 

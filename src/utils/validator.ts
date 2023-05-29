@@ -137,7 +137,7 @@ export const checkConfirmPassword = (
  */
 export const checkNickname = (nickname: string) => {
     const isNotEmpty = nickname.length > 0;
-    const hasValidLength = nickname.length > 1;
+    const hasValidLength = nickname.length > 2;
     const isValid = /^[/^[a-zA-Zа-яА-Я0-9_-]{3,16}$/.test(nickname);
 
     if (!isNotEmpty) {
@@ -175,7 +175,7 @@ export const checkNickname = (nickname: string) => {
 export const checkNewChatName = (name: string) => {
     const isNotEmpty = name.length > 0;
     const hasValidLength = name.length > 4;
-    const isValid = /^[a-zA-Z0-9_]{5,32}$/.test(name);
+    const isValid = /^[а-яА-Яa-zA-Z0-9_ ]{5,32}$/.test(name);
 
     if (!isNotEmpty) {
         return {
@@ -212,7 +212,7 @@ export const checkNewChatName = (name: string) => {
 export const checkNewChatDescription = (description: string) => {
     const isNotEmpty = description.length > 0;
     const hasValidLength = description.length > 1;
-    const isValid = /^[a-zA-Z0-9_\-.,!? ]{1,255}$/.test(description);
+    const isValid = /^[а-яА-Яa-zA-Z0-9_\-.,!? ]{1,255}$/.test(description);
 
     if (!isNotEmpty) {
         return {

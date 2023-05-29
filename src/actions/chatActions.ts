@@ -8,12 +8,14 @@ import {
     getChats,
     getOneChat,
     searchChats,
+    uploadAvatar,
 } from '@utils/api';
 import { router } from '@router/createRouter';
 import {
     createMoveToChatAction,
     createMoveToChatsAction,
 } from '@actions/routeActions';
+import { sendImage } from '@utils/api';
 
 /**
  * Создает экшен "isNotRendered".
@@ -286,10 +288,29 @@ export const createEditChatAction = (updateGroupState: {
  * Создает экшен "createChannel".
  * @returns {function} - Функция, которая делает запрос и возвращает промис с результатом.
  */
-export const createCreateChannelAction = (channel: Record<string, unknown>) => {
+export const createCreateChannelAction = (channel: {
+    image: File | undefined;
+    channel: {
+        type: number;
+        title: string;
+        avatar: string;
+        description: string;
+        members: number[];
+    };
+}): AsyncAction => {
     return async (dispatch: (action: Action) => void) => {
+        if (channel.image) {
+            const { status, body } = await sendImage(channel.image);
+
+            if (status === 201) {
+                channel.channel.avatar = await body;
+            }
+        }
+
         const { status, body } = await createChat(channel);
         const jsonBody = await body;
+
+        console.log('response create channel: ', jsonBody);
 
         switch (status) {
             case 201:

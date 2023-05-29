@@ -87,7 +87,7 @@ export const nicknameErrorTypes: ErrorTypes[] = [
     {
         param: 'invalidNicknameSymbols',
         class: 'invalid-nickname-symbols',
-        message: 'Никнейм может содержать только буквы и цифры',
+        message: 'Никнейм может содержать буквы и цифры',
     },
 ];
 
@@ -121,7 +121,7 @@ export const chatNameErrorTypes: ErrorTypes[] = [
     {
         param: 'invalidNameSymbols',
         class: 'invalid-name-symbols',
-        message: "Имя канала может содержать только буквы, цифры и '_'",
+        message: "Имя канала содержит только буквы, цифры и '_'",
     },
 ];
 
