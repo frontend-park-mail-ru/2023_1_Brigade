@@ -1,8 +1,4 @@
-import {
-    emailErrorTypes,
-    nicknameErrorTypes,
-    passwordErrorTypes,
-} from '@/config/errors';
+import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@/config/errors';
 import { Component } from '@/framework/component';
 import { store } from '@/store/store';
 import { Avatar } from '@/uikit/avatar/avatar';
@@ -29,6 +25,7 @@ interface Props {
     channelNameValidate?: (e?: Event) => void;
     channelDescriptionValidate?: (e?: Event) => void;
     hookContacts?: (state: StoreState) => User[] | undefined;
+    hookUser?: (state: StoreState) => User | undefined;
 }
 
 interface State {
@@ -40,12 +37,13 @@ interface State {
     form?: Form;
     name?: Input;
     description?: Input;
+    membersInput?: Input;
     btnList?: List;
     cancelBtn?: Button;
     saveBtn?: Button;
 }
 
-export class DumbChannel extends Component<Props, State, HTMLElement> {
+export class DumbGroup extends Component<Props, State, HTMLElement> {
     constructor(props: Props) {
         super(props);
         this.state.isMounted = false;
@@ -93,7 +91,7 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
 
         this.headerText = document.createElement('span');
         this.headerText.classList.add('header__title');
-        this.headerText.textContent = 'Создание нового канала';
+        this.headerText.textContent = 'Создание группы';
 
         this.state.header = new Header({
             parent: this.node,
@@ -128,10 +126,10 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
             parent: this.state.form.getNode() as HTMLElement,
             label: 'Название',
             className: 'input-container channel__form__input',
-            placeholder: 'введите название канала',
+            placeholder: 'введите название группы',
             uniqClassName: 'channel-name',
-            errors: [],
-            errorsClassName: 'channel__input__errors',
+            errors: chatNameErrorTypes,
+            errorsClassName: 'channel__form__input__errors',
             onChange: this.props.channelNameValidate,
         });
 
@@ -139,11 +137,24 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
             parent: this.state.form.getNode() as HTMLElement,
             label: 'Описание',
             className: 'input-container channel__form__input',
-            placeholder: 'введите описание канала',
+            placeholder: 'введите описание группы',
             uniqClassName: 'channel-description',
-            errors: [],
-            errorsClassName: 'channel__input__errors',
-            onChange: this.props.channelNameValidate,
+            errors: chatDescriptionErrorTypes,
+            errorsClassName: 'channel__form__input__errors',
+            onChange: this.props.channelDescriptionValidate,
+        });
+
+        this.state.membersInput = new Input({
+            parent: this.state.form.getNode() as HTMLElement,
+            label: 'Участники',
+            className:
+                'input-container channel__form__input channel__form__input-members',
+            placeholder: 'введите имя участника группы',
+            uniqClassName: 'channel-members',
+            icon: svgButtonUI.renderTemplate({
+                svgClassName: 'search-icon',
+            }),
+            onChange: this.props.channelDescriptionValidate,
         });
 
         this.state.btnList = new List({
@@ -174,7 +185,14 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
                 this.props.contacts = this.props.hookContacts(state);
             }
 
-            if (this.props.contacts !== prevProps.contacts) {
+            if (this.props.hookUser) {
+                this.props.user = this.props.hookUser(state);
+            }
+
+            if (
+                this.props.contacts !== prevProps.contacts ||
+                this.props.user !== prevProps.user
+            ) {
                 this.update();
             }
         });

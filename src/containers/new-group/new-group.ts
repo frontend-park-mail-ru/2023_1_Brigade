@@ -14,15 +14,17 @@ import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
+import { DumbGroup } from '@/components/new-group/new-group';
 
 interface Props {
     parent: HTMLElement;
     user?: User;
+    contacts?: User[];
 }
 
 interface State {
     isMounted: boolean;
-    node?: DumbChannel;
+    node?: DumbGroup;
     confirmBtn?: Button | null;
     cancelBtn?: Button | null;
     btnList?: List | null;
@@ -31,9 +33,8 @@ interface State {
     descriptionIsValid?: boolean;
 }
 
-export class SmartCreateChannel extends Component<Props, State> {
+export class SmartCreateGroup extends Component<Props, State> {
     constructor(props: Props) {
-        console.log('create channel constructor has been called');
         DYNAMIC().innerHTML = '';
         super(props);
         this.state = {
@@ -65,7 +66,6 @@ export class SmartCreateChannel extends Component<Props, State> {
     }
 
     render() {
-        console.log('channel render has been called');
         return this.props.parent;
     }
 
@@ -74,17 +74,15 @@ export class SmartCreateChannel extends Component<Props, State> {
             return;
         }
 
-        console.log('channel did mount has been called');
-
         if (!this.state.isMounted) {
             this.state.isMounted = true;
         }
 
-        // if (!this.props.user) {
-        //     return;
-        // }
+        if (!this.props.user) {
+            return;
+        }
 
-        this.state.node = new DumbChannel({
+        this.state.node = new DumbGroup({
             parent: this.node,
             user: this.props.user,
             contacts: this.state.contacts,

@@ -1,8 +1,33 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+}  
+
 .channel {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    animation-delay: 0.5s;
+
     &__header {
         min-height: 80px;
         align-items: center;
@@ -51,12 +76,20 @@
             align-items: flex-start;
             justify-content: flex-start;
             min-width: 100%;
+            // &-members {
+            //     position: relative;
+            // }
+            &__errors {
+                top: 105%;
+                font-size: 1.2rem;
+            }
         }
 
         &__list {
             justify-content: space-between;
             align-items: center;
             min-width: 100%;
+            padding-top: 20px;
         }
 
         &__btn {

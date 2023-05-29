@@ -1,6 +1,6 @@
 import { Route } from '@router/router';
 import { SmartChat } from '@containers/chat/chat';
-import { SmartCreateGroup } from '@containers/createGroup/createGroup';
+import { SmartCreateGroup } from '@containers/new-group/new-group';
 import { SmartLogin } from '@containers/login/login';
 import { SmartProfile } from '@containers/profile/profile';
 import { SmartSignUp } from '@containers/signUp/signUp';
@@ -33,7 +33,11 @@ export const routes: Route[] = [
     {
         path: /^\/create_group$/,
         component: () => {
-            return new SmartCreateGroup({});
+            return new SmartCreateGroup({
+                parent: DYNAMIC(),
+                user: store.getState().user,
+                contacts: store.getState().contacts,
+            });
         },
     },
     {
