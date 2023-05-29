@@ -14,7 +14,8 @@ import { svgButtonUI } from '@components/ui/icon/button';
 interface Props {
     parent: HTMLElement;
     user?: User;
-    contacts?: User[];
+    chats?: Chat[];
+    openedChat?: OpenedChat;
     style?: Record<string, string | number>;
     backOnClick?: (e?: Event) => void;
     avatarOnClick?: (e?: Event) => void;
@@ -24,8 +25,9 @@ interface Props {
     descriptionOnChange?: (e?: Event) => void;
     channelNameValidate?: (e?: Event) => void;
     channelDescriptionValidate?: (e?: Event) => void;
-    hookContacts?: (state: StoreState) => User[] | undefined;
     hookUser?: (state: StoreState) => User | undefined;
+    hookChats(state: StoreState): Chat[] | undefined;
+    hookOpenedChat(state: StoreState): OpenedChat | undefined;
 }
 
 interface State {
@@ -167,21 +169,22 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
 
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
             const prevProps = { ...this.props };
-            if (this.props.hookContacts) {
-                this.props.contacts = this.props.hookContacts(state);
-            }
-
-            if (this.props.hookContacts) {
-                this.props.contacts = this.props.hookContacts(state);
+            if (this.props.hookChats) {
+                this.props.chats = this.props.hookChats(state);
             }
 
             if (this.props.hookUser) {
                 this.props.user = this.props.hookUser(state);
             }
 
+            if (this.props.hookOpenedChat) {
+                this.props.openedChat = this.props.hookOpenedChat(state);
+            }
+
             if (
-                this.props.contacts !== prevProps.contacts ||
-                this.props.user !== prevProps.user
+                this.props.user !== prevProps.user ||
+                this.props.chats !== prevProps.chats ||
+                this.props.openedChat !== prevProps.openedChat
             ) {
                 this.update();
             }

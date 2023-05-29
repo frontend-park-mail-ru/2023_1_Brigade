@@ -24,6 +24,10 @@ import {
     createDeleteMessageAction,
     createEditMessageAction,
 } from '@/actions/messageActions';
+import { Popup } from '@/components/popup/popup';
+import { Button } from '@/uikit/button/button';
+import { List } from '@/uikit/list/list';
+import { router } from '@/router/createRouter';
 
 interface Props {
     chatId?: number;
@@ -32,6 +36,9 @@ interface Props {
 }
 
 interface State {
+    cancelBtn?: Button;
+    confirmBtn?: Button;
+    btnList?: List;
     chat: DumbChat | undefined;
     isMounted: boolean;
     editingMessage: DumbMessage | undefined;
@@ -59,6 +66,7 @@ export class SmartChat extends Component<Props, State> {
 
     private chatId: number | undefined;
     private unsubscribeFromWs: () => void = () => {};
+    private popup: Popup | undefined | null;
 
     constructor(props: Props) {
         super(props);
@@ -339,10 +347,6 @@ export class SmartChat extends Component<Props, State> {
         this.state.domElements.input?.focus();
     }
 
-    handleClickDeleteButton() {
-        store.dispatch(createDeleteChatAction(this.props?.openedChat?.id));
-    }
-
     handleClickEditButton() {
         if (this.props.openedChat) {
             store.dispatch(createMoveToEditChatAction(this.props.openedChat));
@@ -351,6 +355,7 @@ export class SmartChat extends Component<Props, State> {
 
     componentDidMount() {
         if (!this.state.isMounted) {
+            console.log('check opened chat: ', store.getState().openedChat);
             if (this.chatId) {
                 this.unsubscribeFromWs = getWs().subscribe(
                     this.chatId,
@@ -393,6 +398,54 @@ export class SmartChat extends Component<Props, State> {
             this.unsubscribeFromWs();
             this.state.chat?.destroy();
             this.state.isMounted = false;
+        }
+    }
+
+    handleClickDeleteButton() {
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: 'Вы действительно хотите удалить чат?',
+                className: 'popup__container',
+            });
+
+            const popContent: HTMLElement | null = document.querySelector(
+                '.popup__content'
+            ) as HTMLElement;
+
+            if (popContent) {
+                this.state.btnList = new List({
+                    parent: popContent,
+                    className: 'popup__btn-list',
+                });
+
+                this.state?.btnList.getNode()?.classList.remove('list');
+
+                this.state.confirmBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn confirm__btn button-S',
+                    label: 'Подтвердить',
+                    onClick: () => {
+                        store.dispatch(
+                            createDeleteChatAction(this.props?.openedChat?.id)
+                        );
+                        router.route('/');
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+
+                this.state.cancelBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+            }
         }
     }
 }

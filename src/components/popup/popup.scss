@@ -8,6 +8,11 @@
   border-radius: 10px;
 }
 
+.popup__container {
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
 .popup {
     position: fixed;
     top: 50%;

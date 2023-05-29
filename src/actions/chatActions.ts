@@ -2,6 +2,7 @@ import { constantsOfActions } from '@config/actions';
 import { ChatTypes } from '@config/enum';
 import { store } from '@store/store';
 import {
+    chatImage,
     createChat,
     deleteChat,
     editChat,
@@ -288,29 +289,27 @@ export const createEditChatAction = (updateGroupState: {
  * Создает экшен "createChannel".
  * @returns {function} - Функция, которая делает запрос и возвращает промис с результатом.
  */
-export const createCreateChannelAction = (channel: {
+export const createCreateChannelAction = (newchannel: {
     image: File | undefined;
     channel: {
         type: number;
         title: string;
         avatar: string;
-        description: string;
+        // description: string;
         members: number[];
     };
 }): AsyncAction => {
     return async (dispatch: (action: Action) => void) => {
-        if (channel.image) {
-            const { status, body } = await sendImage(channel.image);
+        if (newchannel.image) {
+            const { status, body } = await chatImage(newchannel.image);
 
             if (status === 201) {
-                channel.channel.avatar = await body;
+                newchannel.channel.avatar = await body;
             }
         }
 
-        const { status, body } = await createChat(channel);
+        const { status, body } = await createChat(newchannel.channel);
         const jsonBody = await body;
-
-        console.log('response create channel: ', jsonBody);
 
         switch (status) {
             case 201:

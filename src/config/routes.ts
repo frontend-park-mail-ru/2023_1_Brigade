@@ -45,7 +45,6 @@ export const routes: Route[] = [
         component: () => {
             return new SmartCreateChannel({
                 parent: DYNAMIC(),
-                user: store.getState().user,
             });
         },
     },

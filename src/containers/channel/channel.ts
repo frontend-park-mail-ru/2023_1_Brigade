@@ -5,10 +5,18 @@ import {
     createMoveToChatsAction,
     createMoveToHomePageAction,
 } from '@actions/routeActions';
-import { addErrorToClass, checkNewChatDescription, checkNewChatName } from '@utils/validator';
+import {
+    addErrorToClass,
+    checkNewChatDescription,
+    checkNewChatName,
+} from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction } from '@actions/chatActions';
+import {
+    createCreateChannelAction,
+    createGetChatsAction,
+    createOpenChatAction,
+} from '@actions/chatActions';
 import { DumbChannel } from '@/components/new-channel/new-channel';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
@@ -17,7 +25,6 @@ import { router } from '@/router/createRouter';
 
 interface Props {
     parent: HTMLElement;
-    user?: User;
 }
 
 interface State {
@@ -33,7 +40,6 @@ interface State {
 
 export class SmartCreateChannel extends Component<Props, State> {
     constructor(props: Props) {
-        console.log('create channel constructor has been called');
         DYNAMIC().innerHTML = '';
         super(props);
         this.state = {
@@ -65,7 +71,6 @@ export class SmartCreateChannel extends Component<Props, State> {
     }
 
     render() {
-        console.log('channel render has been called');
         return this.props.parent;
     }
 
@@ -74,22 +79,18 @@ export class SmartCreateChannel extends Component<Props, State> {
             return;
         }
 
-        console.log('channel did mount has been called');
-
         if (!this.state.isMounted) {
             this.state.isMounted = true;
         }
 
-        // if (!this.props.user) {
-        //     return;
-        // }
-
         this.state.node = new DumbChannel({
             parent: this.node,
-            user: this.props.user,
-            contacts: this.state.contacts,
-            hookContacts: this.hookContacts,
-            hookUser: this.hookUser,
+            user: store.getState().user,
+            chats: store.getState().chats,
+            openedChat: store.getState().openedChat,
+            hookUser: this.hookUser.bind(this),
+            hookChats: this.hookChats.bind(this),
+            hookOpenedChat: this.hookOpenedChat.bind(this),
             backOnClick: this.backOnClick.bind(this),
             avatarOnClick: this.avatarOnClick.bind(this),
             cancelOnClick: this.cancelOnClick.bind(this),
@@ -117,8 +118,16 @@ export class SmartCreateChannel extends Component<Props, State> {
         return state.contacts ?? undefined;
     }
 
+    hookChats(state: StoreState): Chat[] | undefined {
+        return state.chats ?? undefined;
+    }
+
     hookUser(state: StoreState): User | undefined {
         return state.user ?? undefined;
+    }
+
+    hookOpenedChat(state: StoreState): OpenedChat | undefined {
+        return state.openedChat ?? undefined;
     }
 
     /**
@@ -160,20 +169,18 @@ export class SmartCreateChannel extends Component<Props, State> {
 
     saveOnClick(e?: Event) {
         e?.preventDefault();
-        if (this.isValid() && this.props.user) {
+        this.validateChannelName();
+        this.validateChannelDescription();
+        const user = store.getState().user;
+        if (this.isValid() && user) {
             const channel = {
                 type: ChatTypes.Channel,
                 title: (
                     document.querySelector('.channel-name') as HTMLInputElement
                 )?.value,
                 avatar: '',
-                description: (
-                    document.querySelector('.channel-description') as HTMLInputElement
-                )?.value,
-                members: [this.props.user.id],
+                members: [user.id],
             };
-
-            console.log('channel object debug: ', channel);
 
             store.dispatch(
                 createCreateChannelAction({
@@ -181,7 +188,6 @@ export class SmartCreateChannel extends Component<Props, State> {
                     channel,
                 })
             );
-            store.dispatch(createMoveToChatsAction());
         }
     }
 
@@ -194,7 +200,9 @@ export class SmartCreateChannel extends Component<Props, State> {
     //  */
     validateChannelName(e?: Event) {
         e?.preventDefault();
-        const channelName = document.querySelector('.channel-name') as HTMLInputElement;
+        const channelName = document.querySelector(
+            '.channel-name'
+        ) as HTMLInputElement;
         channelName?.classList.remove('login-reg__input_error');
         addErrorToClass('', chatNameErrorTypes);
 
@@ -219,7 +227,9 @@ export class SmartCreateChannel extends Component<Props, State> {
 
     validateChannelDescription(e?: Event) {
         e?.preventDefault();
-        const channelDescription = document.querySelector('.channel-description') as HTMLInputElement;
+        const channelDescription = document.querySelector(
+            '.channel-description'
+        ) as HTMLInputElement;
         channelDescription?.classList.remove('login-reg__input_error');
         addErrorToClass('', chatDescriptionErrorTypes);
 

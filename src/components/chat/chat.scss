@@ -44,7 +44,7 @@
 
 .view-chat__header__companion {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center; // flex-start
     justify-content: space-between;
     cursor: pointer;
 }

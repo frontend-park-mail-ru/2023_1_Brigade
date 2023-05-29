@@ -85,6 +85,10 @@
             }
         }
 
+        &__input:not(:last-child) {
+            margin-bottom: 50px;
+        }
+        
         &__list {
             justify-content: space-between;
             align-items: center;
