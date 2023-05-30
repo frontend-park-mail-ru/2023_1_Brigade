@@ -127,7 +127,7 @@ export class SmartCreateChannel extends Component<Props, State> {
     }
 
     hookOpenedChat(state: StoreState): OpenedChat | undefined {
-        return state.openedChat ?? undefined;
+        return store.getState().openedChat ?? undefined;
     }
 
     /**
@@ -179,6 +179,11 @@ export class SmartCreateChannel extends Component<Props, State> {
                     document.querySelector('.channel-name') as HTMLInputElement
                 )?.value,
                 avatar: '',
+                description: (
+                    document.querySelector(
+                        '.channel-description'
+                    ) as HTMLInputElement
+                )?.value,
                 members: [user.id],
             };
 

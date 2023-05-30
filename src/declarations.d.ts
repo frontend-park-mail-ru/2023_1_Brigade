@@ -120,7 +120,7 @@ interface Chat {
 
 interface OpenedChat {
     id: number;
-    master_id: number;
+    masterId: number;
     type: number;
     title: string;
     avatar: string;

@@ -35,6 +35,7 @@ export const createIsNotRenderedAction = () => {
  * @returns {{ type: string, payload: Object }} - Экшен
  */
 export const createOpenChatAction = (chat: Chat | undefined) => {
+    console.log('debug createOpenChatAction: ', chat);
     return {
         type: constantsOfActions.openChat,
         payload: chat,
@@ -295,7 +296,7 @@ export const createCreateChannelAction = (newchannel: {
         type: number;
         title: string;
         avatar: string;
-        // description: string;
+        description: string;
         members: number[];
     };
 }): AsyncAction => {

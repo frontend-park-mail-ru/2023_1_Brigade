@@ -10,6 +10,7 @@ import template from '@components/new-channel/new-channel.pug';
 import '@components/new-channel/new-channel.scss';
 import { Header } from '@uikit/header/header';
 import { svgButtonUI } from '@components/ui/icon/button';
+import { createOpenChatAction } from '@/actions/chatActions';
 
 interface Props {
     parent: HTMLElement;
@@ -169,6 +170,7 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
 
         this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
             const prevProps = { ...this.props };
+            console.log('check channel state:', state);
             if (this.props.hookChats) {
                 this.props.chats = this.props.hookChats(state);
             }
@@ -181,11 +183,15 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
                 this.props.openedChat = this.props.hookOpenedChat(state);
             }
 
+            console.log('hookOpenedChat:', this.props.openedChat);
+
             if (
                 this.props.user !== prevProps.user ||
                 this.props.chats !== prevProps.chats ||
                 this.props.openedChat !== prevProps.openedChat
             ) {
+                console.log('this.props.openedChat: ', this.props.openedChat);
+                console.log('prevProps.openedChat: ', prevProps.openedChat);
                 this.update();
             }
         });
@@ -198,6 +204,7 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
             return;
         }
 
+        this.unsubscribe();
         this.headerText?.remove();
         this.state.backButton?.destroy();
         this.state?.header?.destroy();
@@ -208,6 +215,8 @@ export class DumbChannel extends Component<Props, State, HTMLElement> {
         this.state.saveBtn?.destroy();
         this.state.btnList?.destroy();
         this.state.form?.destroy();
+
+        this.state.isMounted = false;
     }
 
     private render() {

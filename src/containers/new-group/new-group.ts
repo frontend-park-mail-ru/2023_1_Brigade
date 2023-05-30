@@ -158,15 +158,19 @@ export class SmartCreateGroup extends Component<Props, State> {
 
     saveOnClick(e?: Event) {
         e?.preventDefault();
+        this.validateChannelName();
+        this.validateChannelDescription();
         if (this.isValid() && this.props.user) {
             const channel = {
-                type: ChatTypes.Channel,
+                type: ChatTypes.Group,
                 title: (
                     document.querySelector('.channel-name') as HTMLInputElement
                 )?.value,
                 avatar: '',
                 description: (
-                    document.querySelector('.channel-description') as HTMLInputElement
+                    document.querySelector(
+                        '.channel-description'
+                    ) as HTMLInputElement
                 )?.value,
                 members: [this.props.user.id],
             };
@@ -192,7 +196,9 @@ export class SmartCreateGroup extends Component<Props, State> {
     //  */
     validateChannelName(e?: Event) {
         e?.preventDefault();
-        const channelName = document.querySelector('.channel-name') as HTMLInputElement;
+        const channelName = document.querySelector(
+            '.channel-name'
+        ) as HTMLInputElement;
         channelName?.classList.remove('login-reg__input_error');
         addErrorToClass('', chatNameErrorTypes);
 
@@ -217,7 +223,9 @@ export class SmartCreateGroup extends Component<Props, State> {
 
     validateChannelDescription(e?: Event) {
         e?.preventDefault();
-        const channelDescription = document.querySelector('.channel-description') as HTMLInputElement;
+        const channelDescription = document.querySelector(
+            '.channel-description'
+        ) as HTMLInputElement;
         channelDescription?.classList.remove('login-reg__input_error');
         addErrorToClass('', chatDescriptionErrorTypes);
 

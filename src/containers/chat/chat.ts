@@ -107,11 +107,13 @@ export class SmartChat extends Component<Props, State> {
         if (this.state.isMounted && this.chatId) {
             if (this.props?.openedChat?.isNotRendered) {
                 this.state.chat = new DumbChat({
-                    chatData: this.props.openedChat,
+                    openedChat: this.props.openedChat,
                     userId: this.props?.user?.id ?? 0,
                     userAvatar: this.props?.user?.avatar ?? '',
                     chatAvatar: this.props?.openedChat?.avatar,
                     chatTitle: this.props?.openedChat?.title,
+                    chatDescription: this.props?.openedChat?.description,
+                    hookOpenedChat: this.hookOpenedChat.bind(this),
                     onDeleteMessage: this.handleDeleteMessage.bind(this),
                     onEditMessage: this.handleEditMessage.bind(this),
                     onSendMessage: this.handleClickSendButton.bind(this),
@@ -193,6 +195,7 @@ export class SmartChat extends Component<Props, State> {
                             this.state.domElements.subscribeBtn.textContent =
                                 'Subscribe';
                             store.dispatch(createDeleteUserInChat());
+                            // router.route('/');
                         }
 
                         if (this.props.openedChat) {
@@ -230,7 +233,7 @@ export class SmartChat extends Component<Props, State> {
                     this.props.openedChat.type === ChatTypes.Group ||
                     (this.props.openedChat.type === ChatTypes.Channel &&
                         this.props?.user?.id ===
-                            this.props?.openedChat?.master_id)
+                            this.props?.openedChat?.masterId)
                 ) {
                     this.state.domElements.editBtn?.addEventListener(
                         'click',
@@ -355,7 +358,6 @@ export class SmartChat extends Component<Props, State> {
 
     componentDidMount() {
         if (!this.state.isMounted) {
-            console.log('check opened chat: ', store.getState().openedChat);
             if (this.chatId) {
                 this.unsubscribeFromWs = getWs().subscribe(
                     this.chatId,
@@ -390,6 +392,10 @@ export class SmartChat extends Component<Props, State> {
                 }
             }
         }
+    }
+
+    hookOpenedChat(state: StoreState): OpenedChat | undefined {
+        return state.openedChat ?? undefined; // store.getState();
     }
 
     componentWillUnmount() {
