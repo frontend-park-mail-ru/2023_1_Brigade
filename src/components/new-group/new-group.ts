@@ -6,8 +6,8 @@ import { Button } from '@/uikit/button/button';
 import { Form } from '@/uikit/form/form';
 import { Input } from '@/uikit/input/input';
 import { List } from '@/uikit/list/list';
-import template from '@components/new-channel/new-channel.pug';
-import '@components/new-channel/new-channel.scss';
+import template from '@components/new-group/new-group.pug';
+import '@components/new-group/new-group.scss';
 import { Header } from '@uikit/header/header';
 import { svgButtonUI } from '@components/ui/icon/button';
 import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
@@ -100,7 +100,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.header = new Header({
             parent: this.node,
-            className: 'channel__header',
+            className: 'group__header',
         });
 
         this.state.backButton = new Button({
@@ -115,8 +115,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.avatar = new Avatar({
             parent: this.node as HTMLElement,
-            className:
-                'channel__avatar avatar avatar-border-radius-50 avatar-L',
+            className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
             src: this.props.user?.avatar ?? './assets/img/defaultAva.png',
             alt: 'User avatar',
             onClick: this.props.avatarOnClick,
@@ -124,28 +123,28 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.form = new Form({
             parent: this.node as HTMLElement,
-            className: 'channel__form',
+            className: 'group__form',
         });
 
         this.state.name = new Input({
             parent: this.state.form.getNode() as HTMLElement,
             label: 'Название',
-            className: 'input-container channel__form__input',
+            className: 'input-container group__form__input',
             placeholder: 'введите название группы',
             uniqClassName: 'channel-name',
             errors: chatNameErrorTypes,
-            errorsClassName: 'channel__form__input__errors',
+            errorsClassName: 'group__form__input__errors',
             onChange: this.props.channelNameValidate,
         });
 
         this.state.description = new Input({
             parent: this.state.form.getNode() as HTMLElement,
             label: 'Описание',
-            className: 'input-container channel__form__input',
+            className: 'input-container group__form__input',
             placeholder: 'введите описание группы',
             uniqClassName: 'channel-description',
             errors: chatDescriptionErrorTypes,
-            errorsClassName: 'channel__form__input__errors',
+            errorsClassName: 'group__form__input__errors',
             onChange: this.props.channelDescriptionValidate,
         });
 
@@ -155,7 +154,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                     parent: this.state.form?.getNode() as HTMLElement,
                     label: 'Участники',
                     className:
-                        'input-container channel__form__input channel__form__input-members',
+                        'input-container group__form__input group__form__input-members',
                     placeholder: 'введите имя участника группы',
                     uniqClassName: 'channel-members',
                     icon: svgButtonUI.renderTemplate({
@@ -167,38 +166,37 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         });
 
         drawMemberInputPromise.then(() => {
-            console.log('input value: ', document.querySelector('.channel__form__input-members') as HTMLElement);
             const contacts = store.getState().contacts;
             if (contacts) {
                 console.log('contacts: ', contacts);
                 this.state.membersDropdown = new InputDropdownList({
-                    parent: document.querySelector('.channel__form__input-members') as HTMLElement,// this.state.form?.getNode() as HTMLElement
-                    className: 'channel__form__input-members__list',
+                    parent: document.querySelector(
+                        '.group__form__input-members'
+                    ) as HTMLElement,
+                    className: 'group__form__input-members__list',
                 });
 
                 let i = 0;
                 this.state.dropdownItems = [];
                 const dropdownRoot = document.querySelector(
-                    '.channel__form__input-members__list'
+                    '.group__form__input-members__list'
                 ) as HTMLElement;
 
                 for (const contact of contacts) {
                     // TODO: пробрасывать в dropdownitem объект contact
                     this.state.dropdownItems[i] = new InputDropdownItem({
                         parent: dropdownRoot,
-                        className: `channel__form__input-members__list__item members-item-${contact.id}`,
+                        className: `group__form__input-members__list__item members-item-${contact.id}`,
                     });
 
                     i++;
                 }
-
-                console.log('new group still working');
             }
         });
 
         this.state.btnList = new List({
             parent: this.state.form.getNode() as HTMLElement,
-            className: 'channel__form__list row flex',
+            className: 'group__form__list row flex',
         });
         this.state.btnList.getNode()?.classList.remove('list');
 
@@ -206,7 +204,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             parent: this.state.btnList.getNode() as HTMLElement,
             label: 'Отмена',
             className:
-                'btn-reset channel__form__btn cancel-btn button-border-radius-S button-M button-primary',
+                'btn-reset group__form__btn cancel-btn button-border-radius-S button-M button-primary',
             onClick: this.props.cancelOnClick,
         });
 
@@ -214,7 +212,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             parent: this.state.btnList.getNode() as HTMLElement,
             label: 'Сохранить',
             className:
-                'btn-reset channel__form__btn save-btn button-border-radius-S button-M button-primary',
+                'btn-reset group__form__btn save-btn button-border-radius-S button-M button-primary',
             onClick: this.props.saveOnClick,
         });
 
