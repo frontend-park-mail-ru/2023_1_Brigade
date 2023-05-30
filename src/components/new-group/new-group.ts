@@ -183,10 +183,10 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                 ) as HTMLElement;
 
                 for (const contact of contacts) {
-                    // TODO: пробрасывать в dropdownitem объект contact
                     this.state.dropdownItems[i] = new InputDropdownItem({
                         parent: dropdownRoot,
                         className: `group__form__input-members__list__item members-item-${contact.id}`,
+                        contact: contact,
                     });
 
                     i++;

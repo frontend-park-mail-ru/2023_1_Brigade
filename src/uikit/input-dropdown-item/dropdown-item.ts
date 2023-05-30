@@ -5,6 +5,7 @@ import { Component } from '@framework/component';
 interface Props {
     parent: HTMLElement;
     className?: string;
+    contact?: User;
     size?: 'S' | 'M' | 'L';
     style?: Record<string, string | number>;
 }
@@ -66,7 +67,9 @@ export class InputDropdownItem extends Component<Props, State> {
     render() {
         return new DOMParser().parseFromString(
             template({
-                ClassName: this.props.className,
+                ClassName: this.props.className ?? '',
+                ImgSrc: this.props.contact?.avatar ?? '',
+                Nickname: this.props.contact?.nickname ?? '',
             }),
             'text/html'
         ).body.firstChild;

@@ -3,11 +3,11 @@
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
-    min-height: 200px;
+    height: 100vh;
     max-height: 250px;
     background: #181B23;
     opacity: 0;
-    overflow: hidden; // overflow: auto;
+    overflow: auto; // overflow: hidden;
     transition: all 0.3s ease;
 }
 
