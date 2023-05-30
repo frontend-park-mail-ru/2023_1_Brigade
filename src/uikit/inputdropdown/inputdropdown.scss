@@ -5,8 +5,10 @@
     width: 100%;
     height: 100vh;
     max-height: 250px;
-    background: #181B23;
-    opacity: 0;
+    background: #131318;
+    padding: 10px 0px;
+    opacity: 1;
+    z-index: 1;
     overflow: auto; // overflow: hidden;
     transition: all 0.3s ease;
 }
