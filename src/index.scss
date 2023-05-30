@@ -266,6 +266,10 @@ button {
     display: flex;
 }
 
+.align-items-center {
+    align-items: center;
+}
+
 .row {
     flex-direction: row;
 }
@@ -286,6 +290,10 @@ button {
 .container {
     margin: 0 auto;
     padding: 0px 15px;
+}
+
+.w-auto {
+    width: auto;
 }
 
 .position-fixed {

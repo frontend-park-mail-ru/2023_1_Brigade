@@ -23,6 +23,7 @@ interface Props {
     cancelOnClick?: (e?: Event) => void;
     saveOnClick?: (e?: Event) => void;
     nameOnChange?: (e?: Event) => void;
+    itemOnClick?: (e?: Event) => void;
     descriptionOnChange?: (e?: Event) => void;
     membersOnChange?: (e?: Event) => void;
     channelNameValidate?: (e?: Event) => void;
@@ -187,6 +188,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                         parent: dropdownRoot,
                         className: `group__form__input-members__list__item members-item-${contact.id}`,
                         contact: contact,
+                        onClick: this.props.itemOnClick,
                     });
 
                     i++;

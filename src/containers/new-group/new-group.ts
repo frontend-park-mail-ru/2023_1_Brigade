@@ -262,4 +262,8 @@ export class SmartCreateGroup extends Component<Props, State> {
     membersOnChange(e?: Event) {
         e?.preventDefault();
     }
+
+    itemOnClick(e?: Event) {
+        e?.preventDefault();
+    }
 }

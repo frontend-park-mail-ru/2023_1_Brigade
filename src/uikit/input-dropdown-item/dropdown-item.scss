@@ -1,10 +1,12 @@
 .input-dropdown__list__item {
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     min-width: 100%;
     max-height: 50px;
-    background-color: #131318; // #181B23
+    background-color: #131318;
     padding: 10px 0px;
+    padding-right: 10px;
     cursor: pointer;
     z-index: 1;
     transition: background-color 0.3s ease-in-out;
@@ -32,7 +34,7 @@
 }
 
 .dropdown-item__text {
-    width: 76px;
+    width: 75px;
     height: 25px;
     font-family: 'Actor', 'sans-serif';
     font-style: normal;
@@ -47,4 +49,77 @@
     order: 1;
     flex-grow: 0;
     z-index: 999;
+}
+
+
+.styled-checkbox{
+    display: inline-flex;
+    gap: 8px;
+    span{
+      cursor: pointer;
+    }
+    input{
+      visibility: hidden;
+      position: absolute;
+    }
+    .el{
+      width: 18px;
+      height: 18px;
+      border: solid 1px grey;
+      border-radius: 3px;
+      svg{
+        transition: .3s ease;
+      }
+    }
+    input:not(:checked) ~ .el svg{
+      opacity: 0;
+    }
+    //Colors
+    @mixin checkboxStyle($prop, $c1, $c2){
+      &.style-#{$prop}{
+        svg{
+          fill: $c1;
+        }
+        input:checked ~ .el{
+          background-color: $c2;
+          border-color: $c1;
+        }
+        &:hover{
+          .el{
+            border-color: $c1;
+          }
+        }
+      }
+    }
+    @include checkboxStyle('cyan', #11EFFF, #11EFFF1C);
+    @include checkboxStyle('red', rgba(209, 58, 41), rgba(209, 58, 41, .05));
+    @include checkboxStyle('purple', rgba(169, 3, 252), rgba(169, 3, 252, .05));
+    @include checkboxStyle('orange', rgba(252, 152, 3), rgba(252, 152, 3, .05));
+    @include checkboxStyle('blue', rgba(66, 69, 255), rgba(66, 69, 255, .05));
+    @include checkboxStyle('green', rgba(23, 230, 40), rgba(23, 230, 40, .05));
+    @include checkboxStyle('yellow', rgba(255, 238, 0), rgba(255, 238, 0, .05));
+    @include checkboxStyle('gold', rgba(255, 200, 0), rgba(255, 200, 0, .05));
+    @include checkboxStyle('pink', rgba(255, 102, 161), rgba(255, 102, 161, .05));
+    
+    //Animations
+    // &.translate{
+    //   input:not(:checked) ~ .el svg{
+    //     transform: translateX(20px);
+    //   }
+    // }
+    // &.scale{
+    //   input:not(:checked) ~ .el svg{
+    //     transform: scale(3);
+    //   }
+    // }
+    // &.rotate{
+    //   input:not(:checked) ~ .el svg{
+    //     transform: rotate(360deg);
+    //   }
+    // }
+    // &.translate.scale{
+    //   input:not(:checked) ~ .el svg{
+    //     transform: translateX(20px) scale(3);
+    //   }
+    // }
 }
