@@ -268,8 +268,8 @@ export class DumbChat extends Component<Props, State> {
     }
 
     private checkRights(master_id: number | undefined): boolean {
-        console.log('master_id: ', master_id);
         if (master_id == this.props?.userId) {
+            console.log('master_id: ', master_id);
             return true;
         }
 
@@ -299,7 +299,7 @@ export class DumbChat extends Component<Props, State> {
         console.log('openedChat', openedChat);
         let master_id = 0;
         if (openedChat) {
-            master_id = openedChat.masterId;
+            master_id = openedChat.master_id;
         }
 
         console.log('check master_id', master_id);

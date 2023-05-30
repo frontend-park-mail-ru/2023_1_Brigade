@@ -5,7 +5,11 @@ import {
     createMoveToChatsAction,
     createMoveToHomePageAction,
 } from '@actions/routeActions';
-import { addErrorToClass, checkNewChatDescription, checkNewChatName } from '@utils/validator';
+import {
+    addErrorToClass,
+    checkNewChatDescription,
+    checkNewChatName,
+} from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
 import { createCreateChannelAction } from '@actions/chatActions';
@@ -15,6 +19,7 @@ import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
+import { Input } from '@/uikit/input/input';
 
 interface Props {
     parent: HTMLElement;
@@ -27,6 +32,8 @@ interface State {
     node?: DumbGroup;
     confirmBtn?: Button | null;
     cancelBtn?: Button | null;
+    membersInput?: HTMLInputElement;
+    membersDropdown?: '';
     btnList?: List | null;
     contacts?: User[];
     nameIsValid?: boolean;
@@ -95,6 +102,7 @@ export class SmartCreateGroup extends Component<Props, State> {
             channelNameValidate: this.validateChannelName.bind(this),
             channelDescriptionValidate:
                 this.validateChannelDescription.bind(this),
+            membersOnChange: this.membersOnChange.bind(this),
         });
     }
 
@@ -246,5 +254,16 @@ export class SmartCreateGroup extends Component<Props, State> {
         if (this.state.descriptionIsValid === false) {
             this.state.descriptionIsValid = true;
         }
+    }
+
+    membersOnChange(e?: Event) {
+        e?.preventDefault();
+        store.dispatch(createGetContactsAction());
+
+        const membersInput = document.querySelector(
+            '.channel__form__input-members'
+        ) as HTMLInputElement;
+
+
     }
 }

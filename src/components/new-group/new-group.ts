@@ -22,6 +22,7 @@ interface Props {
     saveOnClick?: (e?: Event) => void;
     nameOnChange?: (e?: Event) => void;
     descriptionOnChange?: (e?: Event) => void;
+    membersOnChange?: (e?: Event) => void;
     channelNameValidate?: (e?: Event) => void;
     channelDescriptionValidate?: (e?: Event) => void;
     hookContacts?: (state: StoreState) => User[] | undefined;
@@ -154,8 +155,11 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'search-icon',
             }),
-            onChange: this.props.channelDescriptionValidate,
+            onChange: this.props.membersOnChange,
         });
+
+        // TODO: создать dropdown, который будет append-ится в input.
+        // document.crea channel__form__input-members
 
         this.state.btnList = new List({
             parent: this.state.form.getNode() as HTMLElement,

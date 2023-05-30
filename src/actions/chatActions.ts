@@ -79,6 +79,7 @@ export const createGetOneChatAction = (chat: Record<string, number>) => {
 
         switch (status) {
             case 200:
+                console.log('get one chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 break;
             case 401:
@@ -269,6 +270,7 @@ export const createEditChatAction = (updateGroupState: {
 
         switch (status) {
             case 201:
+                console.log('edit chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 router.route(`/${updateGroupState.id}`);
                 break;
@@ -309,11 +311,14 @@ export const createCreateChannelAction = (newchannel: {
             }
         }
 
+        console.log('newchannel.channel: ', newchannel.channel);
+
         const { status, body } = await createChat(newchannel.channel);
         const jsonBody = await body;
 
         switch (status) {
             case 201:
+                console.log('createCreateChannelAction jsonbody: ', jsonBody);
                 dispatch(createAddChatAction(jsonBody));
                 dispatch(createMoveToChatAction({ chatId: jsonBody.id }));
                 break;

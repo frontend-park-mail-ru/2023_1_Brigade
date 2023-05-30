@@ -116,3 +116,9 @@ input {
 .channel__form__input-members {
   position: relative;
 }
+
+.channel__form__input-members:focus {
+  opacity: 1;
+  height: 200px !important;
+  max-height: 200px !important;
+}

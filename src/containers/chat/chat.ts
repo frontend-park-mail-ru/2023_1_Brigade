@@ -233,7 +233,7 @@ export class SmartChat extends Component<Props, State> {
                     this.props.openedChat.type === ChatTypes.Group ||
                     (this.props.openedChat.type === ChatTypes.Channel &&
                         this.props?.user?.id ===
-                            this.props?.openedChat?.masterId)
+                            this.props?.openedChat?.master_id)
                 ) {
                     this.state.domElements.editBtn?.addEventListener(
                         'click',
