@@ -10,6 +10,8 @@ import template from '@components/new-channel/new-channel.pug';
 import '@components/new-channel/new-channel.scss';
 import { Header } from '@uikit/header/header';
 import { svgButtonUI } from '@components/ui/icon/button';
+import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
+import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
@@ -42,6 +44,8 @@ interface State {
     btnList?: List;
     cancelBtn?: Button;
     saveBtn?: Button;
+    membersDropdown?: InputDropdownList;
+    dropdownItems?: InputDropdownItem[];
 }
 
 export class DumbGroup extends Component<Props, State, HTMLElement> {
@@ -145,21 +149,52 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             onChange: this.props.channelDescriptionValidate,
         });
 
-        this.state.membersInput = new Input({
-            parent: this.state.form.getNode() as HTMLElement,
-            label: 'Участники',
-            className:
-                'input-container channel__form__input channel__form__input-members',
-            placeholder: 'введите имя участника группы',
-            uniqClassName: 'channel-members',
-            icon: svgButtonUI.renderTemplate({
-                svgClassName: 'search-icon',
-            }),
-            onChange: this.props.membersOnChange,
+        const drawMemberInputPromise = new Promise((resolve) => {
+            resolve(
+                (this.state.membersInput = new Input({
+                    parent: this.state.form?.getNode() as HTMLElement,
+                    label: 'Участники',
+                    className:
+                        'input-container channel__form__input channel__form__input-members',
+                    placeholder: 'введите имя участника группы',
+                    uniqClassName: 'channel-members',
+                    icon: svgButtonUI.renderTemplate({
+                        svgClassName: 'search-icon',
+                    }),
+                    onChange: this.props.membersOnChange,
+                }))
+            );
         });
 
-        // TODO: создать dropdown, который будет append-ится в input.
-        // document.crea channel__form__input-members
+        drawMemberInputPromise.then(() => {
+            console.log('input value: ', document.querySelector('.channel__form__input-members') as HTMLElement);
+            const contacts = store.getState().contacts;
+            if (contacts) {
+                console.log('contacts: ', contacts);
+                this.state.membersDropdown = new InputDropdownList({
+                    parent: document.querySelector('.channel__form__input-members') as HTMLElement,// this.state.form?.getNode() as HTMLElement
+                    className: 'channel__form__input-members__list',
+                });
+
+                let i = 0;
+                this.state.dropdownItems = [];
+                const dropdownRoot = document.querySelector(
+                    '.channel__form__input-members__list'
+                ) as HTMLElement;
+
+                for (const contact of contacts) {
+                    // TODO: пробрасывать в dropdownitem объект contact
+                    this.state.dropdownItems[i] = new InputDropdownItem({
+                        parent: dropdownRoot,
+                        className: `channel__form__input-members__list__item members-item-${contact.id}`,
+                    });
+
+                    i++;
+                }
+
+                console.log('new group still working');
+            }
+        });
 
         this.state.btnList = new List({
             parent: this.state.form.getNode() as HTMLElement,
@@ -215,10 +250,19 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.state.avatar?.destroy();
         this.state.name?.destroy();
         this.state.description?.destroy();
+        if (this.state.dropdownItems) {
+            for (const item of this.state?.dropdownItems) {
+                item.destroy();
+            }
+        }
+        this.state.membersDropdown?.destroy();
+        this.state.membersInput?.destroy();
         this.state.cancelBtn?.destroy();
         this.state.saveBtn?.destroy();
         this.state.btnList?.destroy();
         this.state.form?.destroy();
+
+        this.state.isMounted = false;
     }
 
     private render() {

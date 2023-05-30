@@ -20,6 +20,8 @@ import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
 import { Input } from '@/uikit/input/input';
+import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
+import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
@@ -33,7 +35,8 @@ interface State {
     confirmBtn?: Button | null;
     cancelBtn?: Button | null;
     membersInput?: HTMLInputElement;
-    membersDropdown?: '';
+    // membersDropdown?: InputDropdownList;
+    // dropdownItems?: InputDropdownItem[];
     btnList?: List | null;
     contacts?: User[];
     nameIsValid?: boolean;
@@ -258,12 +261,5 @@ export class SmartCreateGroup extends Component<Props, State> {
 
     membersOnChange(e?: Event) {
         e?.preventDefault();
-        store.dispatch(createGetContactsAction());
-
-        const membersInput = document.querySelector(
-            '.channel__form__input-members'
-        ) as HTMLInputElement;
-
-
     }
 }
