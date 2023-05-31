@@ -269,11 +269,6 @@ export class SmartChat extends Component<Props, State> {
                     ) as HTMLElement,
                     message
                 );
-
-            // this.state.chat?.addAttachment(
-            //     document.querySelector('.attachments__list') as HTMLElement,
-            //     message
-            // );
         }
     }
 

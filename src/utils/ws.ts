@@ -2,7 +2,7 @@ import { store } from '@/store/store';
 
 const createWs = (url: string) => {
     let ws: WebSocket | undefined;
-    const subscribers = new Map<number, (message: Message) => void>();
+    const subscribers = new Map<number, ((message: Message) => void)[]>();
 
     const create = () => {
         ws = new WebSocket(url);
@@ -15,9 +15,9 @@ const createWs = (url: string) => {
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
                 const e = JSON.parse(event.data);
-                const cb = subscribers.get(e.chat_id);
-                if (cb) {
-                    cb(e);
+                const cbs = subscribers.get(e.chat_id);
+                if (cbs) {
+                    cbs.forEach((cb) => cb(e));
                 }
             };
 
@@ -43,9 +43,22 @@ const createWs = (url: string) => {
                 ws?.send(JSON.stringify(message));
             },
             subscribe: (chatId: number, cb: (message: Message) => void) => {
-                subscribers.set(chatId, cb);
+                if (subscribers.has(chatId)) {
+                    subscribers.get(chatId)?.push(cb);
+                } else {
+                    subscribers.set(chatId, [cb]);
+                }
+
                 return () => {
-                    subscribers.delete(chatId);
+                    debugger;
+                    const index = subscribers
+                        .get(chatId)
+                        ?.findIndex((c) => c == cb);
+                    if (index !== -1) {
+                        console.log({ ...subscribers });
+                        subscribers.get(chatId)?.slice(index, 1);
+                        console.log(subscribers);
+                    }
                 };
             },
             close: () => {
