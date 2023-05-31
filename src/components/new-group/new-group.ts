@@ -19,6 +19,7 @@ interface Props {
     user?: User;
     openedChat?: OpenedChat;
     type?: number;
+    chats?: Chat[];
     chatActionType?: string;
     contacts?: User[];
     style?: Record<string, string | number>;
@@ -36,6 +37,7 @@ interface Props {
     hookContacts?: (state: StoreState) => User[] | undefined;
     hookOpenedChat?: (state: StoreState) => OpenedChat | undefined;
     hookUser?: (state: StoreState) => User | undefined;
+    hookChats?: (state: StoreState) => Chat[] | undefined;
     nameValue?: string;
     descriptionValue?: string;
     avatar?: string;
@@ -259,9 +261,15 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                 this.props.openedChat = this.props.hookOpenedChat(state);
             }
 
+            if (this.props.hookChats) {
+                this.props.chats = this.props.hookChats(state);
+            }
+
             if (
                 this.props.contacts !== prevProps.contacts ||
-                this.props.user !== prevProps.user
+                this.props.user !== prevProps.user ||
+                this.props.chats !== prevProps.chats ||
+                this.props.openedChat !== prevProps.openedChat
             ) {
                 this.update();
             }
@@ -293,6 +301,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.state.btnList?.destroy();
         this.state.form?.destroy();
 
+        this.unsubscribe();
         this.state.isMounted = false;
     }
 

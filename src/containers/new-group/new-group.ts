@@ -12,7 +12,7 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction } from '@actions/chatActions';
+import { createCreateChannelAction, createGetChatsAction, createOpenChatAction } from '@actions/chatActions';
 import { DumbChannel } from '@/components/new-channel/new-channel';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';

@@ -426,11 +426,8 @@ export const createUpdateChatAction = (chat: {
 
             if (status === 201) {
                 chat.chatField.avatar = await body;
-                // console.log('chat.chatField.avatar: ', chat.chatField.avatar);
             }
         }
-
-        console.log('request json: ', chat.chatField);
 
         const { status, body } = await editChat(chat.chatField);
         const jsonBody = await body;

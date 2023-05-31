@@ -9,7 +9,7 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction, createEditChatAction, createUpdateChatAction } from '@actions/chatActions';
+import { createCreateChannelAction, createEditChatAction, createGetChatsAction, createOpenChatAction, createUpdateChatAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
@@ -37,8 +37,6 @@ interface State {
 }
 
 export class SmartEditChat extends Component<Props, State> {
-    private chatMembers?: User[];
-
     constructor(props: Props) {
         DYNAMIC().innerHTML = '';
         super(props);
@@ -87,20 +85,21 @@ export class SmartEditChat extends Component<Props, State> {
             return;
         }
 
-        // const drawGroupPromise = new Promise((resolve) => {
-        //     if (this.node) {
-        //         resolve(
         this.state.node = new DumbGroup({
             parent: this.node,
             type: store.getState().openedChat?.type,
             chatActionType: 'Изменение',
             user: this.props.user,
             contacts: this.state.contacts,
+            chats: store.getState().chats,
+            openedChat: store.getState().openedChat,
             nameValue: store.getState().openedChat?.title,
             descriptionValue: store.getState().openedChat?.description,
             avatar: store.getState().openedChat?.avatar,
             hookContacts: this.hookContacts,
             hookUser: this.hookUser,
+            hookChats: this.hookChats,
+            hookOpenedChat: this.hookOpenedChat,
             backOnClick: this.backOnClick.bind(this),
             avatarOnClick: this.avatarOnClick.bind(this),
             cancelOnClick: this.cancelOnClick.bind(this),
@@ -111,13 +110,6 @@ export class SmartEditChat extends Component<Props, State> {
             membersOnChange: this.membersOnChange.bind(this),
             setCheckedLabels: this.setCheckedLabels.bind(this),
         });
-        //         );
-        //     }
-        // });
-
-        // drawGroupPromise.then(() => {
-        //     this.setCheckedLabels();
-        // });
     }
 
     componentWillUnmount() {
@@ -143,6 +135,10 @@ export class SmartEditChat extends Component<Props, State> {
 
     hookOpenedChat(state: StoreState): OpenedChat | undefined {
         return state.openedChat ?? undefined;
+    }
+
+    hookChats(state: StoreState): Chat[] | undefined {
+        return state.chats ?? undefined;
     }
 
     /**
@@ -225,6 +221,18 @@ export class SmartEditChat extends Component<Props, State> {
         const checkedLabels = this.getCheckedLabels();
         const checkedMembersId: number[] = [];
 
+        if (this.image) {
+            const reader = new FileReader();
+            reader.readAsDataURL(this.image);
+            reader.onload = () => {
+                const imageUrl = reader.result;
+                const avatar = document.querySelector(
+                    '.group__avatar'
+                ) as HTMLImageElement;
+                avatar.src = imageUrl as string;
+            };
+        }
+
         for (const contact of checkedLabels) {
             checkedMembersId.push(
                 Number(
@@ -238,15 +246,17 @@ export class SmartEditChat extends Component<Props, State> {
         }
 
         const chatType = store.getState().openedChat?.type;
+        const userAvatar = store.getState().openedChat?.avatar;
         if (
             this.isValid() &&
             this.props.user &&
             this.props.chatId &&
-            chatType
+            chatType &&
+            userAvatar
         ) {
             const chatField = {
                 id: this.props.chatId,
-                avatar: '',
+                avatar: userAvatar,
                 description: (
                     document.querySelector(
                         '.channel-description'
@@ -266,6 +276,7 @@ export class SmartEditChat extends Component<Props, State> {
                 })
             );
 
+            store.dispatch(createGetChatsAction());
             router.route(`${this.props.chatId}`);
             store.dispatch(createMoveToChatsAction());
         }
