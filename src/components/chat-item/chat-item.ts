@@ -3,6 +3,7 @@ import { store } from '@/store/store';
 import template from '@components/chat-item/chat-item.pug';
 import '@components/chat-item/chat-item.scss';
 import { smallEllipseIconUI } from '@components/ui/small-ellipse-icon/small-ellipse-icon';
+import { MessageTypes } from '@/config/enum';
 // import { getWs } from '@/utils/ws';
 // import { MessageActionTypes } from '@/config/enum';
 
@@ -146,7 +147,16 @@ export class ChatItem extends Component<Props, State> {
                     altMsg: this.props.chat.title,
                 }),
                 title: this.props.chat.title,
-                lastMessage: this.props.chat.last_message.body,
+                lastMessage:
+                    this.props.chat.last_message.body === ''
+                        ? this.props.chat.last_message.type ===
+                          MessageTypes.Sticker
+                            ? 'Стикер'
+                            : this.props.chat.last_message.attachments.length >
+                              0
+                            ? 'Вложение'
+                            : ''
+                        : this.props.chat.last_message.body,
                 id: this.props.chat.id, // ? this.props.chat.id - 1 : 0,
             }),
             'text/html'

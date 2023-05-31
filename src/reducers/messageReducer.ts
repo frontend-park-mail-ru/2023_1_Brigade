@@ -66,7 +66,7 @@ export const reduceMessage = (state: StoreState, action: Action) => {
                 state.chats &&
                 payload.id === state.chats[i].last_message.id
             ) {
-                state.chats[i].last_message.body = 'УДАЛЕНО';
+                state.chats[i].last_message.body = 'Удалено';
             }
 
             return {
