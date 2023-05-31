@@ -121,6 +121,10 @@ export class SmartProfile extends Component<Props, State> {
             return;
         }
 
+        if (this.state.isMounted === false) {
+            this.state.isMounted = true;
+        }
+
         this.state.node = new DumbProfile({
             parent: this.node,
             user: this.hookUser(store.getState()),
@@ -252,9 +256,7 @@ export class SmartProfile extends Component<Props, State> {
         }
     }
 
-    // TODO: check old password
     updateUserPassword() {
-        // вместо пустых строк отправлять старые данные.
         const user = {
             email: '',
             new_avatar_url: '',
@@ -268,7 +270,7 @@ export class SmartProfile extends Component<Props, State> {
             ).value,
         };
 
-        const updateUserPromise = new Promise((resolve, reject) => {
+        const updateUserPromise = new Promise((resolve) => {
             resolve(
                 store.dispatch(
                     createUpdateUserAction({
@@ -329,7 +331,7 @@ export class SmartProfile extends Component<Props, State> {
             };
 
             // TODO: сделать все что ниже асинхронной функцией
-            const updateUserPromise = new Promise((resolve, reject) => {
+            const updateUserPromise = new Promise((resolve) => {
                 resolve(store.dispatch(createUpdateUserAction(forUpdate)));
             });
 
@@ -392,7 +394,7 @@ export class SmartProfile extends Component<Props, State> {
 
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.jpg';
+        input.accept = 'image/*';
 
         input.addEventListener('change', () => {
             this.image = input?.files?.[0];
@@ -476,7 +478,9 @@ export class SmartProfile extends Component<Props, State> {
      */
     validatePassword(e?: Event) {
         e?.preventDefault();
-        const newPassword = document.querySelector('.new-password') as HTMLInputElement;
+        const newPassword = document.querySelector(
+            '.new-password'
+        ) as HTMLInputElement;
         newPassword?.classList.remove('login-reg__input_error');
 
         addErrorToClass('', passwordErrorTypes);
@@ -501,7 +505,9 @@ export class SmartProfile extends Component<Props, State> {
      */
     validateConfirmPassword(e?: Event) {
         e?.preventDefault();
-        const repeatPassword = document.querySelector('.repeat-password') as HTMLInputElement;
+        const repeatPassword = document.querySelector(
+            '.repeat-password'
+        ) as HTMLInputElement;
         repeatPassword?.classList.remove('login-reg__input_error');
 
         addErrorToClass('', confirmPasswordErrorTypes);
@@ -526,7 +532,9 @@ export class SmartProfile extends Component<Props, State> {
 
     validateOldPassword() {
         addErrorToClass('', oldPasswordErrorTypes);
-        const oldPassword = document.querySelector('.old-password') as HTMLInputElement;
+        const oldPassword = document.querySelector(
+            '.old-password'
+        ) as HTMLInputElement;
         oldPassword?.classList.remove('login-reg__input_error');
 
         if (oldPassword.value === '') {

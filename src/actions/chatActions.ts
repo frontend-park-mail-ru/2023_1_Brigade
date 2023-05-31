@@ -2,18 +2,21 @@ import { constantsOfActions } from '@config/actions';
 import { ChatTypes } from '@config/enum';
 import { store } from '@store/store';
 import {
+    chatImage,
     createChat,
     deleteChat,
     editChat,
     getChats,
     getOneChat,
     searchChats,
+    uploadAvatar,
 } from '@utils/api';
 import { router } from '@router/createRouter';
 import {
     createMoveToChatAction,
     createMoveToChatsAction,
 } from '@actions/routeActions';
+import { sendImage } from '@utils/api';
 
 /**
  * Создает экшен "isNotRendered".
@@ -32,6 +35,7 @@ export const createIsNotRenderedAction = () => {
  * @returns {{ type: string, payload: Object }} - Экшен
  */
 export const createOpenChatAction = (chat: Chat | undefined) => {
+    console.log('debug createOpenChatAction: ', chat);
     return {
         type: constantsOfActions.openChat,
         payload: chat,
@@ -75,6 +79,7 @@ export const createGetOneChatAction = (chat: Record<string, number>) => {
 
         switch (status) {
             case 200:
+                console.log('get one chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 break;
             case 401:
@@ -265,6 +270,7 @@ export const createEditChatAction = (updateGroupState: {
 
         switch (status) {
             case 201:
+                console.log('edit chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 router.route(`/${updateGroupState.id}`);
                 break;
@@ -286,13 +292,33 @@ export const createEditChatAction = (updateGroupState: {
  * Создает экшен "createChannel".
  * @returns {function} - Функция, которая делает запрос и возвращает промис с результатом.
  */
-export const createCreateChannelAction = (channel: Record<string, unknown>) => {
+export const createCreateChannelAction = (newchannel: {
+    image: File | undefined;
+    channel: {
+        type: number;
+        title: string;
+        avatar: string;
+        description: string;
+        members: number[];
+    };
+}): AsyncAction => {
     return async (dispatch: (action: Action) => void) => {
-        const { status, body } = await createChat(channel);
+        if (newchannel.image) {
+            const { status, body } = await chatImage(newchannel.image);
+
+            if (status === 201) {
+                newchannel.channel.avatar = await body;
+            }
+        }
+
+        console.log('newchannel.channel: ', newchannel.channel);
+
+        const { status, body } = await createChat(newchannel.channel);
         const jsonBody = await body;
 
         switch (status) {
             case 201:
+                console.log('createCreateChannelAction jsonbody: ', jsonBody);
                 dispatch(createAddChatAction(jsonBody));
                 dispatch(createMoveToChatAction({ chatId: jsonBody.id }));
                 break;

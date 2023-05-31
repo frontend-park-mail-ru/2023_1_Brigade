@@ -8,13 +8,16 @@ import { DumbMessage } from '@components/message/message';
 import { MessageInput } from '@components/message-input/message-input';
 import { List } from '@uikit/list/list';
 import { Attachment } from '@components/attachment/attachment';
+import { store } from '@/store/store';
 
 interface Props {
-    chatData: OpenedChat;
+    openedChat: OpenedChat;
     chatAvatar: string;
     chatTitle: string;
+    chatDescription: string;
     userId: number;
     userAvatar: string;
+    hookOpenedChat(state: StoreState): OpenedChat | undefined;
     onDeleteMessage: (message: DumbMessage) => void;
     onEditMessage: (message: DumbMessage) => void;
     onSendMessage: (message: {
@@ -68,18 +71,43 @@ export class DumbChat extends Component<Props, State> {
         this.state.isMounted = false;
     }
 
+    update() {
+        // if (this.state.isMounted) {
+        //     const prevNode = this.node;
+        //     this.componentWillUnmount();
+        //     this.node = this.render() as HTMLElement;
+        //     this.componentDidMount();
+        //     prevNode?.replaceWith(this.node);
+        // } else {
+        //     console.error('Chat is not mounted');
+        // }
+    }
+
     componentDidMount(): void {
-        //TODO
+        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
+            const prevProps = { ...this.props };
+            const newOpenedChatState = this.props.hookOpenedChat(state);
+            if (newOpenedChatState) {
+                this.props.openedChat = newOpenedChatState;
+            }
+
+            if (this.props.openedChat !== prevProps.openedChat) {
+                console.log('this.props.openedChat: ', this.props.openedChat);
+                console.log('prevProps.openedChat: ', prevProps.openedChat);
+                this.update();
+            }
+        });
     }
 
     componentWillUnmount(): void {
-        //TODO
+        this.unsubscribe();
+        // TODO: destroy
     }
 
     getAuthor(message: Message) {
         let author: User | undefined = undefined;
 
-        for (const member of this.props.chatData.members) {
+        for (const member of this.props.openedChat.members) {
             if (
                 member.id === message.author_id &&
                 member.id !== this.props.userId
@@ -104,7 +132,7 @@ export class DumbChat extends Component<Props, State> {
                     : undefined;
             },
             user:
-                this.props.chatData.type === ChatTypes.Group
+                this.props.openedChat.type === ChatTypes.Group
                     ? this.getAuthor(message)
                     : undefined,
             place: message.author_id === this.props.userId ? 'right' : 'left',
@@ -130,7 +158,7 @@ export class DumbChat extends Component<Props, State> {
             return;
         }
 
-        this.props.chatData?.messages?.forEach((message) => {
+        this.props.openedChat?.messages?.forEach((message) => {
             this.addMessage(parent, message);
         });
     }
@@ -210,7 +238,7 @@ export class DumbChat extends Component<Props, State> {
                 return;
             }
 
-            this.props.chatData?.messages?.forEach((message) => {
+            this.props.openedChat?.messages?.forEach((message) => {
                 this.addAttachment(parent, message);
             });
 
@@ -239,8 +267,9 @@ export class DumbChat extends Component<Props, State> {
         return this.state.messageInput;
     }
 
-    private checkRights(): boolean {
-        if (this.props?.chatData?.master_id === this.props?.userId) {
+    private checkRights(master_id: number | undefined): boolean {
+        if (master_id == this.props?.userId) {
+            console.log('master_id: ', master_id);
             return true;
         }
 
@@ -252,9 +281,13 @@ export class DumbChat extends Component<Props, State> {
      * @returns {Boolean} - состоит ли пользователь в канале
      */
     private isMember(): boolean {
-        for (const member of this.props?.chatData?.members) {
-            if (member.id == this.props.userId) {
-                return true;
+        const members: User[] | undefined =
+            store.getState().openedChat?.members;
+        if (members) {
+            for (const member of members) {
+                if (member.id === this.props.userId) {
+                    return true;
+                }
             }
         }
 
@@ -262,36 +295,48 @@ export class DumbChat extends Component<Props, State> {
     }
 
     render() {
-        if (this.isMember()) {
-            this.subscribeBtnText = 'Unsubscribe';
-        } else {
-            this.subscribeBtnText = 'Subscribe';
+        const openedChat = store.getState().openedChat;
+        console.log('openedChat', openedChat);
+        let master_id = 0;
+        if (openedChat) {
+            master_id = openedChat.master_id;
         }
 
-        if (
-            this.checkRights() &&
-            this.props.chatData.type !== ChatTypes.Dialog
-        ) {
-            this.editBtn = 'edit-chat';
+        console.log('check master_id', master_id);
+        if (this.props.openedChat.type === ChatTypes.Dialog) {
+            console.log('dialog chat type: ', this.props.openedChat.type);
+            this.channelInput = 'yes';
             this.deleteChatBtn = 'delete-btn';
-            this.channelInput = 'yes';
         }
-
-        if (this.props.chatData.type !== ChatTypes.Channel) {
-            if (this.props.chatData.type !== ChatTypes.Group) {
+        if (this.props.openedChat.type === ChatTypes.Group) {
+            console.log('group chat type: ', this.props.openedChat.type);
+            if (this.checkRights(master_id)) {
+                this.editBtn = 'edit-chat';
                 this.deleteChatBtn = 'delete-btn';
+            } else {
+                this.leaveGroup = 'Выйти из группы';
             }
-            this.channelInput = 'yes';
 
-            this.subscribeBtnText = '';
+            this.channelInput = 'yes';
         }
+        if (this.props.openedChat.type === ChatTypes.Channel) {
+            console.log('channel chat type: ', this.props.openedChat.type);
+            if (this.isMember()) {
+                this.subscribeBtnText = 'Unsubscribe';
+            } else {
+                this.subscribeBtnText = 'Subscribe';
+            }
 
-        if (this.props.chatData.type === ChatTypes.Group) {
-            this.leaveGroup = 'Выйти из группы';
-            this.channelInput = 'yes';
+            if (this.checkRights(master_id)) {
+                console.log('true rights');
+                this.editBtn = 'edit-chat';
+                this.deleteChatBtn = 'delete-btn';
+                this.channelInput = 'yes';
+            }
         }
 
         this.state.isMounted = true;
+
         return template({
             EditBtn: svgButtonUI.renderTemplate({ svgClassName: this.editBtn }),
             LeaveGroupBtn: this.leaveGroup,
@@ -305,10 +350,10 @@ export class DumbChat extends Component<Props, State> {
                 ClassName: 'header__companion__ava',
                 PathToUserImage: this.props?.chatAvatar ?? '',
                 UserName: this.props?.chatTitle ?? '',
-                UserStatus: '',
+                UserStatus: this.props.chatDescription ?? '',
                 Online: false,
             }),
-            Subscriberes: this.props?.chatData?.members?.length,
+            Subscriberes: this.props?.openedChat?.members?.length,
             // Input: this.channelInput,
             SubsribeBtnText: this.subscribeBtnText,
         });

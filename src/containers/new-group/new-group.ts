@@ -12,33 +12,38 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import {
-    createCreateChannelAction,
-    createGetChatsAction,
-    createOpenChatAction,
-} from '@actions/chatActions';
+import { createCreateChannelAction } from '@actions/chatActions';
 import { DumbChannel } from '@/components/new-channel/new-channel';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
+import { DumbGroup } from '@/components/new-group/new-group';
+import { Input } from '@/uikit/input/input';
+import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
+import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
+    user?: User;
+    contacts?: User[];
 }
 
 interface State {
     isMounted: boolean;
-    node?: DumbChannel;
+    node?: DumbGroup;
     confirmBtn?: Button | null;
     cancelBtn?: Button | null;
+    membersInput?: HTMLInputElement;
+    // membersDropdown?: InputDropdownList;
+    // dropdownItems?: InputDropdownItem[];
     btnList?: List | null;
     contacts?: User[];
     nameIsValid?: boolean;
     descriptionIsValid?: boolean;
 }
 
-export class SmartCreateChannel extends Component<Props, State> {
+export class SmartCreateGroup extends Component<Props, State> {
     constructor(props: Props) {
         DYNAMIC().innerHTML = '';
         super(props);
@@ -83,14 +88,16 @@ export class SmartCreateChannel extends Component<Props, State> {
             this.state.isMounted = true;
         }
 
-        this.state.node = new DumbChannel({
+        if (!this.props.user) {
+            return;
+        }
+
+        this.state.node = new DumbGroup({
             parent: this.node,
-            user: store.getState().user,
-            chats: store.getState().chats,
-            openedChat: store.getState().openedChat,
-            hookUser: this.hookUser.bind(this),
-            hookChats: this.hookChats.bind(this),
-            hookOpenedChat: this.hookOpenedChat.bind(this),
+            user: this.props.user,
+            contacts: this.state.contacts,
+            hookContacts: this.hookContacts,
+            hookUser: this.hookUser,
             backOnClick: this.backOnClick.bind(this),
             avatarOnClick: this.avatarOnClick.bind(this),
             cancelOnClick: this.cancelOnClick.bind(this),
@@ -98,6 +105,7 @@ export class SmartCreateChannel extends Component<Props, State> {
             channelNameValidate: this.validateChannelName.bind(this),
             channelDescriptionValidate:
                 this.validateChannelDescription.bind(this),
+            membersOnChange: this.membersOnChange.bind(this),
         });
     }
 
@@ -118,16 +126,8 @@ export class SmartCreateChannel extends Component<Props, State> {
         return state.contacts ?? undefined;
     }
 
-    hookChats(state: StoreState): Chat[] | undefined {
-        return state.chats ?? undefined;
-    }
-
     hookUser(state: StoreState): User | undefined {
         return state.user ?? undefined;
-    }
-
-    hookOpenedChat(state: StoreState): OpenedChat | undefined {
-        return store.getState().openedChat ?? undefined;
     }
 
     /**
@@ -171,10 +171,9 @@ export class SmartCreateChannel extends Component<Props, State> {
         e?.preventDefault();
         this.validateChannelName();
         this.validateChannelDescription();
-        const user = store.getState().user;
-        if (this.isValid() && user) {
+        if (this.isValid() && this.props.user) {
             const channel = {
-                type: ChatTypes.Channel,
+                type: ChatTypes.Group,
                 title: (
                     document.querySelector('.channel-name') as HTMLInputElement
                 )?.value,
@@ -184,8 +183,10 @@ export class SmartCreateChannel extends Component<Props, State> {
                         '.channel-description'
                     ) as HTMLInputElement
                 )?.value,
-                members: [user.id],
+                members: [this.props.user.id],
             };
+
+            console.log('channel object debug: ', channel);
 
             store.dispatch(
                 createCreateChannelAction({
@@ -193,6 +194,7 @@ export class SmartCreateChannel extends Component<Props, State> {
                     channel,
                 })
             );
+            store.dispatch(createMoveToChatsAction());
         }
     }
 
@@ -255,5 +257,13 @@ export class SmartCreateChannel extends Component<Props, State> {
         if (this.state.descriptionIsValid === false) {
             this.state.descriptionIsValid = true;
         }
+    }
+
+    membersOnChange(e?: Event) {
+        e?.preventDefault();
+    }
+
+    itemOnClick(e?: Event) {
+        e?.preventDefault();
     }
 }

@@ -12,6 +12,8 @@ import { Button } from '@uikit/button/button';
 import { Avatar } from '@/uikit/avatar/avatar';
 import { Link } from '@/uikit/link-item/link-item';
 import { Form } from '@/uikit/form/form';
+import { ROOT } from '@/config/config';
+import { List } from '@/uikit/list/list';
 
 interface Props {
     parent: HTMLElement;
@@ -22,7 +24,7 @@ interface Props {
 interface State {
     isMounted: boolean;
     parent?: HTMLElement | undefined;
-    avatar: Avatar;
+    avatar?: Avatar;
     email: Input;
     nickname: Input;
     password: Input;
@@ -125,6 +127,8 @@ export class DumbSignUp extends Component<Props, State, HTMLElement> {
         if (this.props.onClick) {
             this.node.addEventListener('click', this.props.onClick);
         }
+
+        this.state.isMounted = true;
     }
 
     componentWillUnmount() {
@@ -132,9 +136,13 @@ export class DumbSignUp extends Component<Props, State, HTMLElement> {
             return;
         }
 
+        // this.node.remove();
+
         if (this.props.onClick) {
             this.node.removeEventListener('click', this.props.onClick);
         }
+
+        this.state.isMounted = false;
     }
 
     private render() {

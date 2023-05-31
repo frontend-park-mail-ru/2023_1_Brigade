@@ -266,12 +266,20 @@ button {
     display: flex;
 }
 
+.align-items-center {
+    align-items: center;
+}
+
 .row {
     flex-direction: row;
 }
 
 .col {
     flex-direction: column;
+}
+
+.opacity {
+    opacity: 1;
 }
 
 .center {
@@ -282,6 +290,10 @@ button {
 .container {
     margin: 0 auto;
     padding: 0px 15px;
+}
+
+.w-auto {
+    width: auto;
 }
 
 .position-fixed {
@@ -305,6 +317,9 @@ button {
 
 main {
     width: 100%;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    animation-delay: 0.3s;
 }
 
 .main {
@@ -320,6 +335,28 @@ main {
     background-color: #131318;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+}
+  
+
 #sidebar {
     
 }
@@ -331,8 +368,10 @@ main {
 }
 
 #dynamic {
-    // flex-grow: 1;
     background-color: #131318;
+    // opacity: 0;
+    // animation: fadeIn 1s ease-in-out forwards;
+    // animation-delay: 0.5s;
 }
 
 .flex-grow-1 {
