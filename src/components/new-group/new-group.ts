@@ -169,7 +169,6 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         drawMemberInputPromise.then(() => {
             const contacts = store.getState().contacts;
             if (contacts) {
-                console.log('contacts: ', contacts);
                 this.state.membersDropdown = new InputDropdownList({
                     parent: document.querySelector(
                         '.group__form__input-members'

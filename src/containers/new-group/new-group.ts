@@ -35,6 +35,7 @@ interface State {
     confirmBtn?: Button | null;
     cancelBtn?: Button | null;
     membersInput?: HTMLInputElement;
+    members?: HTMLLabelElement[];
     // membersDropdown?: InputDropdownList;
     // dropdownItems?: InputDropdownItem[];
     btnList?: List | null;
@@ -107,6 +108,8 @@ export class SmartCreateGroup extends Component<Props, State> {
                 this.validateChannelDescription.bind(this),
             membersOnChange: this.membersOnChange.bind(this),
         });
+
+        // this.state.members = ;
     }
 
     componentWillUnmount() {
@@ -167,10 +170,33 @@ export class SmartCreateGroup extends Component<Props, State> {
         router.route('/');
     }
 
+    getCheckedLabels() {
+        const contactList = Array.from(
+            document.querySelectorAll(
+                '.input-dropdown__list__item__checkbox input[type="checkbox"]'
+            )
+        ) as HTMLInputElement[];
+
+        const checkedLabels = [];
+        for (const contact of contactList) {
+            if (contact.checked) {
+                checkedLabels.push(contact.parentElement);
+            }
+        }
+        return checkedLabels;
+    }
+
     saveOnClick(e?: Event) {
         e?.preventDefault();
         this.validateChannelName();
         this.validateChannelDescription();
+
+        const checkedLabels = this.getCheckedLabels();
+        console.log(
+            'Checked labels: ',
+            checkedLabels[0]?.getElementsByTagName('input')
+        );
+
         if (this.isValid() && this.props.user) {
             const channel = {
                 type: ChatTypes.Group,

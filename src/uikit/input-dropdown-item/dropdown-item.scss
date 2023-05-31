@@ -1,24 +1,24 @@
 .input-dropdown__list__item {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 100%;
-    max-height: 50px;
-    background-color: #131318;
-    padding: 10px 0px;
-    padding-right: 10px;
-    cursor: pointer;
-    z-index: 1;
-    transition: background-color 0.3s ease-in-out;
-    &:hover {
-        background-color: #112235;
-    }
-    &:active {
-        background-color: #112235;
-    }
-    &:focus {
-        background-color: #112235;
-    }
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 100%;
+  max-height: 50px;
+  background-color: #131318;
+  padding: 10px 0px;
+  padding-right: 10px;
+  cursor: pointer;
+  z-index: 1;
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+      background-color: #112235;
+  }
+  &:active {
+      background-color: #112235;
+  }
+  &:focus {
+      background-color: #112235;
+  }
 }
 
 .dropdown-item__image {
