@@ -404,3 +404,49 @@ export const createDeleteUserInChat = () => {
         payload: null,
     };
 };
+
+/**
+ * Создает экшен "editChat"
+ * @returns {function} - Функция, которая делает запрос и возвращает промис с результатом.
+ */
+export const createUpdateChatAction = (chat: {
+    image: File | undefined;
+    chatField: {
+        id: number;
+        avatar: string;
+        description: string;
+        type: number;
+        title: string;
+        members: number[];
+    };
+}): AsyncAction => {
+    return async (dispatch: (action: Action) => void) => {
+        if (chat.image) {
+            const { status, body } = await chatImage(chat.image);
+
+            if (status === 201) {
+                chat.chatField.avatar = await body;
+            }
+        }
+
+        const { status, body } = await editChat(chat.chatField);
+        const jsonBody = await body;
+
+        switch (status) {
+            case 201:
+                dispatch(createAddChatAction(jsonBody));
+                dispatch(createMoveToChatAction({ chatId: jsonBody.id }));
+                break;
+            case 401:
+            // TODO: отрендерить ошибку
+            case 404:
+            // TODO: отрендерить ошибку
+            case 500:
+            // TODO: отрендерить ошибку
+            case 0:
+            // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
+            default:
+            // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
+        }
+    };
+};

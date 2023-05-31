@@ -1,10 +1,7 @@
 import { DYNAMIC } from '@config/config';
 import { store } from '@store/store';
 import { Component } from '@framework/component';
-import {
-    createMoveToChatsAction,
-    createMoveToHomePageAction,
-} from '@actions/routeActions';
+import { createMoveToChatsAction } from '@actions/routeActions';
 import {
     addErrorToClass,
     checkNewChatDescription,
@@ -12,21 +9,19 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction } from '@actions/chatActions';
-import { DumbChannel } from '@/components/new-channel/new-channel';
+import { createCreateChannelAction, createEditChatAction, createUpdateChatAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
-import { Input } from '@/uikit/input/input';
-import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
-import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
+    chatId?: number;
     user?: User;
-    contacts?: User[];
+    chats?: Chat[];
+    members?: User[];
 }
 
 interface State {
@@ -41,7 +36,12 @@ interface State {
     descriptionIsValid?: boolean;
 }
 
-export class SmartCreateGroup extends Component<Props, State> {
+export class SmartEditChat extends Component<Props, State> {
+    private chatMembers?: User[];
+    private title?: string;
+    private description?: string;
+    private avatar?: string;
+
     constructor(props: Props) {
         DYNAMIC().innerHTML = '';
         super(props);
@@ -54,6 +54,9 @@ export class SmartCreateGroup extends Component<Props, State> {
             descriptionIsValid: false,
         };
         this.state.contacts = this.getContacts();
+        this.title = store.getState().openedChat?.title;
+        this.description = store.getState().openedChat?.description;
+        this.avatar = store.getState().openedChat?.avatar;
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -90,23 +93,36 @@ export class SmartCreateGroup extends Component<Props, State> {
             return;
         }
 
-        this.state.node = new DumbGroup({
-            parent: this.node,
-            user: this.props.user,
-            contacts: this.state.contacts,
-            type: store.getState().openedChat?.type,
-            chatActionType: 'Создание',
-            avatar: this.props.user.avatar,
-            hookContacts: this.hookContacts,
-            hookUser: this.hookUser,
-            backOnClick: this.backOnClick.bind(this),
-            avatarOnClick: this.avatarOnClick.bind(this),
-            cancelOnClick: this.cancelOnClick.bind(this),
-            saveOnClick: this.saveOnClick.bind(this),
-            channelNameValidate: this.validateChannelName.bind(this),
-            channelDescriptionValidate:
-                this.validateChannelDescription.bind(this),
-            membersOnChange: this.membersOnChange.bind(this),
+        const drawGroupPromise = new Promise((resolve) => {
+            if (this.node) {
+                resolve(
+                    (this.state.node = new DumbGroup({
+                        parent: this.node,
+                        type: store.getState().openedChat?.type,
+                        chatActionType: 'Изменение',
+                        user: this.props.user,
+                        contacts: this.state.contacts,
+                        nameValue: this.title,
+                        descriptionValue: this.description,
+                        avatar: this.avatar,
+                        hookContacts: this.hookContacts,
+                        hookUser: this.hookUser,
+                        backOnClick: this.backOnClick.bind(this),
+                        avatarOnClick: this.avatarOnClick.bind(this),
+                        cancelOnClick: this.cancelOnClick.bind(this),
+                        saveOnClick: this.saveOnClick.bind(this),
+                        channelNameValidate:
+                            this.validateChannelName.bind(this),
+                        channelDescriptionValidate:
+                            this.validateChannelDescription.bind(this),
+                        membersOnChange: this.membersOnChange.bind(this),
+                    }))
+                );
+            }
+        });
+
+        drawGroupPromise.then(() => {
+            this.setCheckedLabels();
         });
     }
 
@@ -168,6 +184,30 @@ export class SmartCreateGroup extends Component<Props, State> {
         router.route('/');
     }
 
+    setCheckedLabels() {
+        let membersIds: number[] = [];
+        if (this.props.members) {
+            membersIds = this.props?.members.map((member: User) => member.id);
+        }
+
+        const contactList = Array.from(
+            document.querySelectorAll(
+                '.input-dropdown__list__item__checkbox input[type="checkbox"]'
+            )
+        ) as HTMLInputElement[];
+
+        console.log('setCheckedLabels called: ', contactList);
+        console.log('membersIds: ', membersIds);
+
+        for (const contact of contactList) {
+            if (membersIds.includes(Number(contact.id))) {
+                console.log('contact id', contact.id);
+                contact.checked = true;
+                console.log('contact', contact);
+            }
+        }
+    }
+
     getCheckedLabels() {
         const contactList = Array.from(
             document.querySelectorAll(
@@ -204,25 +244,26 @@ export class SmartCreateGroup extends Component<Props, State> {
             );
         }
 
-        if (this.isValid() && this.props.user) {
-            const channel = {
-                type: ChatTypes.Group,
-                title: (
-                    document.querySelector('.channel-name') as HTMLInputElement
-                )?.value,
+        if (this.isValid() && this.props.user && this.props.chatId) {
+            const chatField = {
+                id: this.props.chatId,
                 avatar: '',
                 description: (
                     document.querySelector(
                         '.channel-description'
                     ) as HTMLInputElement
                 )?.value,
+                type: ChatTypes.Group,
+                title: (
+                    document.querySelector('.channel-name') as HTMLInputElement
+                )?.value,
                 members: [this.props.user.id, ...checkedMembersId],
             };
 
             store.dispatch(
-                createCreateChannelAction({
+                createUpdateChatAction({
                     image: this.image,
-                    channel,
+                    chatField,
                 })
             );
             store.dispatch(createMoveToChatsAction());

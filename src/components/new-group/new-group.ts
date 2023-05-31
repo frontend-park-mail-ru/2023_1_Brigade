@@ -12,10 +12,13 @@ import { Header } from '@uikit/header/header';
 import { svgButtonUI } from '@components/ui/icon/button';
 import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
 import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
+import { ChatTypes } from '@/config/enum';
 
 interface Props {
     parent: HTMLElement;
     user?: User;
+    type?: number;
+    chatActionType?: string;
     contacts?: User[];
     style?: Record<string, string | number>;
     backOnClick?: (e?: Event) => void;
@@ -30,6 +33,9 @@ interface Props {
     channelDescriptionValidate?: (e?: Event) => void;
     hookContacts?: (state: StoreState) => User[] | undefined;
     hookUser?: (state: StoreState) => User | undefined;
+    nameValue?: string;
+    descriptionValue?: string;
+    avatar?: string;
 }
 
 interface State {
@@ -97,7 +103,12 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.headerText = document.createElement('span');
         this.headerText.classList.add('header__title');
-        this.headerText.textContent = 'Создание группы';
+
+        if (this.props.type === ChatTypes.Group) {
+            this.headerText.textContent = `${this.props.chatActionType} группы`;
+        } else if (this.props.type === ChatTypes.Channel) {
+            this.headerText.textContent = `${this.props.chatActionType} канала`;
+        }
 
         this.state.header = new Header({
             parent: this.node,
@@ -117,7 +128,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.state.avatar = new Avatar({
             parent: this.node as HTMLElement,
             className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
-            src: this.props.user?.avatar ?? './assets/img/defaultAva.png',
+            src: this.props.avatar ?? '', // this.props.user?.avatar
             alt: 'User avatar',
             onClick: this.props.avatarOnClick,
         });
@@ -129,6 +140,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.name = new Input({
             parent: this.state.form.getNode() as HTMLElement,
+            value: this.props.nameValue ?? '',
             label: 'Название',
             className: 'input-container group__form__input',
             placeholder: 'введите название группы',
@@ -140,6 +152,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.description = new Input({
             parent: this.state.form.getNode() as HTMLElement,
+            value: this.props.descriptionValue ?? '',
             label: 'Описание',
             className: 'input-container group__form__input',
             placeholder: 'введите описание группы',
