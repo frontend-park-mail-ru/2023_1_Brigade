@@ -208,6 +208,15 @@ export class MessageInput extends Component<Props, State> {
             e.preventDefault();
             this.onSend();
         }
+
+        const maxlength = this.node?.querySelector('.message-input__maxlength');
+        if (!maxlength) {
+            return;
+        }
+
+        setTimeout(() => {
+            maxlength.textContent = `${this.state.input?.value.length}/1000`;
+        });
     }
 
     inputFocus(e: KeyboardEvent) {
