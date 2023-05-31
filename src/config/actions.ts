@@ -31,4 +31,5 @@ export const constantsOfActions = {
     addMessage: 'addMessage',
     editMessage: 'editMessage',
     deleteMessage: 'deleteMessage',
+    updateContact: 'updateContact',
 };

@@ -18,8 +18,7 @@ export class InputDropdownList extends Component<Props, State> {
         super(props);
         this.state.isMounted = false;
 
-        console.log('InputDropdownList this.props.parent:', this.props.parent);
-
+        console.log('parent list', this.props.parent);
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
         this.props.parent.appendChild(this.node);

@@ -35,7 +35,6 @@ export const createIsNotRenderedAction = () => {
  * @returns {{ type: string, payload: Object }} - Экшен
  */
 export const createOpenChatAction = (chat: Chat | undefined) => {
-    console.log('debug createOpenChatAction: ', chat);
     return {
         type: constantsOfActions.openChat,
         payload: chat,
@@ -79,7 +78,6 @@ export const createGetOneChatAction = (chat: Record<string, number>) => {
 
         switch (status) {
             case 200:
-                console.log('get one chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 break;
             case 401:
@@ -91,7 +89,6 @@ export const createGetOneChatAction = (chat: Record<string, number>) => {
             case 500:
             // TODO: отрендерить ошибку
             case 0:
-                console.log(body);
             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
             default:
             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
@@ -232,11 +229,14 @@ export const createDeleteChatAction = (deletedChatId: number | undefined) => {
  * Создает экшен "editChat".
  * @returns {{ type: string, payload: Object }} - Экшен
  */
+
 export const createEditChatFromStoreAction = (updateGroupState: {
     id: number;
     type: ChatTypes;
     title: string;
     members: (number | undefined)[];
+    avatar?: string;
+    description?: string;
 }) => {
     return {
         type: constantsOfActions.editChat,
@@ -270,7 +270,6 @@ export const createEditChatAction = (updateGroupState: {
 
         switch (status) {
             case 201:
-                console.log('edit chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 router.route(`/${updateGroupState.id}`);
                 break;
@@ -311,14 +310,11 @@ export const createCreateChannelAction = (newchannel: {
             }
         }
 
-        console.log('newchannel.channel: ', newchannel.channel);
-
         const { status, body } = await createChat(newchannel.channel);
         const jsonBody = await body;
 
         switch (status) {
             case 201:
-                console.log('createCreateChannelAction jsonbody: ', jsonBody);
                 dispatch(createAddChatAction(jsonBody));
                 dispatch(createMoveToChatAction({ chatId: jsonBody.id }));
                 break;
@@ -411,3 +407,66 @@ export const createDeleteUserInChat = () => {
         payload: null,
     };
 };
+
+/**
+ * Создает экшен "editChat"
+ * @returns {function} - Функция, которая делает запрос и возвращает промис с результатом.
+ */
+export const createUpdateChatAction = (chat: {
+    image: File | undefined;
+    chatField: {
+        id: number;
+        avatar: string;
+        description: string;
+        type: number;
+        title: string;
+        members: number[];
+    };
+}): AsyncAction => {
+    return async (dispatch: (action: Action) => void) => {
+        if (chat.image) {
+            const { status, body } = await chatImage(chat.image);
+
+            if (status === 201) {
+                chat.chatField.avatar = await body;
+            }
+        }
+
+        if (chat.chatField) {
+            dispatch(createEditChatFromStoreAction(chat.chatField));
+        }
+
+        const { status, body } = await editChat(chat.chatField);
+        const jsonBody = await body;
+
+        switch (status) {
+            case 201:
+                dispatch(createOpenChatAction(jsonBody));
+                router.route(`/${chat.chatField.id}`);
+                break;
+            case 401:
+            // TODO: отрендерить ошибку
+            case 404:
+            // TODO: отрендерить ошибку
+            case 500:
+            // TODO: отрендерить ошибку
+            case 0:
+            // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
+            default:
+            // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
+        }
+    };
+};
+
+// sasad
+// export const createEditChatFromStoreAction = (updateGroupState: {
+//     id: number;
+//     type: ChatTypes;
+//     title: string;
+//     members: (number | undefined)[];
+// }) => {
+//     return {
+//         type: constantsOfActions.editChat,
+//         payload: updateGroupState,
+//     };
+// };

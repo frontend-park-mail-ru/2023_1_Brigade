@@ -19,7 +19,8 @@
         font-weight: 400;
         font-size: 24px;
         line-height: 30px;
-        margin-bottom: 50px;
+        // margin-bottom: 50px;
+        margin-bottom: 30px;
     }
 
     &__back-btn {
@@ -41,6 +42,7 @@
     &__avatar {
         padding: 0px;
         margin-bottom: 50px;
+        cursor: pointer;
         &__container{
             max-width: 200px;
         }

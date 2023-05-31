@@ -1,10 +1,7 @@
 import { DYNAMIC } from '@config/config';
 import { store } from '@store/store';
 import { Component } from '@framework/component';
-import {
-    createMoveToChatsAction,
-    createMoveToHomePageAction,
-} from '@actions/routeActions';
+import { createMoveToChatsAction } from '@actions/routeActions';
 import {
     addErrorToClass,
     checkNewChatDescription,
@@ -12,21 +9,19 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction, createGetChatsAction, createOpenChatAction } from '@actions/chatActions';
-import { DumbChannel } from '@/components/new-channel/new-channel';
+import { createCreateChannelAction, createEditChatAction, createGetChatsAction, createOpenChatAction, createSetChatsAction, createUpdateChatAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
-import { Input } from '@/uikit/input/input';
-import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
-import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
+    chatId?: number;
     user?: User;
-    contacts?: User[];
+    chats?: Chat[];
+    members?: User[];
 }
 
 interface State {
@@ -41,7 +36,7 @@ interface State {
     descriptionIsValid?: boolean;
 }
 
-export class SmartCreateGroup extends Component<Props, State> {
+export class SmartEditChat extends Component<Props, State> {
     constructor(props: Props) {
         DYNAMIC().innerHTML = '';
         super(props);
@@ -92,13 +87,19 @@ export class SmartCreateGroup extends Component<Props, State> {
 
         this.state.node = new DumbGroup({
             parent: this.node,
+            type: store.getState().openedChat?.type,
+            chatActionType: 'Изменение',
             user: this.props.user,
             contacts: this.state.contacts,
-            type: store.getState().openedChat?.type,
-            chatActionType: 'Создание',
-            avatar: this.props.user.avatar,
+            chats: store.getState().chats,
+            openedChat: store.getState().openedChat,
+            nameValue: store.getState().openedChat?.title,
+            descriptionValue: store.getState().openedChat?.description,
+            avatar: store.getState().openedChat?.avatar,
             hookContacts: this.hookContacts,
             hookUser: this.hookUser,
+            hookChats: this.hookChats,
+            hookOpenedChat: this.hookOpenedChat,
             backOnClick: this.backOnClick.bind(this),
             avatarOnClick: this.avatarOnClick.bind(this),
             cancelOnClick: this.cancelOnClick.bind(this),
@@ -107,6 +108,7 @@ export class SmartCreateGroup extends Component<Props, State> {
             channelDescriptionValidate:
                 this.validateChannelDescription.bind(this),
             membersOnChange: this.membersOnChange.bind(this),
+            setCheckedLabels: this.setCheckedLabels.bind(this),
         });
     }
 
@@ -129,6 +131,14 @@ export class SmartCreateGroup extends Component<Props, State> {
 
     hookUser(state: StoreState): User | undefined {
         return state.user ?? undefined;
+    }
+
+    hookOpenedChat(state: StoreState): OpenedChat | undefined {
+        return state.openedChat ?? undefined;
+    }
+
+    hookChats(state: StoreState): Chat[] | undefined {
+        return state.chats ?? undefined;
     }
 
     /**
@@ -168,6 +178,25 @@ export class SmartCreateGroup extends Component<Props, State> {
         router.route('/');
     }
 
+    setCheckedLabels() {
+        let membersIds: number[] = [];
+        if (this.props.members) {
+            membersIds = this.props?.members.map((member: User) => member.id);
+        }
+
+        const contactList = Array.from(
+            document.querySelectorAll(
+                '.input-dropdown__list__item__checkbox input[type="checkbox"]'
+            )
+        ) as HTMLInputElement[];
+
+        for (const contact of contactList) {
+            if (membersIds.includes(Number(contact.id))) {
+                contact.checked = true;
+            }
+        }
+    }
+
     getCheckedLabels() {
         const contactList = Array.from(
             document.querySelectorAll(
@@ -192,6 +221,18 @@ export class SmartCreateGroup extends Component<Props, State> {
         const checkedLabels = this.getCheckedLabels();
         const checkedMembersId: number[] = [];
 
+        if (this.image) {
+            const reader = new FileReader();
+            reader.readAsDataURL(this.image);
+            reader.onload = () => {
+                const imageUrl = reader.result;
+                const avatar = document.querySelector(
+                    '.group__avatar'
+                ) as HTMLImageElement;
+                avatar.src = imageUrl as string;
+            };
+        }
+
         for (const contact of checkedLabels) {
             checkedMembersId.push(
                 Number(
@@ -204,29 +245,38 @@ export class SmartCreateGroup extends Component<Props, State> {
             );
         }
 
-        if (this.isValid() && this.props.user) {
-            const channel = {
-                type: ChatTypes.Group,
-                title: (
-                    document.querySelector('.channel-name') as HTMLInputElement
-                )?.value,
-                avatar: '',
+        const chatType = store.getState().openedChat?.type;
+        const userAvatar = store.getState().openedChat?.avatar;
+        if (
+            this.isValid() &&
+            this.props.user &&
+            this.props.chatId &&
+            chatType &&
+            userAvatar
+        ) {
+            const chatField = {
+                id: this.props.chatId,
+                avatar: userAvatar,
                 description: (
                     document.querySelector(
                         '.channel-description'
                     ) as HTMLInputElement
                 )?.value,
+                type: chatType,
+                title: (
+                    document.querySelector('.channel-name') as HTMLInputElement
+                )?.value,
                 members: [this.props.user.id, ...checkedMembersId],
             };
 
             store.dispatch(
-                createCreateChannelAction({
+                createUpdateChatAction({
                     image: this.image,
-                    channel,
+                    chatField,
                 })
             );
 
-            store.dispatch(createMoveToChatsAction());
+            // store.dispatch(createSetChatsAction(store.getState()))
         }
     }
 

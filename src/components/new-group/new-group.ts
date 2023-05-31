@@ -12,10 +12,15 @@ import { Header } from '@uikit/header/header';
 import { svgButtonUI } from '@components/ui/icon/button';
 import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
 import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
+import { ChatTypes } from '@/config/enum';
 
 interface Props {
     parent: HTMLElement;
     user?: User;
+    openedChat?: OpenedChat;
+    type?: number;
+    chats?: Chat[];
+    chatActionType?: string;
     contacts?: User[];
     style?: Record<string, string | number>;
     backOnClick?: (e?: Event) => void;
@@ -28,8 +33,14 @@ interface Props {
     membersOnChange?: (e?: Event) => void;
     channelNameValidate?: (e?: Event) => void;
     channelDescriptionValidate?: (e?: Event) => void;
+    setCheckedLabels?: () => void;
     hookContacts?: (state: StoreState) => User[] | undefined;
+    hookOpenedChat?: (state: StoreState) => OpenedChat | undefined;
     hookUser?: (state: StoreState) => User | undefined;
+    hookChats?: (state: StoreState) => Chat[] | undefined;
+    nameValue?: string;
+    descriptionValue?: string;
+    avatar?: string;
 }
 
 interface State {
@@ -90,6 +101,36 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         }
     }
 
+    drawContacts() {
+        const contacts = store.getState().contacts;
+        const rootMembersDropdown = document.querySelector('.group__form__input-members') as HTMLElement;
+        if (contacts && rootMembersDropdown) {
+            this.state.membersDropdown = new InputDropdownList({
+                parent: rootMembersDropdown,
+                className: 'group__form__input-members__list',
+            });
+
+            let i = 0;
+            this.state.dropdownItems = [];
+            const dropdownRoot = document.querySelector(
+                '.group__form__input-members__list'
+            ) as HTMLElement;
+
+            if (dropdownRoot) {
+                for (const contact of contacts) {
+                    this.state.dropdownItems[i] = new InputDropdownItem({
+                        parent: dropdownRoot,
+                        className: `group__form__input-members__list__item members-item-${contact.id}`,
+                        contact: contact,
+                        onClick: this.props.itemOnClick,
+                    });
+
+                    i++;
+                }
+            }
+        }
+    }
+
     componentDidMount() {
         if (!this.node) {
             return;
@@ -97,7 +138,12 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.headerText = document.createElement('span');
         this.headerText.classList.add('header__title');
-        this.headerText.textContent = 'Создание группы';
+
+        if (this.props.type === ChatTypes.Group) {
+            this.headerText.textContent = `${this.props.chatActionType} группы`;
+        } else if (this.props.type === ChatTypes.Channel) {
+            this.headerText.textContent = `${this.props.chatActionType} канала`;
+        }
 
         this.state.header = new Header({
             parent: this.node,
@@ -117,7 +163,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.state.avatar = new Avatar({
             parent: this.node as HTMLElement,
             className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
-            src: this.props.user?.avatar ?? './assets/img/defaultAva.png',
+            src: this.props.avatar ?? '', // this.props.user?.avatar
             alt: 'User avatar',
             onClick: this.props.avatarOnClick,
         });
@@ -129,6 +175,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.name = new Input({
             parent: this.state.form.getNode() as HTMLElement,
+            value: this.props.nameValue ?? '',
             label: 'Название',
             className: 'input-container group__form__input',
             placeholder: 'введите название группы',
@@ -140,6 +187,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.state.description = new Input({
             parent: this.state.form.getNode() as HTMLElement,
+            value: this.props.descriptionValue ?? '',
             label: 'Описание',
             className: 'input-container group__form__input',
             placeholder: 'введите описание группы',
@@ -167,33 +215,15 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         });
 
         drawMemberInputPromise.then(() => {
-            const contacts = store.getState().contacts;
-            if (contacts) {
-                console.log('contacts: ', contacts);
-                this.state.membersDropdown = new InputDropdownList({
-                    parent: document.querySelector(
-                        '.group__form__input-members'
-                    ) as HTMLElement,
-                    className: 'group__form__input-members__list',
-                });
+            const contactPromise = new Promise((resolve) => {
+                resolve(this.drawContacts());
+            });
 
-                let i = 0;
-                this.state.dropdownItems = [];
-                const dropdownRoot = document.querySelector(
-                    '.group__form__input-members__list'
-                ) as HTMLElement;
-
-                for (const contact of contacts) {
-                    this.state.dropdownItems[i] = new InputDropdownItem({
-                        parent: dropdownRoot,
-                        className: `group__form__input-members__list__item members-item-${contact.id}`,
-                        contact: contact,
-                        onClick: this.props.itemOnClick,
-                    });
-
-                    i++;
+            contactPromise.then(() => {
+                if (this.props.setCheckedLabels) {
+                    this.props.setCheckedLabels();
                 }
-            }
+            });
         });
 
         this.state.btnList = new List({
@@ -228,9 +258,19 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                 this.props.user = this.props.hookUser(state);
             }
 
+            if (this.props.hookOpenedChat) {
+                this.props.openedChat = this.props.hookOpenedChat(state);
+            }
+
+            if (this.props.hookChats) {
+                this.props.chats = this.props.hookChats(state);
+            }
+
             if (
                 this.props.contacts !== prevProps.contacts ||
-                this.props.user !== prevProps.user
+                this.props.user !== prevProps.user ||
+                this.props.chats !== prevProps.chats ||
+                this.props.openedChat !== prevProps.openedChat
             ) {
                 this.update();
             }
@@ -243,6 +283,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         if (!this.node) {
             return;
         }
+
+        console.log('willunmount');
 
         this.headerText?.remove();
         this.state.backButton?.destroy();
@@ -262,6 +304,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.state.btnList?.destroy();
         this.state.form?.destroy();
 
+        this.unsubscribe();
         this.state.isMounted = false;
     }
 
