@@ -139,10 +139,15 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.headerText = document.createElement('span');
         this.headerText.classList.add('header__title');
 
+        console.log('this.props.type: ', this.props.type);
+        console.log('this.props.chatActionType', this.props.chatActionType);
+
         if (this.props.type === ChatTypes.Group) {
             this.headerText.textContent = `${this.props.chatActionType} группы`;
         } else if (this.props.type === ChatTypes.Channel) {
             this.headerText.textContent = `${this.props.chatActionType} канала`;
+        } else if (!this.props.type) {
+            this.headerText.textContent = 'Создание группы';
         }
 
         this.state.header = new Header({
@@ -163,7 +168,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         this.state.avatar = new Avatar({
             parent: this.node as HTMLElement,
             className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
-            src: this.props.avatar ?? '', // this.props.user?.avatar
+            src: this.props.avatar ?? '',
             alt: 'User avatar',
             onClick: this.props.avatarOnClick,
         });

@@ -13,15 +13,11 @@ import {
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
 import { createCreateChannelAction, createGetChatsAction, createOpenChatAction } from '@actions/chatActions';
-import { DumbChannel } from '@/components/new-channel/new-channel';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
-import { Input } from '@/uikit/input/input';
-import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
-import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
