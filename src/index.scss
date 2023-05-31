@@ -284,6 +284,10 @@ button {
     opacity: 1;
 }
 
+.overflow-auto {
+    overflow: auto;
+}
+
 .center {
     align-items: center;
     justify-content: center;
@@ -357,6 +361,14 @@ main {
       transform: scale(1);
     }
 }
+
+.flex-grow-1{
+    flex-grow: 1;
+}
+
+.w-100 {
+    width: 100%;
+}
   
 
 #sidebar {
@@ -371,9 +383,6 @@ main {
 
 #dynamic {
     background-color: #131318;
-    // opacity: 0;
-    // animation: fadeIn 1s ease-in-out forwards;
-    // animation-delay: 0.5s;
 }
 
 .flex-grow-1 {

@@ -275,8 +275,6 @@ export class SmartEditChat extends Component<Props, State> {
                     chatField,
                 })
             );
-
-            // store.dispatch(createSetChatsAction(store.getState()))
         }
     }
 
