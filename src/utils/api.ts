@@ -528,3 +528,34 @@ export const sendImage = (image: File) => {
             };
         });
 };
+
+export const chatImage = (image: File) => {
+    return postMultipartForm(config.chatAvatar, image)
+        .then(({ status, parsedBody }) => {
+            switch (status) {
+                case 201:
+                    return {
+                        status,
+                        body: parsedBody,
+                    };
+                case 401:
+                case 404:
+                case 500:
+                    return {
+                        status,
+                        body: null,
+                    };
+                default:
+                    return {
+                        status,
+                        body: null,
+                    };
+            }
+        })
+        .catch((error) => {
+            return {
+                status: 0,
+                body: error,
+            };
+        });
+};

@@ -1,26 +1,30 @@
 .header__avatar {
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
+    min-height: 100%;
+    padding-left: 15px;
+    padding-top: 10px;
 }
 
 .header__avatar__username {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
     line-height: 19px;
     color: #FFFFFF;
-    margin-bottom: 5px;
-    padding-left: 10px;
+    margin-bottom: 10px;
 }
 
 
 .header__avatar__status {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
-    font-size: 10px;
+    font-size: 14px;
     line-height: 12px;
     color: #CDCDCD;
 }

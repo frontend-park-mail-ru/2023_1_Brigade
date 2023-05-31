@@ -14,7 +14,8 @@ $input-font-size: 16px;
   margin-bottom: 7%;
 
   &__label {
-    font-family: 'Manrope, sans-serif';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 500;
     font-size: 1.4rem;
@@ -51,10 +52,11 @@ input {
 }
 
 .login-reg__error {
-  font-family: 'SF Pro Display, sans-serif';
+  font-family: 'SF Pro Display', sans-serif;
+  overflow: hidden;
   color: #FF0000;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 17px;
   padding-left: 16px;
 }
@@ -108,3 +110,17 @@ input {
 .profile__form__input:not(:last-child) {
   margin-bottom: 5%;
 }
+
+.channel-members {
+  position: relative;
+}
+
+.channel__form__input-members {
+  position: relative;
+}
+
+// .channel__form__input-members:focus + .input-dropdown__list{
+//   opacity: 1;
+//   height: 200px !important;
+//   max-height: 200px !important;
+// }

@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     src: url('SFProDisplay-Medium.eot');
     src: local('SF Pro Display Medium'), local('SFProDisplay-Medium'),
     url('SFProDisplay-Medium.woff2') format('woff2'),
@@ -10,7 +10,7 @@
 }
 
 @font-face {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     src: url('SFProDisplay-Bold.eot');
     src: local('SF Pro Display Bold'), local('SFProDisplay-Bold'),
     url('SFProDisplay-Bold.woff2') format('woff2'),
@@ -21,7 +21,7 @@
 }
 
 @font-face {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     src: url('SFProDisplay-Light.eot');
     src: local('SF Pro Display Light'), local('SFProDisplay-Light'),
     url('SFProDisplay-Light.woff2') format('woff2'),
@@ -32,7 +32,7 @@
 }
 
 @font-face {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     src: url('SFProDisplay-Regular.eot');
     src: local('SF Pro Display Regular'), local('SFProDisplay-Regular'),
     url('SFProDisplay-Regular.woff2') format('woff2'),
@@ -43,7 +43,7 @@
 }
 
 @font-face {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     src: url('SFProDisplay-Semibold.eot');
     src: local('SF Pro Display Semibold'), local('SFProDisplay-Semibold'),
     url('SFProDisplay-Semibold.woff2') format('woff2'),

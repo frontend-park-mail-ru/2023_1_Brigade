@@ -8,8 +8,9 @@ import {
 } from '@actions/routeActions';
 import { createLogoutAction } from '@actions/authActions';
 import { Popup } from '@/components/popup/popup';
-import { List } from '@/uikit/list/list';
+import { List } from '@uikit/list/list';
 import { Button } from '@/uikit/button/button';
+import { router } from '@/router/createRouter';
 
 interface Props {
     parent: HTMLElement;
@@ -67,8 +68,6 @@ export class SmartSidebar extends Component<Props, State> {
             this.prevActive.removeAttribute('id');
         }
 
-        // if (this.prevActive?.className)
-
         const items = document.querySelectorAll('.sidebar-header__list__item');
         for (const item of items) {
             if (item === document.activeElement) {
@@ -81,6 +80,10 @@ export class SmartSidebar extends Component<Props, State> {
     componentDidMount() {
         if (!this.node) {
             return;
+        }
+
+        if (this.state.isMounted === false) {
+            this.state.isMounted = true;
         }
 
         this.state.node = new DumbSidebar({
@@ -129,11 +132,13 @@ export class SmartSidebar extends Component<Props, State> {
     chatsOnClick() {
         this.isActive();
         store.dispatch(createMoveToChatsAction());
+        // router.route('/');
     }
 
     contactsOnClick() {
         this.isActive();
         store.dispatch(createMoveToContactsAction());
+        // router.route('/');
     }
 
     logoutOnClick() {

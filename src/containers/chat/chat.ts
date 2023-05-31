@@ -19,11 +19,10 @@ import {
 import { ChatTypes, MessageActionTypes, MessageTypes } from '@config/enum';
 import { DYNAMIC } from '@config/config';
 import { DumbMessage } from '@/components/message/message';
-import {
-    createAddMessageAction,
-    createDeleteMessageAction,
-    createEditMessageAction,
-} from '@/actions/messageActions';
+import { Popup } from '@/components/popup/popup';
+import { Button } from '@/uikit/button/button';
+import { List } from '@/uikit/list/list';
+import { router } from '@/router/createRouter';
 
 interface Props {
     chatId?: number;
@@ -32,6 +31,9 @@ interface Props {
 }
 
 interface State {
+    cancelBtn?: Button;
+    confirmBtn?: Button;
+    btnList?: List;
     chat: DumbChat | undefined;
     isMounted: boolean;
     editingMessage: DumbMessage | undefined;
@@ -59,6 +61,7 @@ export class SmartChat extends Component<Props, State> {
 
     private chatId: number | undefined;
     private unsubscribeFromWs: () => void = () => {};
+    private popup: Popup | undefined | null;
 
     constructor(props: Props) {
         super(props);
@@ -99,11 +102,13 @@ export class SmartChat extends Component<Props, State> {
         if (this.state.isMounted && this.chatId) {
             if (this.props?.openedChat?.isNotRendered) {
                 this.state.chat = new DumbChat({
-                    chatData: this.props.openedChat,
+                    openedChat: this.props.openedChat,
                     userId: this.props?.user?.id ?? 0,
                     userAvatar: this.props?.user?.avatar ?? '',
                     chatAvatar: this.props?.openedChat?.avatar,
                     chatTitle: this.props?.openedChat?.title,
+                    chatDescription: this.props?.openedChat?.description,
+                    hookOpenedChat: this.hookOpenedChat.bind(this),
                     onDeleteMessage: this.handleDeleteMessage.bind(this),
                     onEditMessage: this.handleEditMessage.bind(this),
                     onSendMessage: this.handleClickSendButton.bind(this),
@@ -185,6 +190,7 @@ export class SmartChat extends Component<Props, State> {
                             this.state.domElements.subscribeBtn.textContent =
                                 'Subscribe';
                             store.dispatch(createDeleteUserInChat());
+                            // router.route('/');
                         }
 
                         if (this.props.openedChat) {
@@ -253,28 +259,30 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
-        switch (message.action) {
-            case MessageActionTypes.Edit:
-                store.dispatch(createEditMessageAction(message));
-                break;
-            case MessageActionTypes.Delete:
-                store.dispatch(createDeleteMessageAction(message));
-                break;
-            case MessageActionTypes.Create:
-                store.dispatch(createAddMessageAction(message));
-
-                this.state.chat?.addMessage(
-                    document.querySelector(
-                        '.view-chat__messages'
-                    ) as HTMLElement,
-                    message
-                );
-
-            // this.state.chat?.addAttachment(
-            //     document.querySelector('.attachments__list') as HTMLElement,
-            //     message
-            // );
+        if (message.action === MessageActionTypes.Create) {
+            this.state.chat?.addMessage(
+                document.querySelector('.view-chat__messages') as HTMLElement,
+                message
+            );
         }
+
+        // switch (message.action) {
+        //     case MessageActionTypes.Edit:
+        //         store.dispatch(createEditMessageAction(message));
+        //         break;
+        //     case MessageActionTypes.Delete:
+        //         store.dispatch(createDeleteMessageAction(message));
+        //         break;
+        //     case MessageActionTypes.Create:
+        //         store.dispatch(createAddMessageAction(message));
+
+        //         this.state.chat?.addMessage(
+        //             document.querySelector(
+        //                 '.view-chat__messages'
+        //             ) as HTMLElement,
+        //             message
+        //         );
+        // }
     }
 
     handleClickSendButton(message: {
@@ -285,7 +293,7 @@ export class SmartChat extends Component<Props, State> {
             name: string;
         }[];
     }) {
-        if (this.chatId && this.props.user?.id) {
+        if (this.chatId && this.props.user) {
             if (
                 this.state.editingMessage &&
                 message.type !== MessageTypes.Sticker
@@ -296,8 +304,9 @@ export class SmartChat extends Component<Props, State> {
                     type: message.type,
                     attachments: message.attachments,
                     body: message.body,
-                    author_id: 0,
+                    author_id: this.props.user.id,
                     chat_id: this.chatId,
+                    created_at: '',
                 });
 
                 this.state.editingMessage = undefined;
@@ -310,6 +319,7 @@ export class SmartChat extends Component<Props, State> {
                     body: message.body,
                     author_id: this.props.user.id,
                     chat_id: this.chatId,
+                    created_at: '',
                 });
             }
         }
@@ -321,14 +331,19 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
+        if (!this.props.user) {
+            return;
+        }
+
         getWs().send({
             id: message.getMessage().id,
             action: MessageActionTypes.Delete,
             type: MessageTypes.notSticker,
             attachments: [],
             body: '',
-            author_id: 0,
+            author_id: this.props.user.id,
             chat_id: this.chatId,
+            created_at: '',
         });
     }
 
@@ -337,10 +352,6 @@ export class SmartChat extends Component<Props, State> {
 
         this.state.chat?.getInput()?.setMessage(message.getMessage());
         this.state.domElements.input?.focus();
-    }
-
-    handleClickDeleteButton() {
-        store.dispatch(createDeleteChatAction(this.props?.openedChat?.id));
     }
 
     handleClickEditButton() {
@@ -359,8 +370,16 @@ export class SmartChat extends Component<Props, State> {
 
                 this.unsubscribe = store.subscribe(
                     this.constructor.name,
-                    (props: Props) => {
-                        this.props = props;
+                    (props: StoreState) => {
+                        if (!props.user || !props.openedChat) {
+                            return;
+                        }
+
+                        this.props = {
+                            chatId: this.props.chatId,
+                            user: props.user,
+                            openedChat: props.openedChat,
+                        };
 
                         this.render();
                     }
@@ -387,12 +406,64 @@ export class SmartChat extends Component<Props, State> {
         }
     }
 
+    hookOpenedChat(state: StoreState): OpenedChat | undefined {
+        return state.openedChat ?? undefined; // store.getState();
+    }
+
     componentWillUnmount() {
         if (this.state.isMounted) {
             this.unsubscribe();
             this.unsubscribeFromWs();
             this.state.chat?.destroy();
             this.state.isMounted = false;
+        }
+    }
+
+    handleClickDeleteButton() {
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: 'Вы действительно хотите удалить чат?',
+                className: 'popup__container',
+            });
+
+            const popContent: HTMLElement | null = document.querySelector(
+                '.popup__content'
+            ) as HTMLElement;
+
+            if (popContent) {
+                this.state.btnList = new List({
+                    parent: popContent,
+                    className: 'popup__btn-list',
+                });
+
+                this.state?.btnList.getNode()?.classList.remove('list');
+
+                this.state.confirmBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn confirm__btn button-S',
+                    label: 'Подтвердить',
+                    onClick: () => {
+                        store.dispatch(
+                            createDeleteChatAction(this.props?.openedChat?.id)
+                        );
+                        router.route('/');
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+
+                this.state.cancelBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+            }
         }
     }
 }

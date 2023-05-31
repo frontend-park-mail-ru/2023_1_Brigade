@@ -45,7 +45,8 @@
     }
 
     &__body {
-        font-family: 'SF Pro Display';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 1.2em;

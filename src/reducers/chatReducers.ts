@@ -82,6 +82,7 @@ export const reduceSetChats = (state: StoreState, action: Action) => {
  * @return {object} Обновленное состояние после открытия нового чата
  */
 export const reduceOpenChat = (state: StoreState, action: Action) => {
+    console.log('reduceOpenChat payload:', action.payload);
     switch (action.type) {
         case constantsOfActions.openChat:
             if (action.payload) {

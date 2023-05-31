@@ -13,7 +13,8 @@
 }
 
 .login-reg__top_welcome {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 600;
     font-size: 36px;
@@ -24,7 +25,8 @@
 }
 
 .login-reg__top_message {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -77,7 +79,8 @@
     }
 
     &__caption {
-        font-family: 'Actor';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 24px;
@@ -90,7 +93,8 @@
         justify-content: center;
         
         &__username {
-            font-family: 'SF Pro Display';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 16px;
@@ -101,7 +105,8 @@
         }
         
         &__status {
-            font-family: 'SF Pro Display';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 12px;
@@ -113,70 +118,85 @@
     }
 }
 
+.avatar {
+    padding-top: 10px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    &-border-radius {
+        &-50 {
+            border-radius: 50%;
+        }
 
-// TODO: сделать стили по-человечески
-// .figure {
-//     flex-direction: column;
-//     align-items: center;
-//     margin-bottom: 43px;
+        &-25 {
+            border-radius: 25%;
+        }
 
-//     &-column {
-//         flex-direction: column;
-//     }
+        &-10 {
+            border-radius: 10%;
+        }
 
-//     &-row {
-//         flex-direction: row;
-//     }
-// }
+        &-5 {
+            border-radius: 5%;
+        }
+    }
 
-// .image {
-//     object-fit: cover;
-//     align-self: center;
-//     max-width: 130px;
-//     max-height: 130px;
-//     border-radius: 50%;
-//     background: #112235;
-//     cursor: pointer;
+    &-S {
+        max-width: 60px;
+        max-height: 60px;
+    }
 
-//     &--pointer {
-//         cursor: pointer;
-//     }
-
-//     &-border-radius {
-//         &-50 {
-//             border-radius: 50%;
-//         }
-
-//         &-25 {
-//             border-radius: 25%;
-//         }
-
-//         &-10 {
-//             border-radius: 10%;
-//         }
-
-//         &-5 {
-//             border-radius: 5%;
-//         }
-//     }
-
-//     &-S {
-//         max-width: 60px;
-//         max-height: 60px;
-//     }
-
-//     &-M {
-//         max-width: 130px;
-//         max-height: 130px;
-//     }
+    &-M {
+        max-width: 130px;
+        max-height: 130px;
+    }
     
-//     &-L {
-//         max-width: 200px;
-//         max-height: 200px;
-//     }
+    &-L {
+        max-width: 200px;
+        max-height: 200px;
+    }
 
-//     &-XL {
-//         max-width: 300px;
-//         max-height: 300px;
-//     }
-// }
+    &-XL {
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    &__caption {
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 29px;
+        text-align: center;
+        color: #FFFFFF;
+        padding: 10px;
+        padding-bottom: 0px;
+        align-items: center;
+        justify-content: center;
+        
+        &__username {
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 19px;
+            text-align: center;
+            color: #696969;
+            // z-index: 1;
+        }
+        
+        &__status {
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 14px;
+            text-align: center;
+            color: #696969;
+            // z-index: 1;
+        }
+    }
+}

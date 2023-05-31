@@ -23,7 +23,8 @@ export class chatAvatarUi extends Component<Props, State> {
         PathToUserImage: string;
         UserName: string;
         UserStatus: string;
-        Online: boolean;
+        Description?: string;
+        Online?: boolean;
     }) {
         return template(args);
     }

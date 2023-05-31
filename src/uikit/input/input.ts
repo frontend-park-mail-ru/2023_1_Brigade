@@ -17,6 +17,8 @@ interface Props {
     size?: 'S' | 'M' | 'L';
     contentType?: string;
     value?: string;
+    icon?: string;
+    iconClassName?: string;
 }
 
 interface State {
@@ -83,6 +85,8 @@ export class Input extends Component<Props, State, HTMLInputElement> {
                 style: this.props.style ?? '',
                 Type: this.props.type ?? 'text',
                 ErrorsClassName: this.props.errorsClassName ?? '',
+                Icon: this.props.icon ?? '',
+                IconClassName: this.props.iconClassName ?? '',
             }),
             'text/html'
         ).body.firstChild;
