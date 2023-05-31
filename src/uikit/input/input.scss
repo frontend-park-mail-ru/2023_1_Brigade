@@ -14,7 +14,7 @@ $input-font-size: 16px;
   margin-bottom: 7%;
 
   &__label {
-    font-family: 'Manrope, sans-serif';
+    font-family: 'SF Pro Display', sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 1.4rem;
@@ -51,7 +51,7 @@ input {
 }
 
 .login-reg__error {
-  font-family: 'SF Pro Display, sans-serif';
+  font-family: 'SF Pro Display', sans-serif;
   color: #FF0000;
   font-weight: 600;
   font-size: 16px;
