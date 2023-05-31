@@ -76,6 +76,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
     }
 
     private headerText: HTMLElement | null;
+    private wrapperCreateGroup?: HTMLElement;
 
     destroy() {
         if (this.state.isMounted) {
@@ -143,6 +144,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             this.headerText.textContent = `${this.props.chatActionType} группы`;
         } else if (this.props.type === ChatTypes.Channel) {
             this.headerText.textContent = `${this.props.chatActionType} канала`;
+        } else if (!this.props.type) {
+            this.headerText.textContent = 'Создание группы';
         }
 
         this.state.header = new Header({
@@ -160,8 +163,20 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         });
         this.state.header.getNode()?.appendChild(this.headerText);
 
+        this.wrapperCreateGroup = document.createElement('div');
+        this.wrapperCreateGroup.classList.add(
+            'flex',
+            'col',
+            'flex-grow-1',
+            'w-100',
+            'center',
+            'overflow-auto'
+        );
+
+        this.node.appendChild(this.wrapperCreateGroup);
+
         this.state.avatar = new Avatar({
-            parent: this.node as HTMLElement,
+            parent: this.wrapperCreateGroup as HTMLElement,
             className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
             src: this.props.avatar ?? '', // this.props.user?.avatar
             alt: 'User avatar',
@@ -169,7 +184,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         });
 
         this.state.form = new Form({
-            parent: this.node as HTMLElement,
+            parent: this.wrapperCreateGroup as HTMLElement,
             className: 'group__form',
         });
 

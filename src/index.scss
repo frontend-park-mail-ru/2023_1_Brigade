@@ -284,6 +284,10 @@ button {
     opacity: 1;
 }
 
+.overflow-auto {
+    overflow: auto;
+}
+
 .center {
     align-items: center;
     justify-content: center;
@@ -356,6 +360,14 @@ main {
     100% {
       transform: scale(1);
     }
+}
+
+.flex-grow-1{
+    flex-grow: 1;
+}
+
+.w-100 {
+    width: 100%;
 }
   
 
