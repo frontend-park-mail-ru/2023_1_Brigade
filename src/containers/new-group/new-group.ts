@@ -35,9 +35,6 @@ interface State {
     confirmBtn?: Button | null;
     cancelBtn?: Button | null;
     membersInput?: HTMLInputElement;
-    members?: HTMLLabelElement[];
-    // membersDropdown?: InputDropdownList;
-    // dropdownItems?: InputDropdownItem[];
     btnList?: List | null;
     contacts?: User[];
     nameIsValid?: boolean;
@@ -108,8 +105,6 @@ export class SmartCreateGroup extends Component<Props, State> {
                 this.validateChannelDescription.bind(this),
             membersOnChange: this.membersOnChange.bind(this),
         });
-
-        // this.state.members = ;
     }
 
     componentWillUnmount() {
@@ -151,7 +146,7 @@ export class SmartCreateGroup extends Component<Props, State> {
                 reader.onload = () => {
                     const imageUrl = reader.result;
                     const avatar = document.querySelector(
-                        '.channel__avatar'
+                        '.group__avatar'
                     ) as HTMLImageElement;
                     avatar.src = imageUrl as string;
                 };
@@ -192,10 +187,19 @@ export class SmartCreateGroup extends Component<Props, State> {
         this.validateChannelDescription();
 
         const checkedLabels = this.getCheckedLabels();
-        console.log(
-            'Checked labels: ',
-            checkedLabels[0]?.getElementsByTagName('input')
-        );
+        const checkedMembersId: number[] = [];
+
+        for (const contact of checkedLabels) {
+            checkedMembersId.push(
+                Number(
+                    (
+                        contact?.querySelector(
+                            '.checkbox__input'
+                        ) as HTMLInputElement
+                    ).id
+                )
+            );
+        }
 
         if (this.isValid() && this.props.user) {
             const channel = {
@@ -209,10 +213,8 @@ export class SmartCreateGroup extends Component<Props, State> {
                         '.channel-description'
                     ) as HTMLInputElement
                 )?.value,
-                members: [this.props.user.id],
+                members: [this.props.user.id, ...checkedMembersId],
             };
-
-            console.log('channel object debug: ', channel);
 
             store.dispatch(
                 createCreateChannelAction({

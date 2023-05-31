@@ -35,7 +35,6 @@ export const createIsNotRenderedAction = () => {
  * @returns {{ type: string, payload: Object }} - Экшен
  */
 export const createOpenChatAction = (chat: Chat | undefined) => {
-    console.log('debug createOpenChatAction: ', chat);
     return {
         type: constantsOfActions.openChat,
         payload: chat,
@@ -79,7 +78,6 @@ export const createGetOneChatAction = (chat: Record<string, number>) => {
 
         switch (status) {
             case 200:
-                console.log('get one chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 break;
             case 401:
@@ -91,7 +89,6 @@ export const createGetOneChatAction = (chat: Record<string, number>) => {
             case 500:
             // TODO: отрендерить ошибку
             case 0:
-                console.log(body);
             // TODO: тут типа жееееееесткая ошибка случилось, аж catch сработал
             default:
             // TODO: мб отправлять какие-нибудь логи на бэк? ну и мб высветить страничку, мол вообще хз что, попробуй позже
@@ -270,7 +267,6 @@ export const createEditChatAction = (updateGroupState: {
 
         switch (status) {
             case 201:
-                console.log('edit chat jsonbody: ', jsonBody);
                 dispatch(createOpenChatAction(jsonBody));
                 router.route(`/${updateGroupState.id}`);
                 break;
@@ -311,14 +307,11 @@ export const createCreateChannelAction = (newchannel: {
             }
         }
 
-        console.log('newchannel.channel: ', newchannel.channel);
-
         const { status, body } = await createChat(newchannel.channel);
         const jsonBody = await body;
 
         switch (status) {
             case 201:
-                console.log('createCreateChannelAction jsonbody: ', jsonBody);
                 dispatch(createAddChatAction(jsonBody));
                 dispatch(createMoveToChatAction({ chatId: jsonBody.id }));
                 break;

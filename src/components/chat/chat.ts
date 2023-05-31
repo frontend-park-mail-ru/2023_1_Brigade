@@ -92,8 +92,6 @@ export class DumbChat extends Component<Props, State> {
             }
 
             if (this.props.openedChat !== prevProps.openedChat) {
-                console.log('this.props.openedChat: ', this.props.openedChat);
-                console.log('prevProps.openedChat: ', prevProps.openedChat);
                 this.update();
             }
         });
@@ -269,7 +267,6 @@ export class DumbChat extends Component<Props, State> {
 
     private checkRights(master_id: number | undefined): boolean {
         if (master_id == this.props?.userId) {
-            console.log('master_id: ', master_id);
             return true;
         }
 
@@ -296,20 +293,16 @@ export class DumbChat extends Component<Props, State> {
 
     render() {
         const openedChat = store.getState().openedChat;
-        console.log('openedChat', openedChat);
         let master_id = 0;
         if (openedChat) {
             master_id = openedChat.master_id;
         }
 
-        console.log('check master_id', master_id);
         if (this.props.openedChat.type === ChatTypes.Dialog) {
-            console.log('dialog chat type: ', this.props.openedChat.type);
             this.channelInput = 'yes';
             this.deleteChatBtn = 'delete-btn';
         }
         if (this.props.openedChat.type === ChatTypes.Group) {
-            console.log('group chat type: ', this.props.openedChat.type);
             if (this.checkRights(master_id)) {
                 this.editBtn = 'edit-chat';
                 this.deleteChatBtn = 'delete-btn';
@@ -320,7 +313,6 @@ export class DumbChat extends Component<Props, State> {
             this.channelInput = 'yes';
         }
         if (this.props.openedChat.type === ChatTypes.Channel) {
-            console.log('channel chat type: ', this.props.openedChat.type);
             if (this.isMember()) {
                 this.subscribeBtnText = 'Unsubscribe';
             } else {
@@ -328,7 +320,6 @@ export class DumbChat extends Component<Props, State> {
             }
 
             if (this.checkRights(master_id)) {
-                console.log('true rights');
                 this.editBtn = 'edit-chat';
                 this.deleteChatBtn = 'delete-btn';
                 this.channelInput = 'yes';
