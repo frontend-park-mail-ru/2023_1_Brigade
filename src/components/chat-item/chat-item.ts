@@ -3,8 +3,8 @@ import { store } from '@/store/store';
 import template from '@components/chat-item/chat-item.pug';
 import '@components/chat-item/chat-item.scss';
 import { smallEllipseIconUI } from '@components/ui/small-ellipse-icon/small-ellipse-icon';
-import { getWs } from '@/utils/ws';
-import { MessageActionTypes } from '@/config/enum';
+// import { getWs } from '@/utils/ws';
+// import { MessageActionTypes } from '@/config/enum';
 
 interface Props {
     user?: User; //TODO: убрать
@@ -25,7 +25,7 @@ interface State {
 }
 
 export class ChatItem extends Component<Props, State> {
-    private unsubscribeWs: () => void = () => 0;
+    // private unsubscribeWs: () => void = () => 0;
 
     constructor(props: Props) {
         super(props);
@@ -40,7 +40,7 @@ export class ChatItem extends Component<Props, State> {
         };
 
         this.onClick = this.onClick.bind(this);
-        this.handleMessage = this.handleMessage.bind(this);
+        // this.handleMessage = this.handleMessage.bind(this);
         this.update = this.update.bind(this);
         this.destroy = this.destroy.bind(this);
 
@@ -73,17 +73,17 @@ export class ChatItem extends Component<Props, State> {
             }
         );
 
-        this.unsubscribeWs = getWs().subscribe(
-            this.state.chatId,
-            this.handleMessage
-        );
+        // this.unsubscribeWs = getWs().subscribe(
+        //     this.state.chatId,
+        //     this.handleMessage
+        // );
     }
 
     destroy() {
         if (this.state.isMounted) {
             this.componentWillUnmount();
             this.unsubscribe();
-            this.unsubscribeWs();
+            // this.unsubscribeWs();
             this.state.node?.remove();
             this.state.node = undefined;
         } else {
@@ -91,25 +91,25 @@ export class ChatItem extends Component<Props, State> {
         }
     }
 
-    handleMessage(message: Message) {
-        if (message.chat_id !== this.state.chatId) {
-            return;
-        }
+    // handleMessage(message: Message) {
+    //     if (message.chat_id !== this.state.chatId) {
+    //         return;
+    //     }
 
-        if (message.action === MessageActionTypes.Create) {
-            this.props.chat.last_message = message;
+    //     if (message.action === MessageActionTypes.Create) {
+    //         this.props.chat.last_message = message;
 
-            this.componentWillUnmount();
-            this.state.node?.remove();
+    //         this.componentWillUnmount();
+    //         this.state.node?.remove();
 
-            this.state.node = this.render() as HTMLElement;
-            this.componentDidMount();
-            this.props.parent?.insertBefore(
-                this.state.node,
-                this.props.parent.firstChild
-            );
-        }
-    }
+    //         this.state.node = this.render() as HTMLElement;
+    //         this.componentDidMount();
+    //         this.props.parent?.insertBefore(
+    //             this.state.node,
+    //             this.props.parent.firstChild
+    //         );
+    //     }
+    // }
 
     onClick(e: Event) {
         this.state.node?.classList.add('is_current');

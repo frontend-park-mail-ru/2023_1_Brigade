@@ -1,8 +1,14 @@
+import {
+    createAddMessageAction,
+    createDeleteMessageAction,
+    createEditMessageAction,
+} from '@/actions/messageActions';
+import { MessageActionTypes } from '@/config/enum';
 import { store } from '@/store/store';
 
 const createWs = (url: string) => {
     let ws: WebSocket | undefined;
-    const subscribers = new Map<number, ((message: Message) => void)[]>();
+    const subscribers = new Map<number, (message: Message) => void>();
 
     const create = () => {
         ws = new WebSocket(url);
@@ -14,10 +20,21 @@ const createWs = (url: string) => {
 
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
-                const e = JSON.parse(event.data);
-                const cbs = subscribers.get(e.chat_id);
-                if (cbs) {
-                    cbs.forEach((cb) => cb(e));
+                const message = JSON.parse(event.data);
+                switch (message.action) {
+                    case MessageActionTypes.Edit:
+                        store.dispatch(createEditMessageAction(message));
+                        break;
+                    case MessageActionTypes.Delete:
+                        store.dispatch(createDeleteMessageAction(message));
+                        break;
+                    case MessageActionTypes.Create:
+                        store.dispatch(createAddMessageAction(message));
+                }
+
+                const cb = subscribers.get(message.chat_id);
+                if (cb) {
+                    cb(message);
                 }
             };
 
@@ -43,22 +60,9 @@ const createWs = (url: string) => {
                 ws?.send(JSON.stringify(message));
             },
             subscribe: (chatId: number, cb: (message: Message) => void) => {
-                if (subscribers.has(chatId)) {
-                    subscribers.get(chatId)?.push(cb);
-                } else {
-                    subscribers.set(chatId, [cb]);
-                }
-
+                subscribers.set(chatId, cb);
                 return () => {
-                    debugger;
-                    const index = subscribers
-                        .get(chatId)
-                        ?.findIndex((c) => c == cb);
-                    if (index !== -1) {
-                        console.log({ ...subscribers });
-                        subscribers.get(chatId)?.slice(index, 1);
-                        console.log(subscribers);
-                    }
+                    subscribers.delete(chatId);
                 };
             },
             close: () => {

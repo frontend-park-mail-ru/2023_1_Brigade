@@ -253,23 +253,30 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
-        switch (message.action) {
-            case MessageActionTypes.Edit:
-                store.dispatch(createEditMessageAction(message));
-                break;
-            case MessageActionTypes.Delete:
-                store.dispatch(createDeleteMessageAction(message));
-                break;
-            case MessageActionTypes.Create:
-                store.dispatch(createAddMessageAction(message));
-
-                this.state.chat?.addMessage(
-                    document.querySelector(
-                        '.view-chat__messages'
-                    ) as HTMLElement,
-                    message
-                );
+        if (message.action === MessageActionTypes.Create) {
+            this.state.chat?.addMessage(
+                document.querySelector('.view-chat__messages') as HTMLElement,
+                message
+            );
         }
+
+        // switch (message.action) {
+        //     case MessageActionTypes.Edit:
+        //         store.dispatch(createEditMessageAction(message));
+        //         break;
+        //     case MessageActionTypes.Delete:
+        //         store.dispatch(createDeleteMessageAction(message));
+        //         break;
+        //     case MessageActionTypes.Create:
+        //         store.dispatch(createAddMessageAction(message));
+
+        //         this.state.chat?.addMessage(
+        //             document.querySelector(
+        //                 '.view-chat__messages'
+        //             ) as HTMLElement,
+        //             message
+        //         );
+        // }
     }
 
     handleClickSendButton(message: {
