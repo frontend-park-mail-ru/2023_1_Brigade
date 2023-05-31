@@ -225,6 +225,7 @@ export class SmartCreateGroup extends Component<Props, State> {
                     channel,
                 })
             );
+
             store.dispatch(createMoveToChatsAction());
         }
     }

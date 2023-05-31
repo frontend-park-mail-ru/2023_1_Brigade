@@ -38,9 +38,6 @@ interface State {
 
 export class SmartEditChat extends Component<Props, State> {
     private chatMembers?: User[];
-    private title?: string;
-    private description?: string;
-    private avatar?: string;
 
     constructor(props: Props) {
         DYNAMIC().innerHTML = '';
@@ -54,9 +51,6 @@ export class SmartEditChat extends Component<Props, State> {
             descriptionIsValid: false,
         };
         this.state.contacts = this.getContacts();
-        this.title = store.getState().openedChat?.title;
-        this.description = store.getState().openedChat?.description;
-        this.avatar = store.getState().openedChat?.avatar;
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -93,37 +87,37 @@ export class SmartEditChat extends Component<Props, State> {
             return;
         }
 
-        const drawGroupPromise = new Promise((resolve) => {
-            if (this.node) {
-                resolve(
-                    (this.state.node = new DumbGroup({
-                        parent: this.node,
-                        type: store.getState().openedChat?.type,
-                        chatActionType: 'Изменение',
-                        user: this.props.user,
-                        contacts: this.state.contacts,
-                        nameValue: this.title,
-                        descriptionValue: this.description,
-                        avatar: this.avatar,
-                        hookContacts: this.hookContacts,
-                        hookUser: this.hookUser,
-                        backOnClick: this.backOnClick.bind(this),
-                        avatarOnClick: this.avatarOnClick.bind(this),
-                        cancelOnClick: this.cancelOnClick.bind(this),
-                        saveOnClick: this.saveOnClick.bind(this),
-                        channelNameValidate:
-                            this.validateChannelName.bind(this),
-                        channelDescriptionValidate:
-                            this.validateChannelDescription.bind(this),
-                        membersOnChange: this.membersOnChange.bind(this),
-                    }))
-                );
-            }
+        // const drawGroupPromise = new Promise((resolve) => {
+        //     if (this.node) {
+        //         resolve(
+        this.state.node = new DumbGroup({
+            parent: this.node,
+            type: store.getState().openedChat?.type,
+            chatActionType: 'Изменение',
+            user: this.props.user,
+            contacts: this.state.contacts,
+            nameValue: store.getState().openedChat?.title,
+            descriptionValue: store.getState().openedChat?.description,
+            avatar: store.getState().openedChat?.avatar,
+            hookContacts: this.hookContacts,
+            hookUser: this.hookUser,
+            backOnClick: this.backOnClick.bind(this),
+            avatarOnClick: this.avatarOnClick.bind(this),
+            cancelOnClick: this.cancelOnClick.bind(this),
+            saveOnClick: this.saveOnClick.bind(this),
+            channelNameValidate: this.validateChannelName.bind(this),
+            channelDescriptionValidate:
+                this.validateChannelDescription.bind(this),
+            membersOnChange: this.membersOnChange.bind(this),
+            setCheckedLabels: this.setCheckedLabels.bind(this),
         });
+        //         );
+        //     }
+        // });
 
-        drawGroupPromise.then(() => {
-            this.setCheckedLabels();
-        });
+        // drawGroupPromise.then(() => {
+        //     this.setCheckedLabels();
+        // });
     }
 
     componentWillUnmount() {
@@ -145,6 +139,10 @@ export class SmartEditChat extends Component<Props, State> {
 
     hookUser(state: StoreState): User | undefined {
         return state.user ?? undefined;
+    }
+
+    hookOpenedChat(state: StoreState): OpenedChat | undefined {
+        return state.openedChat ?? undefined;
     }
 
     /**
@@ -196,14 +194,9 @@ export class SmartEditChat extends Component<Props, State> {
             )
         ) as HTMLInputElement[];
 
-        console.log('setCheckedLabels called: ', contactList);
-        console.log('membersIds: ', membersIds);
-
         for (const contact of contactList) {
             if (membersIds.includes(Number(contact.id))) {
-                console.log('contact id', contact.id);
                 contact.checked = true;
-                console.log('contact', contact);
             }
         }
     }
@@ -244,7 +237,13 @@ export class SmartEditChat extends Component<Props, State> {
             );
         }
 
-        if (this.isValid() && this.props.user && this.props.chatId) {
+        const chatType = store.getState().openedChat?.type;
+        if (
+            this.isValid() &&
+            this.props.user &&
+            this.props.chatId &&
+            chatType
+        ) {
             const chatField = {
                 id: this.props.chatId,
                 avatar: '',
@@ -253,7 +252,7 @@ export class SmartEditChat extends Component<Props, State> {
                         '.channel-description'
                     ) as HTMLInputElement
                 )?.value,
-                type: ChatTypes.Group,
+                type: chatType,
                 title: (
                     document.querySelector('.channel-name') as HTMLInputElement
                 )?.value,
@@ -266,6 +265,8 @@ export class SmartEditChat extends Component<Props, State> {
                     chatField,
                 })
             );
+
+            router.route(`${this.props.chatId}`);
             store.dispatch(createMoveToChatsAction());
         }
     }
