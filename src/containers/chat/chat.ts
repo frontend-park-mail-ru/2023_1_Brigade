@@ -19,11 +19,6 @@ import {
 import { ChatTypes, MessageActionTypes, MessageTypes } from '@config/enum';
 import { DYNAMIC } from '@config/config';
 import { DumbMessage } from '@/components/message/message';
-import {
-    createAddMessageAction,
-    createDeleteMessageAction,
-    createEditMessageAction,
-} from '@/actions/messageActions';
 
 interface Props {
     chatId?: number;
@@ -287,7 +282,7 @@ export class SmartChat extends Component<Props, State> {
             name: string;
         }[];
     }) {
-        if (this.chatId && this.props.user?.id) {
+        if (this.chatId && this.props.user) {
             if (
                 this.state.editingMessage &&
                 message.type !== MessageTypes.Sticker
@@ -298,7 +293,7 @@ export class SmartChat extends Component<Props, State> {
                     type: message.type,
                     attachments: message.attachments,
                     body: message.body,
-                    author_id: 0,
+                    author_id: this.props.user.id,
                     chat_id: this.chatId,
                     created_at: '',
                 });
@@ -325,13 +320,17 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
+        if (!this.props.user) {
+            return;
+        }
+
         getWs().send({
             id: message.getMessage().id,
             action: MessageActionTypes.Delete,
             type: MessageTypes.notSticker,
             attachments: [],
             body: '',
-            author_id: 0,
+            author_id: this.props.user.id,
             chat_id: this.chatId,
             created_at: '',
         });
@@ -364,8 +363,16 @@ export class SmartChat extends Component<Props, State> {
 
                 this.unsubscribe = store.subscribe(
                     this.constructor.name,
-                    (props: Props) => {
-                        this.props = props;
+                    (props: StoreState) => {
+                        if (!props.user || !props.openedChat) {
+                            return;
+                        }
+
+                        this.props = {
+                            chatId: this.props.chatId,
+                            user: props.user,
+                            openedChat: props.openedChat,
+                        };
 
                         this.render();
                     }
