@@ -9,7 +9,7 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction, createEditChatAction, createGetChatsAction, createOpenChatAction, createUpdateChatAction } from '@actions/chatActions';
+import { createCreateChannelAction, createEditChatAction, createGetChatsAction, createOpenChatAction, createSetChatsAction, createUpdateChatAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
@@ -276,9 +276,7 @@ export class SmartEditChat extends Component<Props, State> {
                 })
             );
 
-            store.dispatch(createGetChatsAction());
-            router.route(`${this.props.chatId}`);
-            store.dispatch(createMoveToChatsAction());
+            // store.dispatch(createSetChatsAction(store.getState()))
         }
     }
 

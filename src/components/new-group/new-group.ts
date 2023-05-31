@@ -103,11 +103,10 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
     drawContacts() {
         const contacts = store.getState().contacts;
-        if (contacts) {
+        const rootMembersDropdown = document.querySelector('.group__form__input-members') as HTMLElement;
+        if (contacts && rootMembersDropdown) {
             this.state.membersDropdown = new InputDropdownList({
-                parent: document.querySelector(
-                    '.group__form__input-members'
-                ) as HTMLElement,
+                parent: rootMembersDropdown,
                 className: 'group__form__input-members__list',
             });
 
@@ -117,15 +116,17 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                 '.group__form__input-members__list'
             ) as HTMLElement;
 
-            for (const contact of contacts) {
-                this.state.dropdownItems[i] = new InputDropdownItem({
-                    parent: dropdownRoot,
-                    className: `group__form__input-members__list__item members-item-${contact.id}`,
-                    contact: contact,
-                    onClick: this.props.itemOnClick,
-                });
+            if (dropdownRoot) {
+                for (const contact of contacts) {
+                    this.state.dropdownItems[i] = new InputDropdownItem({
+                        parent: dropdownRoot,
+                        className: `group__form__input-members__list__item members-item-${contact.id}`,
+                        contact: contact,
+                        onClick: this.props.itemOnClick,
+                    });
 
-                i++;
+                    i++;
+                }
             }
         }
     }
@@ -282,6 +283,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         if (!this.node) {
             return;
         }
+
+        console.log('willunmount');
 
         this.headerText?.remove();
         this.state.backButton?.destroy();

@@ -229,11 +229,14 @@ export const createDeleteChatAction = (deletedChatId: number | undefined) => {
  * Создает экшен "editChat".
  * @returns {{ type: string, payload: Object }} - Экшен
  */
+
 export const createEditChatFromStoreAction = (updateGroupState: {
     id: number;
     type: ChatTypes;
     title: string;
     members: (number | undefined)[];
+    avatar?: string;
+    description?: string;
 }) => {
     return {
         type: constantsOfActions.editChat,
@@ -429,13 +432,17 @@ export const createUpdateChatAction = (chat: {
             }
         }
 
+        if (chat.chatField) {
+            dispatch(createEditChatFromStoreAction(chat.chatField));
+        }
+
         const { status, body } = await editChat(chat.chatField);
         const jsonBody = await body;
 
         switch (status) {
             case 201:
-                dispatch(createAddChatAction(jsonBody));
-                dispatch(createMoveToChatAction({ chatId: jsonBody.id }));
+                dispatch(createOpenChatAction(jsonBody));
+                router.route(`/${chat.chatField.id}`);
                 break;
             case 401:
             // TODO: отрендерить ошибку
@@ -450,3 +457,16 @@ export const createUpdateChatAction = (chat: {
         }
     };
 };
+
+// sasad
+// export const createEditChatFromStoreAction = (updateGroupState: {
+//     id: number;
+//     type: ChatTypes;
+//     title: string;
+//     members: (number | undefined)[];
+// }) => {
+//     return {
+//         type: constantsOfActions.editChat,
+//         payload: updateGroupState,
+//     };
+// };
