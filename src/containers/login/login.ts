@@ -11,6 +11,7 @@ import {
 import { DYNAMIC, LOGIN, ROOT, SIDEBAR, STATIC } from '@config/config';
 
 import { createInvalidEmailAction } from '@/actions/userActions';
+import { DumbAboutUs } from '@/components/about-us/about-us';
 
 interface Props {
     invalidEmail?: boolean;
@@ -39,12 +40,19 @@ interface State {
  *
  */
 export class SmartLogin extends Component<Props, State> {
+    private dumbLogin?: DumbLogin;
+    private dumbAboutUs?: DumbAboutUs;
     /**
      * Cохраняет props
      * @param {Object} props - параметры компонента
      */
     constructor(props: Props) {
         super(props);
+
+        const aboutUs = document.querySelector('.about-us');
+        if (aboutUs) {
+            aboutUs.innerHTML = '';
+        }
 
         this.state = {
             isMounted: false,
@@ -86,7 +94,11 @@ export class SmartLogin extends Component<Props, State> {
         if (this.state.isMounted && !LOGIN()) {
             STATIC().innerHTML = DYNAMIC().innerHTML = SIDEBAR().innerHTML = '';
 
-            new DumbLogin({
+            this.dumbAboutUs = new DumbAboutUs({
+                parent: ROOT(),
+            });
+
+            this.dumbLogin = new DumbLogin({
                 parent: ROOT(),
             });
 
@@ -178,6 +190,7 @@ export class SmartLogin extends Component<Props, State> {
             this.state.isMounted = false;
 
             LOGIN().remove();
+            this.dumbAboutUs?.destroy();
         }
     }
 

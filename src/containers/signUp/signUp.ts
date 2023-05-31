@@ -21,6 +21,7 @@ import {
 } from '@actions/routeActions';
 import { DYNAMIC, ROOT, SIDEBAR, SIGNUP, STATIC } from '@config/config';
 import { createOccupiedEmailAction } from '@/actions/userActions';
+import { DumbAboutUs } from '@/components/about-us/about-us';
 
 interface Props {
     occupiedEmail?: boolean;
@@ -52,12 +53,19 @@ interface State {
  * для корректного рендера ошибки
  */
 export class SmartSignUp extends Component<Props, State> {
+    private dumbSignUp?: DumbSignUp;
+    private dumbAboutUs?: DumbAboutUs;
     /**
      * Cохраняет props
      * @param {Object} props - параметры компонента
      */
     constructor(props: Props) {
         super(props);
+
+        const aboutUs = document.querySelector('.about-us');
+        if (aboutUs) {
+            aboutUs.innerHTML = '';
+        }
 
         this.state = {
             isMounted: false,
@@ -104,7 +112,12 @@ export class SmartSignUp extends Component<Props, State> {
     render() {
         if (this.state.isMounted && !SIGNUP()) {
             STATIC().innerHTML = DYNAMIC().innerHTML = SIDEBAR().innerHTML = '';
-            new DumbSignUp({
+
+            this.dumbAboutUs = new DumbAboutUs({
+                parent: ROOT(),
+            });
+
+            this.dumbSignUp = new DumbSignUp({
                 parent: ROOT(),
             });
 
@@ -211,6 +224,7 @@ export class SmartSignUp extends Component<Props, State> {
             this.state.isMounted = false;
 
             SIGNUP().remove();
+            this.dumbAboutUs?.destroy();
         }
     }
 

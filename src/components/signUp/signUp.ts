@@ -25,8 +25,6 @@ interface State {
     isMounted: boolean;
     parent?: HTMLElement | undefined;
     avatar?: Avatar;
-    logoImageNode?: Avatar;
-    informationList?: List;
     email: Input;
     nickname: Input;
     password: Input;
@@ -37,78 +35,18 @@ interface State {
 }
 
 export class DumbSignUp extends Component<Props, State, HTMLElement> {
-    private greetingNode: HTMLElement;
-    private logoNode: HTMLElement;
-    private sloganNode: HTMLElement;
-
-    private firstInfoField: HTMLElement;
-    private secondInfoField: HTMLElement;
-    private thirdInfoField: HTMLElement;
     constructor(props: Props) {
         super(props);
-
-        this.greetingNode = document.createElement('div');
-        this.greetingNode.classList.add('about-us', 'container', 'flex', 'col');
-
-        this.logoNode = document.createElement('div');
-        this.logoNode.classList.add('about-us__logo', 'flex');
-
-        this.sloganNode = document.createElement('h2');
-        this.sloganNode.textContent = 'Наслаждайтесь общением.';
-        this.sloganNode.classList.add('about-us__slogan');
-
-        this.firstInfoField = document.createElement('span');
-        this.firstInfoField.classList.add('about-us__list__item');
-        this.firstInfoField.textContent = `Обмен текстовыми сообщениями, фото и стикерами.`;
-
-        this.secondInfoField = document.createElement('span');
-        this.secondInfoField.classList.add('about-us__list__item');
-        this.secondInfoField.textContent = `Создание канала для публикации контента.`;
-
-        this.thirdInfoField = document.createElement('span');
-        this.thirdInfoField.classList.add('about-us__list__item');
-        this.thirdInfoField.textContent = `Создание групповых чатов для общения с друзьями.`;
 
         if (this.props.parent) {
             this.node = this.render() as HTMLElement;
             this.state.isMounted = true;
             this.state.parent = this.props.parent;
             this.componentDidMount();
-            console.log('signup parent: ', this.props.parent);
             if (this.node) {
-                // left side
-                this.props.parent.appendChild(this.greetingNode);
-                this.greetingNode.appendChild(this.logoNode);
-                this.greetingNode.appendChild(this.sloganNode);
-
-                this.state.informationList = new List({
-                    parent: this.greetingNode,
-                    className: 'about-us__list flex col',
-                });
-
-                this.state.informationList
-                    .getNode()
-                    ?.appendChild(this.firstInfoField);
-                this.state.informationList
-                    .getNode()
-                    ?.appendChild(this.secondInfoField);
-                this.state.informationList
-                    .getNode()
-                    ?.appendChild(this.thirdInfoField);
-                // right side
                 this.props.parent.appendChild(this.node);
             }
         }
-
-        this.state.logoImageNode = new Avatar({
-            parent: document.querySelector('.about-us__logo') as HTMLElement,
-            className: 'about-us__logo__image',
-            src: './assets/img/logo.png', // src/assets/img/logo.png
-            alt: 'Logo',
-            caption: `Technogramm`,
-            captionStyle: 'about-us__logo__text',
-            captionBlockStyle: 'row',
-        });
 
         this.state.avatar = new Avatar({
             parent: document.querySelector('.reg') as HTMLElement,
@@ -198,9 +136,7 @@ export class DumbSignUp extends Component<Props, State, HTMLElement> {
             return;
         }
 
-        this.greetingNode.remove();
-        this.logoNode.remove();
-        this.sloganNode.remove();
+        // this.node.remove();
 
         if (this.props.onClick) {
             this.node.removeEventListener('click', this.props.onClick);

@@ -48,6 +48,7 @@ export class DumbAboutUs extends Component<Props, State, HTMLElement> {
             return;
         }
 
+        this.node.remove();
         this.state.isMounted = false;
     }
 
