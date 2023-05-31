@@ -1,11 +1,11 @@
 div(class=ClassName)
     span(class=LabelClassName).input-container__label
-        !=Label
+        =Label
     input(class=UniqClassName)(type=Type, placeholder=Placeholder, value=Value)
     !=Icon
-    !=Caption
+    =Caption
     if Errors
         div(class=ErrorsClassName).input__errors.flex
             each error in Errors
                 span(class=error.class).login-reg__error.invisible
-                    !=error.message
+                    =error.message
