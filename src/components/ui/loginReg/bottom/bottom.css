@@ -10,7 +10,8 @@
     border: 0px;
     border-radius: 6px;
 
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -25,7 +26,8 @@
 
 .login-reg-bottom__question {
     text-align: center;
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 500;
     font-size: 13px;

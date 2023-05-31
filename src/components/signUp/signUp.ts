@@ -12,8 +12,6 @@ import { Button } from '@uikit/button/button';
 import { Avatar } from '@/uikit/avatar/avatar';
 import { Link } from '@/uikit/link-item/link-item';
 import { Form } from '@/uikit/form/form';
-import { ROOT } from '@/config/config';
-import { List } from '@/uikit/list/list';
 
 interface Props {
     parent: HTMLElement;

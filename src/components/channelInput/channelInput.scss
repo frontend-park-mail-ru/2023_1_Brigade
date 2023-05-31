@@ -17,6 +17,7 @@
     outline: none;
     background: none;
     font-family: inherit;
+    overflow: hidden;
     font-size: inherit;
     line-height: inherit;
 }
@@ -28,7 +29,8 @@
     border: 1px solid #1B262C;
     border-radius: 10px;
     color: #ffffff;
-    font-family: "SF Pro Display";
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 600;
     font-size: 20px;

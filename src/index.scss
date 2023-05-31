@@ -195,7 +195,8 @@ body {
     margin: 0px;
     padding: 0px;
     transition: all 0.3s ease-in-out;
-    font-family: Arial, sans-serif;
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-size: 16px;
     line-height: 1.5;
     overflow-x: hidden;
@@ -234,7 +235,8 @@ section {
 .chat-page {
     width: 100%;
     min-width: 500px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-weight: 400;
     background: #131318;
 }
@@ -379,7 +381,8 @@ main {
 }
 
 .font-size-1 {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -390,7 +393,8 @@ main {
 }
 
 .font-size-2 {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -401,7 +405,8 @@ main {
 }
 
 .font-size-3 {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -411,7 +416,8 @@ main {
 }
 
 .font-size-4 {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -420,7 +426,8 @@ main {
 }
 
 .font-size-5 {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -429,7 +436,8 @@ main {
 }
 
 .font-size-6 {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 26px;
