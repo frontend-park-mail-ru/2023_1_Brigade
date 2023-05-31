@@ -207,7 +207,29 @@ export class MessageInput extends Component<Props, State> {
         } else if (e.key === 'Enter') {
             e.preventDefault();
             this.onSend();
+
+            const maxlength = this.node?.querySelector(
+                '.message-input__maxlength'
+            );
+            if (!maxlength) {
+                return;
+            }
+
+            setTimeout(() => {
+                maxlength.textContent = `0/1000`;
+            });
+
+            return;
         }
+
+        const maxlength = this.node?.querySelector('.message-input__maxlength');
+        if (!maxlength) {
+            return;
+        }
+
+        setTimeout(() => {
+            maxlength.textContent = `${this.state.input?.value.length}/1000`;
+        });
     }
 
     inputFocus(e: KeyboardEvent) {
