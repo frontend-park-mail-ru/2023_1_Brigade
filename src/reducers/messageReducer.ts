@@ -19,6 +19,16 @@ export const reduceMessage = (state: StoreState, action: Action) => {
                 state.chats[i].last_message = payload;
             }
 
+            state.chats?.sort((a, b) => {
+                if (a.last_message.created_at < b.last_message.created_at) {
+                    return 1;
+                }
+                if (a.last_message.created_at > b.last_message.created_at) {
+                    return -1;
+                }
+                return 0;
+            });
+
             return {
                 ...state,
             };

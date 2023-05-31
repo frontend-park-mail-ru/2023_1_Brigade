@@ -300,6 +300,7 @@ export class SmartChat extends Component<Props, State> {
                     body: message.body,
                     author_id: 0,
                     chat_id: this.chatId,
+                    created_at: '',
                 });
 
                 this.state.editingMessage = undefined;
@@ -312,6 +313,7 @@ export class SmartChat extends Component<Props, State> {
                     body: message.body,
                     author_id: this.props.user.id,
                     chat_id: this.chatId,
+                    created_at: '',
                 });
             }
         }
@@ -331,6 +333,7 @@ export class SmartChat extends Component<Props, State> {
             body: '',
             author_id: 0,
             chat_id: this.chatId,
+            created_at: '',
         });
     }
 
