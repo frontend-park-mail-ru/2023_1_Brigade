@@ -1,3 +1,9 @@
+import {
+    createAddMessageAction,
+    createDeleteMessageAction,
+    createEditMessageAction,
+} from '@/actions/messageActions';
+import { MessageActionTypes } from '@/config/enum';
 import { store } from '@/store/store';
 
 const createWs = (url: string) => {
@@ -14,10 +20,21 @@ const createWs = (url: string) => {
 
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
-                const e = JSON.parse(event.data);
-                const cb = subscribers.get(e.chat_id);
+                const message = JSON.parse(event.data);
+                switch (message.action) {
+                    case MessageActionTypes.Edit:
+                        store.dispatch(createEditMessageAction(message));
+                        break;
+                    case MessageActionTypes.Delete:
+                        store.dispatch(createDeleteMessageAction(message));
+                        break;
+                    case MessageActionTypes.Create:
+                        store.dispatch(createAddMessageAction(message));
+                }
+
+                const cb = subscribers.get(message.chat_id);
                 if (cb) {
-                    cb(e);
+                    cb(message);
                 }
             };
 
