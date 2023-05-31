@@ -1,7 +1,7 @@
 .message-input.flex(class=className)
     .message-input__attachment.message-input__attachment--disabled.flex
     .message-input__text-field
-        .message-input__text-field__in(type="text" placeholder="Сообщение" contenteditable)
+        textarea(type="text" placeholder="Сообщение").message-input__text-field__in
         for i in icons 
             !=i
     .message-input__emoji-stickers.message-input__emoji-stickers--disabled.flex

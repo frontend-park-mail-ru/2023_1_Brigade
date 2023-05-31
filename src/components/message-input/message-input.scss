@@ -33,23 +33,22 @@
         min-height: 60px;
 
         &__in {
+            resize: none;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             word-break: break-word;
-            min-height: 60px;
-            min-width: 100%;
             max-height: 25vh;
-            max-width: 100%;
             outline: none;
             background: #1C1C24;
-            border: 1px solid #1B262C;
-            border-radius: 10px;
+            border: none;
             font-family: 'SF Pro Display';
             font-style: normal;
             font-weight: 400;
             font-size: 16px;
             line-height: 17px;
             color: #78777C;
-            padding: 22px 100px 18px 50px;
+            padding: 19px 100px 0px 50px;
 
             &:focus {
                 color: #ffffff;    
