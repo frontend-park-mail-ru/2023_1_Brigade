@@ -65,6 +65,7 @@ export class MessageInput extends Component<Props, State> {
         this.onInput = this.onInput.bind(this);
         this.inputFocus = this.inputFocus.bind(this);
         this.update = this.update.bind(this);
+        this.onAttachment = this.onAttachment.bind(this);
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -336,6 +337,20 @@ export class MessageInput extends Component<Props, State> {
         input.addEventListener('change', () => {
             const file = input?.files?.[0];
             if (!file) {
+                return;
+            }
+
+            if (file.size > 16 * 1024 * 1024) {
+                console.error('File size > 16MB');
+                return;
+            }
+
+            if (
+                this.state.attachmentFiles.length +
+                    this.state.attachmentUrls.length >=
+                10
+            ) {
+                console.error('Added 10 attachments');
                 return;
             }
 
