@@ -15,6 +15,7 @@ $input-font-size: 16px;
 
   &__label {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 500;
     font-size: 1.4rem;
@@ -52,6 +53,7 @@ input {
 
 .login-reg__error {
   font-family: 'SF Pro Display', sans-serif;
+  overflow: hidden;
   color: #FF0000;
   font-weight: 600;
   font-size: 16px;

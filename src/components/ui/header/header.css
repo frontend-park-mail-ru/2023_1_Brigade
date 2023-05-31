@@ -6,6 +6,7 @@
 
 .title__left-side__text {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 25px;
@@ -22,6 +23,7 @@
     background-color: #FC3F1D;
     margin-bottom: 15px;
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     color: #ffffff;
     font-weight: 500;
     font-size: 15px;
