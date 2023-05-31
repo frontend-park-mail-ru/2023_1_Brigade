@@ -58,12 +58,13 @@ export class ChatItem extends Component<Props, State> {
                 });
 
                 const chats = prop as Chat[];
-                const index = chats.findIndex((chat: { id: number }) => {
+                const index = chats?.findIndex((chat: { id: number }) => {
                     return chat?.id === this.state.chatId;
                 });
 
-                if (index === -1) {
+                if (index === -1 || (!index && index !== 0)) {
                     this.destroy();
+                    return;
                 }
 
                 if (this.props.chat !== chats[index]) {

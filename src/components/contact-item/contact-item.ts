@@ -62,9 +62,14 @@ export class ContactItem extends Component<Props, State> {
                     });
 
                     const contacts = prop as User[];
-                    const index = contacts.findIndex((contact) => {
+                    const index = contacts?.findIndex((contact) => {
                         return contact.id === this.state.contactId;
                     });
+
+                    if (index === -1 || (!index && index !== 0)) {
+                        this.destroy();
+                        return;
+                    }
 
                     if (this.props.contact != contacts[index]) {
                         this.props.contact = contacts[index];
