@@ -13,7 +13,8 @@
 }
 
 .login-reg__top_welcome {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 600;
     font-size: 36px;
@@ -24,7 +25,8 @@
 }
 
 .login-reg__top_message {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -77,7 +79,8 @@
     }
 
     &__caption {
-        font-family: 'Actor';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 24px;
@@ -90,7 +93,8 @@
         justify-content: center;
         
         &__username {
-            font-family: 'SF Pro Display';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 16px;
@@ -101,7 +105,8 @@
         }
         
         &__status {
-            font-family: 'SF Pro Display';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 12px;
@@ -157,7 +162,8 @@
     }
 
     &__caption {
-        font-family: 'Actor';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 24px;
@@ -170,7 +176,8 @@
         justify-content: center;
         
         &__username {
-            font-family: 'SF Pro Display';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 16px;
@@ -181,7 +188,8 @@
         }
         
         &__status {
-            font-family: 'SF Pro Display';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 12px;

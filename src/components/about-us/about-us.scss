@@ -42,7 +42,8 @@
             fill: #000000;
         }
         &__text {
-            font-family: 'Actor';
+            font-family: 'SF Pro Display', sans-serif;
+            overflow: hidden;
             font-style: normal;
             font-weight: 600;
             font-size: 24px;
@@ -58,7 +59,8 @@
         margin: 0px;
         padding: 0px;
         margin-bottom: 100px;
-        font-family: 'Actor';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 40px;
@@ -81,7 +83,8 @@
                 margin-bottom: 30px;
             }
             &__text {
-                font-family: 'Roboto';
+                font-family: 'SF Pro Display', sans-serif;
+                overflow: hidden;
                 font-style: normal;
                 font-weight: 400;
                 font-size: 24px;

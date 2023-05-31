@@ -19,11 +19,6 @@ import {
 import { ChatTypes, MessageActionTypes, MessageTypes } from '@config/enum';
 import { DYNAMIC } from '@config/config';
 import { DumbMessage } from '@/components/message/message';
-import {
-    createAddMessageAction,
-    createDeleteMessageAction,
-    createEditMessageAction,
-} from '@/actions/messageActions';
 import { Popup } from '@/components/popup/popup';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
@@ -264,28 +259,30 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
-        switch (message.action) {
-            case MessageActionTypes.Edit:
-                store.dispatch(createEditMessageAction(message));
-                break;
-            case MessageActionTypes.Delete:
-                store.dispatch(createDeleteMessageAction(message));
-                break;
-            case MessageActionTypes.Create:
-                store.dispatch(createAddMessageAction(message));
-
-                this.state.chat?.addMessage(
-                    document.querySelector(
-                        '.view-chat__messages'
-                    ) as HTMLElement,
-                    message
-                );
-
-            // this.state.chat?.addAttachment(
-            //     document.querySelector('.attachments__list') as HTMLElement,
-            //     message
-            // );
+        if (message.action === MessageActionTypes.Create) {
+            this.state.chat?.addMessage(
+                document.querySelector('.view-chat__messages') as HTMLElement,
+                message
+            );
         }
+
+        // switch (message.action) {
+        //     case MessageActionTypes.Edit:
+        //         store.dispatch(createEditMessageAction(message));
+        //         break;
+        //     case MessageActionTypes.Delete:
+        //         store.dispatch(createDeleteMessageAction(message));
+        //         break;
+        //     case MessageActionTypes.Create:
+        //         store.dispatch(createAddMessageAction(message));
+
+        //         this.state.chat?.addMessage(
+        //             document.querySelector(
+        //                 '.view-chat__messages'
+        //             ) as HTMLElement,
+        //             message
+        //         );
+        // }
     }
 
     handleClickSendButton(message: {
@@ -296,7 +293,7 @@ export class SmartChat extends Component<Props, State> {
             name: string;
         }[];
     }) {
-        if (this.chatId && this.props.user?.id) {
+        if (this.chatId && this.props.user) {
             if (
                 this.state.editingMessage &&
                 message.type !== MessageTypes.Sticker
@@ -307,8 +304,9 @@ export class SmartChat extends Component<Props, State> {
                     type: message.type,
                     attachments: message.attachments,
                     body: message.body,
-                    author_id: 0,
+                    author_id: this.props.user.id,
                     chat_id: this.chatId,
+                    created_at: '',
                 });
 
                 this.state.editingMessage = undefined;
@@ -321,6 +319,7 @@ export class SmartChat extends Component<Props, State> {
                     body: message.body,
                     author_id: this.props.user.id,
                     chat_id: this.chatId,
+                    created_at: '',
                 });
             }
         }
@@ -332,14 +331,19 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
+        if (!this.props.user) {
+            return;
+        }
+
         getWs().send({
             id: message.getMessage().id,
             action: MessageActionTypes.Delete,
             type: MessageTypes.notSticker,
             attachments: [],
             body: '',
-            author_id: 0,
+            author_id: this.props.user.id,
             chat_id: this.chatId,
+            created_at: '',
         });
     }
 
@@ -366,8 +370,16 @@ export class SmartChat extends Component<Props, State> {
 
                 this.unsubscribe = store.subscribe(
                     this.constructor.name,
-                    (props: Props) => {
-                        this.props = props;
+                    (props: StoreState) => {
+                        if (!props.user || !props.openedChat) {
+                            return;
+                        }
+
+                        this.props = {
+                            chatId: this.props.chatId,
+                            user: props.user,
+                            openedChat: props.openedChat,
+                        };
 
                         this.render();
                     }

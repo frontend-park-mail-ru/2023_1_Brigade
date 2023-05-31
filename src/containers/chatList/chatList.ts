@@ -199,8 +199,6 @@ export class SmartChatList extends Component<Props, State> {
                             isCurrent,
                         });
 
-                        chatItem.componentDidMount();
-
                         this.state.domElements.items.push(chatItem);
                     });
 
@@ -241,8 +239,6 @@ export class SmartChatList extends Component<Props, State> {
                             observe: ['founded_channels'],
                             isCurrent,
                         });
-
-                        chatItem.componentDidMount();
 
                         this.state.domElements.items.push(chatItem);
                     });
@@ -285,8 +281,6 @@ export class SmartChatList extends Component<Props, State> {
                             isCurrent,
                         });
 
-                        chatItem.componentDidMount();
-
                         this.state.domElements.items.push(chatItem);
                     });
 
@@ -316,8 +310,6 @@ export class SmartChatList extends Component<Props, State> {
                             observe: ['chats'],
                             isCurrent,
                         });
-
-                        chatItem.componentDidMount();
 
                         this.state.domElements.items.push(chatItem);
                     });

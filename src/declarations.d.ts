@@ -141,4 +141,5 @@ interface Message {
     body: string;
     chat_id: number;
     author_id: number;
+    created_at: string;
 }

@@ -5,8 +5,8 @@ mixin uiHeader(headerType, title, messCount)
         when "chat-list__header"
             div.chat-list__header.chat-list__child.flex
                 div.chat-list__header__title__left-side.title__left-side.flex
-                    h2.title__left-side__text !{title}
-                    span.flex.title__left-side__text__count !{messCount}
+                    h2.title__left-side__text= title
+                    span.flex.title__left-side__text__count= messCount
                 +svgButton("chat-list__header__write-message-button")
         when "view-chat__header"
             div.view-chat__header.flex

@@ -45,7 +45,8 @@
     }
 
     &__body {
-        font-family: 'SF Pro Display';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 1.2em;
@@ -54,7 +55,7 @@
 
         max-width: 100%;
         word-wrap: break-word;
-        word-break: normal;
-        white-space: normal;
+        word-break: break-word;
+        white-space: break-spaces;
     }
 }

@@ -56,7 +56,8 @@
         &__title {
           margin: 0px;
           margin-bottom: 20px;
-          font-family: 'Actor';
+          font-family: 'SF Pro Display', sans-serif;
+          overflow: hidden;
           font-style: normal;
           font-weight: 400;
           font-size: 24px;
@@ -89,7 +90,8 @@
   color: #ffffff;
   margin-bottom: 20px;
   z-index: 1;
-  font-family: 'Actor';
+  font-family: 'SF Pro Display', sans-serif;
+  overflow: hidden;
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
