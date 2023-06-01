@@ -10,6 +10,7 @@ import {
 import { STATIC } from '@config/config';
 import { List } from '@/uikit/list/list';
 import { ContactItem } from '@/components/contact-item/contact-item';
+import { createMoveToCreateChannelAction, createMoveToCreateGroupAction } from '@/actions/routeActions';
 
 interface Props {
     user?: User;
@@ -160,6 +161,20 @@ export class SmartContacts extends Component<Props, State> {
                     });
                 }
             }
+            const group = window.document.querySelector(
+                '.dropdown-menu__item-group'
+            );
+            const channel = window.document.querySelector(
+                '.dropdown-menu__item-channel'
+            );
+
+            group?.addEventListener('click', () => {
+                store.dispatch(createMoveToCreateGroupAction());
+            });
+
+            channel?.addEventListener('click', () => {
+                store.dispatch(createMoveToCreateChannelAction());
+            });
         }
     }
 
