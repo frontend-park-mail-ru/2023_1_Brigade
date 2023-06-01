@@ -266,6 +266,10 @@ export class DumbChat extends Component<Props, State> {
     }
 
     private checkRights(master_id: number | undefined): boolean {
+        console.log('debug checkRights function');
+
+        console.log('master_id', master_id);
+        console.log('this.props?.userId', this.props?.userId);
         if (master_id == this.props?.userId) {
             return true;
         }
@@ -325,6 +329,8 @@ export class DumbChat extends Component<Props, State> {
                 this.channelInput = 'yes';
             }
         }
+
+        console.log('this.editBtn', this.editBtn);
 
         this.state.isMounted = true;
 
