@@ -104,9 +104,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
     drawContacts() {
         const contacts = store.getState().contacts;
-        const rootMembersDropdown = document.querySelector(
-            '.group__form__input-members'
-        ) as HTMLElement;
+        const rootMembersDropdown = document.querySelector('.group__form__input-members') as HTMLElement;
         if (contacts && rootMembersDropdown) {
             this.state.membersDropdown = new InputDropdownList({
                 parent: rootMembersDropdown,
@@ -174,8 +172,9 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             'col',
             'flex-grow-1',
             'w-100',
-            'center',
-            'overflow-auto'
+            'align-items-center',
+            'height-100',
+            'overflow-y'
         );
 
         this.node.appendChild(this.wrapperCreateGroup);
@@ -303,8 +302,6 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         if (!this.node) {
             return;
         }
-
-        console.log('willunmount');
 
         this.headerText?.remove();
         this.state.backButton?.destroy();

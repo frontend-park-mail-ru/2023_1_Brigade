@@ -74,6 +74,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
     private headerText: HTMLElement | null;
     private profileUsername: HTMLElement | null;
     private profileStatus: HTMLElement | null;
+    private wrapperCreateGroup?: HTMLElement;
 
     destroy() {
         if (this.state.isMounted) {
@@ -140,8 +141,21 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         });
         this.state.header.getNode()?.appendChild(this.headerText);
 
+        this.wrapperCreateGroup = document.createElement('div');
+        this.wrapperCreateGroup.classList.add(
+            'flex',
+            'col',
+            'flex-grow-1',
+            'w-100',
+            'align-items-center',
+            'height-100',
+            'overflow-y'
+        );
+
+        this.node.appendChild(this.wrapperCreateGroup);
+
         this.state.avatar = new Avatar({
-            parent: this.node as HTMLElement,
+            parent: this.wrapperCreateGroup,
             className:
                 'profile__avatar profile__avatar-border-radius-50 profile__avatar-L',
             src: this.props.user?.avatar ?? './assets/img/defaultAva.png',
@@ -156,7 +170,7 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.state?.avatar?.getNode()?.appendChild(this.profileStatus);
 
         this.state.form = new Form({
-            parent: this.node as HTMLElement,
+            parent: this.wrapperCreateGroup,
             className: 'profile__form',
         });
 

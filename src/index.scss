@@ -195,6 +195,8 @@ body {
     margin: 0px;
     padding: 0px;
     transition: all 0.3s ease-in-out;
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-size: 16px;
     line-height: 1.5;
     overflow-x: hidden;
@@ -233,6 +235,8 @@ section {
 .chat-page {
     width: 100%;
     min-width: 500px;
+    font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-weight: 400;
     background: #131318;
 }
@@ -284,14 +288,30 @@ button {
     overflow: auto;
 }
 
-.center {
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-y {
+    overflow-y: auto;
+}
+
+.align-items-center {
     align-items: center;
+}
+
+.justify-content {
     justify-content: center;
 }
 
 .container {
     margin: 0 auto;
     padding: 0px 15px;
+}
+
+.height-100 {
+    max-height: 800px;
+    padding-bottom: 150px;
 }
 
 .w-auto {
@@ -320,8 +340,8 @@ button {
 main {
     width: 100%;
     opacity: 0;
-    animation: fadeIn 1s ease-in-out forwards;
-    animation-delay: 0.3s;
+    animation: fadeIn 0.5s ease-in-out forwards;
+    animation-delay: 0.05s;
 }
 
 .main {
@@ -366,6 +386,9 @@ main {
     width: 100%;
 }
   
+.h-100vh {
+    height: 100vh;
+}
 
 #sidebar {
     
@@ -387,6 +410,7 @@ main {
 
 .font-size-1 {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -398,6 +422,7 @@ main {
 
 .font-size-2 {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -409,6 +434,7 @@ main {
 
 .font-size-3 {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -419,6 +445,7 @@ main {
 
 .font-size-4 {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 24px;
@@ -428,6 +455,7 @@ main {
 
 .font-size-5 {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -437,6 +465,7 @@ main {
 
 .font-size-6 {
     font-family: 'SF Pro Display', sans-serif;
+    overflow: hidden;
     font-style: normal;
     font-weight: 700;
     font-size: 26px;

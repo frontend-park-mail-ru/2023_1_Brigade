@@ -23,6 +23,11 @@
     }
 
     &__nickname {
+        font-family: 'SF Pro Display', sans-serif;
+        color: #6147c1;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 1.2rem;
         margin-bottom: 10px;
     }
 
@@ -50,7 +55,7 @@
         font-style: normal;
         font-weight: 400;
         font-size: 1.2em;
-        line-height: 19px;
+        line-height: 30px;
         color: #FFFFFF;
 
         max-width: 100%;
