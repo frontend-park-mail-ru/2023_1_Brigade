@@ -1,12 +1,12 @@
-import template from '@components/ui/loginReg/top/top.pug';
-import '@components/ui/loginReg/top/top.css';
+import template from '@uikit/icon/button.pug';
+import '@uikit/icon/button.scss';
 import { Component } from '@framework/component';
 
 interface Props {}
 
 interface State {}
 
-export class loginRegTopUI extends Component<Props, State> {
+export class svgButtonUI extends Component<Props, State> {
     destroy() {}
 
     componentDidMount(): void {
@@ -17,7 +17,7 @@ export class loginRegTopUI extends Component<Props, State> {
         //
     }
 
-    static renderTemplate(args: Record<string, unknown>) {
+    static renderTemplate(args: { svgClassName: string }) {
         return template(args);
     }
 }

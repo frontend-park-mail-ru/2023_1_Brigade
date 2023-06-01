@@ -1,10 +1,7 @@
 import { DYNAMIC } from '@config/config';
 import { store } from '@store/store';
 import { Component } from '@framework/component';
-import {
-    createMoveToChatsAction,
-    createMoveToHomePageAction,
-} from '@actions/routeActions';
+import {} from '@actions/routeActions';
 import {
     addErrorToClass,
     checkNewChatDescription,
@@ -12,11 +9,7 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import {
-    createCreateChannelAction,
-    createGetChatsAction,
-    createOpenChatAction,
-} from '@actions/chatActions';
+import { createCreateChannelAction } from '@actions/chatActions';
 import { DumbChannel } from '@/components/new-channel/new-channel';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
@@ -127,7 +120,7 @@ export class SmartCreateChannel extends Component<Props, State> {
     }
 
     hookOpenedChat(state: StoreState): OpenedChat | undefined {
-        return store.getState().openedChat ?? undefined;
+        return state.openedChat ?? undefined;
     }
 
     /**

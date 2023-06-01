@@ -2,8 +2,6 @@ import { Component } from '@/framework/component';
 import { store } from '@/store/store';
 import template from '@components/popup/popup.pug';
 import '@components/popup/popup.scss';
-import { Button } from '@uikit/button/button';
-import { List } from '@uikit/list/list';
 
 interface Props {
     parent: HTMLElement;

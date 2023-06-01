@@ -1,5 +1,5 @@
-import '@components/ui/small-ellipse-icon/small-ellipse-icon.scss';
-import template from '@components/ui/small-ellipse-icon/small-ellipse-icon.pug';
+import '@uikit/small-ellipse-icon/small-ellipse-icon.scss';
+import template from '@uikit/small-ellipse-icon/small-ellipse-icon.pug';
 import { Component } from '@framework/component';
 
 interface Props {}

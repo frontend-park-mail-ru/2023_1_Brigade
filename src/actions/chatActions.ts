@@ -9,14 +9,12 @@ import {
     getChats,
     getOneChat,
     searchChats,
-    uploadAvatar,
 } from '@utils/api';
 import { router } from '@router/createRouter';
 import {
     createMoveToChatAction,
     createMoveToChatsAction,
 } from '@actions/routeActions';
-import { sendImage } from '@utils/api';
 
 /**
  * Создает экшен "isNotRendered".

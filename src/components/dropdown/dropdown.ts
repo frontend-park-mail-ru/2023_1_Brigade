@@ -1,7 +1,7 @@
 import { Component } from '@framework/component';
 import template from '@components/dropdown/dropdown.pug';
 import '@components/dropdown/dropdown.scss';
-import { svgButtonUI } from '@/components/ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 
 interface Props {
     icon: string;

@@ -1,8 +1,4 @@
-import {
-    emailErrorTypes,
-    nicknameErrorTypes,
-    passwordErrorTypes,
-} from '@/config/errors';
+import { emailErrorTypes, nicknameErrorTypes } from '@/config/errors';
 import { Component } from '@/framework/component';
 import { store } from '@/store/store';
 import { Avatar } from '@/uikit/avatar/avatar';
@@ -13,7 +9,7 @@ import { List } from '@/uikit/list/list';
 import template from '@components/new-profile/profile.pug';
 import '@components/new-profile/profile.scss';
 import { Header } from '@uikit/header/header';
-import { svgButtonUI } from '@components/ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 import { Popup } from '@components/popup/popup';
 
 interface Props {

@@ -1,8 +1,8 @@
 import { Component } from '@framework/component';
-import { store } from '@/store/store';
+import { store } from '@store/store';
 import template from '@components/contact-item/contact-item.pug';
 import '@components/contact-item/contact-item.scss';
-import { smallEllipseIconUI } from '@components/ui/small-ellipse-icon/small-ellipse-icon';
+import { smallEllipseIconUI } from '@uikit/small-ellipse-icon/small-ellipse-icon';
 
 interface Props {
     user?: User; //TODO: убрать
