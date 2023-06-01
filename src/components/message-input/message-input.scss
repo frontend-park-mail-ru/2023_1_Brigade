@@ -38,10 +38,18 @@
     &__text-field {
         position: relative;
         min-width: 100%;
+        // resize: vertical;
+        // min-height: 50px;
+        // max-height: 400px;
         min-height: 60px;
 
         &__in {
-            resize: none;
+            // resize: both;
+            // min-height: 50px;
+            // min-width: 200px;
+            // max-height: 200px;
+            // max-width: 500px;
+            resize: vertical;
             height: 100%;
             width: 100%;
             word-break: break-word;

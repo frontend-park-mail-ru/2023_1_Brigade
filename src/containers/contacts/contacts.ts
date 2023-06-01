@@ -10,7 +10,10 @@ import {
 import { STATIC } from '@config/config';
 import { List } from '@/uikit/list/list';
 import { ContactItem } from '@/components/contact-item/contact-item';
-import { createMoveToCreateChannelAction, createMoveToCreateGroupAction } from '@/actions/routeActions';
+import {
+    createMoveToCreateChannelAction,
+    createMoveToCreateGroupAction,
+} from '@/actions/routeActions';
 
 interface Props {
     user?: User;

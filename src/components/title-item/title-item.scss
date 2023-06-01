@@ -1,6 +1,16 @@
 .title-item {
     justify-content: start;
     width: 100%;
+    padding-top: 10px;
     padding-left: 20px;
-    border-bottom: 1px #33353A solid;
+    border-bottom: 1px #6d7589 solid; // 33353A
+    font-family: "SF Pro Display", sans-serif;
+    overflow: none;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 19px;
+    color: #1daf93; // #696969
+    min-height: 40px;
+    max-height: 100px;
 }

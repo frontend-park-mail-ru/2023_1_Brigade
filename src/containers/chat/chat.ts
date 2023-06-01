@@ -95,6 +95,50 @@ export class SmartChat extends Component<Props, State> {
         }
     }
 
+    createPopupContent(popText: string, confirmAction: () => void) {
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: popText,
+                className: 'popup__container',
+            });
+
+            const popContent: HTMLElement | null = document.querySelector(
+                '.popup__content'
+            ) as HTMLElement;
+
+            if (popContent) {
+                this.state.btnList = new List({
+                    parent: popContent,
+                    className: 'popup__btn-list',
+                });
+
+                this.state?.btnList.getNode()?.classList.remove('list');
+                this.state.confirmBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn confirm__btn button-S',
+                    label: 'Подтвердить',
+                    onClick: () => {
+                        confirmAction();
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+
+                this.state.cancelBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+            }
+        }
+    }
+
     /**
      * Рендерит чат
      */
@@ -139,32 +183,96 @@ export class SmartChat extends Component<Props, State> {
                 this.state.domElements.leaveGroupBtn?.addEventListener(
                     'click',
                     () => {
-                        const updateMembers = this.props?.openedChat?.members
-                            .map((member: { id: number }) => {
-                                return member.id;
-                            })
-                            .filter((id: number) => {
-                                return id !== this.props?.user?.id;
+                        const root = document.getElementById('root');
+                        if (!this.popup) {
+                            this.popup = new Popup({
+                                parent: root as HTMLElement,
+                                title: 'Вы действительно хотите покинуть группу?',
+                                className: 'popup__container',
                             });
 
-                        if (this.props.openedChat) {
-                            const updateChannelState = {
-                                id: this.props.openedChat.id,
-                                type: ChatTypes.Channel,
-                                title: this.props.openedChat.title,
-                                members: updateMembers ?? [],
-                            };
+                            const popContent: HTMLElement | null =
+                                document.querySelector(
+                                    '.popup__content'
+                                ) as HTMLElement;
 
-                            async function updateChannelAndMoveToHomePage() {
-                                store.dispatch(createDeleteUserInChat());
-                                await store.dispatch(
-                                    createEditChatAction(updateChannelState)
-                                );
-                                store.dispatch(createOpenChatAction(undefined));
-                                store.dispatch(createMoveToHomePageAction());
+                            if (popContent) {
+                                this.state.btnList = new List({
+                                    parent: popContent,
+                                    className: 'popup__btn-list',
+                                });
+
+                                this.state?.btnList
+                                    .getNode()
+                                    ?.classList.remove('list');
+                                this.state.confirmBtn = new Button({
+                                    parent: this.state.btnList.getNode() as HTMLElement,
+                                    className:
+                                        'popup__btn confirm__btn button-S',
+                                    label: 'Подтвердить',
+                                    onClick: () => {
+                                        const updateMembers =
+                                            this.props?.openedChat?.members
+                                                .map(
+                                                    (member: {
+                                                        id: number;
+                                                    }) => {
+                                                        return member.id;
+                                                    }
+                                                )
+                                                .filter((id: number) => {
+                                                    return (
+                                                        id !==
+                                                        this.props?.user?.id
+                                                    );
+                                                });
+
+                                        if (this.props.openedChat) {
+                                            const updateChannelState = {
+                                                id: this.props.openedChat.id,
+                                                type: ChatTypes.Channel,
+                                                title: this.props.openedChat
+                                                    .title,
+                                                members: updateMembers ?? [],
+                                            };
+
+                                            async function updateChannelAndMoveToHomePage() {
+                                                store.dispatch(
+                                                    createDeleteUserInChat()
+                                                );
+                                                await store.dispatch(
+                                                    createEditChatAction(
+                                                        updateChannelState
+                                                    )
+                                                );
+                                                store.dispatch(
+                                                    createOpenChatAction(
+                                                        undefined
+                                                    )
+                                                );
+                                                store.dispatch(
+                                                    createMoveToHomePageAction()
+                                                );
+                                            }
+
+                                            updateChannelAndMoveToHomePage();
+                                        }
+                                        this.popup?.destroy();
+                                        this.popup = null;
+                                    },
+                                });
+
+                                this.state.cancelBtn = new Button({
+                                    parent: this.state.btnList.getNode() as HTMLElement,
+                                    className:
+                                        'popup__btn cancel__btn button-S',
+                                    label: 'Отмена',
+                                    onClick: () => {
+                                        this.popup?.destroy();
+                                        this.popup = null;
+                                    },
+                                });
                             }
-
-                            updateChannelAndMoveToHomePage();
                         }
                     }
                 );
@@ -174,10 +282,10 @@ export class SmartChat extends Component<Props, State> {
                     () => {
                         if (
                             this.state.domElements.subscribeBtn?.textContent ===
-                            'Subscribe'
+                            'Подписаться'
                         ) {
                             this.state.domElements.subscribeBtn.textContent =
-                                'Unsubscribe';
+                                'Отписаться';
                             if (this.props.user) {
                                 store.dispatch(
                                     createAddUserInChat(this.props.user)
@@ -185,12 +293,14 @@ export class SmartChat extends Component<Props, State> {
                             }
                         } else if (
                             this.state.domElements.subscribeBtn?.textContent ===
-                            'Unsubscribe'
+                            'Отписаться'
                         ) {
-                            this.state.domElements.subscribeBtn.textContent =
-                                'Subscribe';
-                            store.dispatch(createDeleteUserInChat());
-                            // router.route('/');
+                            if (this.state.domElements.subscribeBtn) {
+                                this.state.domElements.subscribeBtn.textContent =
+                                    'Подписаться';
+                                store.dispatch(createDeleteUserInChat());
+                                router.route('/');
+                            }
                         }
 
                         if (this.props.openedChat) {
@@ -265,24 +375,6 @@ export class SmartChat extends Component<Props, State> {
                 message
             );
         }
-
-        // switch (message.action) {
-        //     case MessageActionTypes.Edit:
-        //         store.dispatch(createEditMessageAction(message));
-        //         break;
-        //     case MessageActionTypes.Delete:
-        //         store.dispatch(createDeleteMessageAction(message));
-        //         break;
-        //     case MessageActionTypes.Create:
-        //         store.dispatch(createAddMessageAction(message));
-
-        //         this.state.chat?.addMessage(
-        //             document.querySelector(
-        //                 '.view-chat__messages'
-        //             ) as HTMLElement,
-        //             message
-        //         );
-        // }
     }
 
     handleClickSendButton(message: {
@@ -335,16 +427,60 @@ export class SmartChat extends Component<Props, State> {
             return;
         }
 
-        getWs().send({
-            id: message.getMessage().id,
-            action: MessageActionTypes.Delete,
-            type: MessageTypes.notSticker,
-            attachments: [],
-            body: '',
-            author_id: this.props.user.id,
-            chat_id: this.chatId,
-            created_at: '',
-        });
+        const root = document.getElementById('root');
+        if (!this.popup) {
+            this.popup = new Popup({
+                parent: root as HTMLElement,
+                title: 'Вы действительно хотите удалить это сообщение?',
+                className: 'popup__container',
+            });
+
+            const popContent: HTMLElement | null = document.querySelector(
+                '.popup__content'
+            ) as HTMLElement;
+
+            if (popContent) {
+                this.state.btnList = new List({
+                    parent: popContent,
+                    className: 'popup__btn-list',
+                });
+
+                this.state?.btnList.getNode()?.classList.remove('list');
+                const userId = this.props.user.id;
+
+                if (userId && this.chatId) {
+                    this.state.confirmBtn = new Button({
+                        parent: this.state.btnList.getNode() as HTMLElement,
+                        className: 'popup__btn confirm__btn button-S',
+                        label: 'Подтвердить',
+                        onClick: () => {
+                            getWs().send({
+                                id: message.getMessage().id,
+                                action: MessageActionTypes.Delete,
+                                type: MessageTypes.notSticker,
+                                attachments: [],
+                                body: '',
+                                author_id: userId,
+                                chat_id: Number(this.chatId),
+                                created_at: '',
+                            });
+                            this.popup?.destroy();
+                            this.popup = null;
+                        },
+                    });
+                }
+
+                this.state.cancelBtn = new Button({
+                    parent: this.state.btnList.getNode() as HTMLElement,
+                    className: 'popup__btn cancel__btn button-S',
+                    label: 'Отмена',
+                    onClick: () => {
+                        this.popup?.destroy();
+                        this.popup = null;
+                    },
+                });
+            }
+        }
     }
 
     handleEditMessage(message: DumbMessage) {

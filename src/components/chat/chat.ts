@@ -314,9 +314,9 @@ export class DumbChat extends Component<Props, State> {
         }
         if (this.props.openedChat.type === ChatTypes.Channel) {
             if (this.isMember()) {
-                this.subscribeBtnText = 'Unsubscribe';
+                this.subscribeBtnText = 'Отписаться';
             } else {
-                this.subscribeBtnText = 'Subscribe';
+                this.subscribeBtnText = 'Подписаться';
             }
 
             if (this.checkRights(master_id)) {

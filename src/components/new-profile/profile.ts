@@ -132,11 +132,10 @@ export class DumbProfile extends Component<Props, State, HTMLElement> {
         this.state.backButton = new Button({
             parent: this.state.header.getNode() as HTMLElement,
             className: 'button-transparent profile__header__back-btn flex',
-            label: 'Назад',
-            // icon: svgButtonUI.renderTemplate({
-            //     svgClassName: 'back-btn',
-            // }),
-            // iconPosition: 'left',
+            icon: svgButtonUI.renderTemplate({
+                svgClassName: 'back-btn',
+            }),
+            iconPosition: 'left',
             onClick: this.props.backOnClick,
         });
         this.state.header.getNode()?.appendChild(this.headerText);
