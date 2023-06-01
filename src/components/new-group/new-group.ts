@@ -147,9 +147,15 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         if (this.props.type === ChatTypes.Group) {
             this.headerText.textContent = `${this.props.chatActionType} группы`;
-        } else if (this.props.type === ChatTypes.Channel) {
+        } else if (
+            this.props.type === ChatTypes.Channel &&
+            this.props.chatActionType === 'Создание нового'
+        ) {
             this.headerText.textContent = `${this.props.chatActionType} канала`;
-        } else if (!this.props.type) {
+        } else if (
+            !this.props.type ||
+            this.props.chatActionType === 'Создание нового'
+        ) {
             this.headerText.textContent = 'Создание группы';
         }
 
