@@ -1,10 +1,7 @@
 import { DYNAMIC } from '@config/config';
 import { store } from '@store/store';
 import { Component } from '@framework/component';
-import {
-    createMoveToChatsAction,
-    createMoveToHomePageAction,
-} from '@actions/routeActions';
+import { createMoveToChatsAction } from '@actions/routeActions';
 import {
     addErrorToClass,
     checkNewChatDescription,
@@ -12,7 +9,7 @@ import {
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
 import { ChatTypes } from '@config/enum';
-import { createCreateChannelAction, createGetChatsAction, createOpenChatAction } from '@actions/chatActions';
+import { createCreateChannelAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';

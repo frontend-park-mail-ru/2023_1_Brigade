@@ -2,7 +2,7 @@ import { Component } from '@framework/component';
 import { store } from '@/store/store';
 import template from '@components/chat-item/chat-item.pug';
 import '@components/chat-item/chat-item.scss';
-import { smallEllipseIconUI } from '@components/ui/small-ellipse-icon/small-ellipse-icon';
+import { smallEllipseIconUI } from '@uikit/small-ellipse-icon/small-ellipse-icon';
 import { MessageTypes } from '@/config/enum';
 // import { getWs } from '@/utils/ws';
 // import { MessageActionTypes } from '@/config/enum';

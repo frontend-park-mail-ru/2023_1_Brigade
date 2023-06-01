@@ -2,7 +2,7 @@ import '@components/message-input/message-input.scss';
 import template from '@components/message-input/message-input.pug';
 import { Component } from '@framework/component';
 import { Img } from '@uikit/img/img';
-import { svgButtonUI } from '@components/ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 import { MessageTypes } from '@config/enum';
 import { Emoji, Stickers } from '@config/images_urls';
 import { Button } from '@uikit/button/button';
@@ -273,6 +273,7 @@ export class MessageInput extends Component<Props, State> {
         }
 
         const attachments: { url: string; name: string }[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const promises: Promise<any>[] = [];
 
         this.state.attachmentFiles.forEach(async (attachment) => {

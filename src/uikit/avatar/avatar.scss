@@ -14,7 +14,6 @@
 
 .login-reg__top_welcome {
     font-family: 'SF Pro Display', sans-serif;
-    overflow: hidden;
     font-style: normal;
     font-weight: 600;
     font-size: 36px;
@@ -26,7 +25,6 @@
 
 .login-reg__top_message {
     font-family: 'SF Pro Display', sans-serif;
-    overflow: hidden;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -80,7 +78,6 @@
 
     &__caption {
         font-family: 'SF Pro Display', sans-serif;
-        // overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 24px;
@@ -101,7 +98,6 @@
             line-height: 19px;
             text-align: center;
             color: #696969;
-            // z-index: 1;
         }
         
         &__status {
@@ -113,7 +109,6 @@
             line-height: 14px;
             text-align: center;
             color: #696969;
-            // z-index: 1;
         }
     }
 }
@@ -177,7 +172,6 @@
         
         &__username {
             font-family: 'SF Pro Display', sans-serif;
-            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 16px;
@@ -189,7 +183,6 @@
         
         &__status {
             font-family: 'SF Pro Display', sans-serif;
-            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 12px;

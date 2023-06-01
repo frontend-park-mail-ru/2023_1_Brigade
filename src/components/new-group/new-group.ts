@@ -9,7 +9,7 @@ import { List } from '@/uikit/list/list';
 import template from '@components/new-group/new-group.pug';
 import '@components/new-group/new-group.scss';
 import { Header } from '@uikit/header/header';
-import { svgButtonUI } from '@components/ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
 import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 import { ChatTypes } from '@/config/enum';
@@ -104,7 +104,9 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
     drawContacts() {
         const contacts = store.getState().contacts;
-        const rootMembersDropdown = document.querySelector('.group__form__input-members') as HTMLElement;
+        const rootMembersDropdown = document.querySelector(
+            '.group__form__input-members'
+        ) as HTMLElement;
         if (contacts && rootMembersDropdown) {
             this.state.membersDropdown = new InputDropdownList({
                 parent: rootMembersDropdown,

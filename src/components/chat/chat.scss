@@ -6,7 +6,6 @@
     transition: min-width 0.3s;
 
     &__heder {
-        overflow: hidden;
         justify-content: center;
         align-items: center;
         height: 115px;
@@ -84,7 +83,6 @@ p {
     align-items: center;
     justify-content: center;
     font-family: 'SF Pro Display', sans-serif;
-    overflow: hidden;
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -94,7 +92,6 @@ p {
 
 .channel__subscribers {
     font-family: 'SF Pro Display', sans-serif;
-    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -110,7 +107,6 @@ p {
 
 .view-chat__header__icons__leave-group {
     font-family: 'SF Pro Display', sans-serif;
-    overflow: hidden;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

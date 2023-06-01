@@ -10,7 +10,6 @@ import { createLogoutAction } from '@actions/authActions';
 import { Popup } from '@/components/popup/popup';
 import { List } from '@uikit/list/list';
 import { Button } from '@/uikit/button/button';
-import { router } from '@/router/createRouter';
 
 interface Props {
     parent: HTMLElement;

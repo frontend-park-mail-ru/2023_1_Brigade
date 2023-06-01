@@ -9,8 +9,7 @@ import { List } from '@/uikit/list/list';
 import template from '@components/new-channel/new-channel.pug';
 import '@components/new-channel/new-channel.scss';
 import { Header } from '@uikit/header/header';
-import { svgButtonUI } from '@components/ui/icon/button';
-import { createOpenChatAction } from '@/actions/chatActions';
+import { svgButtonUI } from '@uikit/icon/button';
 
 interface Props {
     parent: HTMLElement;

@@ -2,7 +2,7 @@ import { Component } from '@/framework/component';
 import template from '@components/new-sidebar/sidebar.pug';
 import '@components/new-sidebar/sidebar.scss';
 import { Button } from '@uikit/button/button';
-import { svgButtonUI } from '../ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 import { store } from '@store/store';
 import { Img } from '@/uikit/img/img';
 import { List } from '@uikit/list/list';

@@ -1,8 +1,8 @@
 import template from '@components/chat/chat.pug';
 import '@components/chat/chat.scss';
 import { Component } from '@framework/component';
-import { svgButtonUI } from '@/components/ui/icon/button';
-import { chatAvatarUi } from '@components/ui/chatAvatar/chatAvatar';
+import { svgButtonUI } from '@uikit/icon/button';
+import { chatAvatarUi } from '@/uikit/chatAvatar/chatAvatar';
 import { ChatTypes, MessageTypes } from '@config/enum';
 import { DumbMessage } from '@components/message/message';
 import { MessageInput } from '@components/message-input/message-input';

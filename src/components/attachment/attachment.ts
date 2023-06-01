@@ -7,7 +7,7 @@ import { FileUi } from '@uikit/file/file';
 import { MessageTypes } from '@config/enum';
 import { Files } from '@/config/images_urls';
 import { Button } from '@/uikit/button/button';
-import { svgButtonUI } from '../ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 
 interface Props {
     src: { url: string; name: string };
