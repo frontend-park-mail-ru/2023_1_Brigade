@@ -6,6 +6,7 @@
     border: 1px solid #1B262C;
     border-radius: 10px;
     width: 100%;
+    overflow: hidden;
 
     &__maxlength {
         padding: 3px;
@@ -16,7 +17,6 @@
     }
 
     &__attachment {
-        overflow: hidden;
         max-height: 30vh;
         width: 100%;
         flex-wrap: wrap;
@@ -44,14 +44,12 @@
             resize: none;
             height: 100%;
             width: 100%;
-            overflow: hidden;
             word-break: break-word;
             max-height: 25vh;
             outline: none;
             background: #1C1C24;
             border: none;
             font-family: 'SF Pro Display', sans-serif;
-            overflow: hidden;
             font-style: normal;
             font-weight: 400;
             font-size: 16px;
@@ -66,7 +64,6 @@
     }
 
     &__emoji-stickers {
-        overflow: hidden;
         max-height: 30vh;
         overflow: auto;
         padding: 18px;

@@ -14,7 +14,6 @@
         background-color: #181B23;
         color: #ffffff;
         font-family: 'SF Pro Display', sans-serif;
-        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 24px;
@@ -28,7 +27,6 @@
         align-self: center;
         justify-content: center;
         font-family: 'SF Pro Display', sans-serif;
-        overflow: hidden;
         font-style: normal;
         letter-spacing: 0.08rem;
         font-weight: 400;
@@ -62,6 +60,7 @@
             align-items: flex-start;
             justify-content: flex-start;
             min-width: 100%;
+            overflow: hidden;
             &__errors {
                 top: 105%;
                 font-size: 1.2rem;
