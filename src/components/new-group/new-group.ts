@@ -173,6 +173,10 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             onClick: this.props.backOnClick,
         });
         this.state.header.getNode()?.appendChild(this.headerText);
+        const emptyBtn = new Button({
+            parent: this.state.header.getNode() as HTMLElement,
+            className: 'button-transparent channel__header__back-btn flex w-40',
+        });
 
         this.wrapperCreateGroup = document.createElement('div');
         this.wrapperCreateGroup.classList.add(
@@ -181,8 +185,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             'flex-grow-1',
             'w-100',
             'align-items-center',
-            'height-100',
-            'overflow-y'
+            'overflow-y',
+            'pb-100'
         );
 
         this.node.appendChild(this.wrapperCreateGroup);

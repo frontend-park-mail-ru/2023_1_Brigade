@@ -103,11 +103,12 @@ input {
   align-items: flex-start;
   justify-content: flex-start;
   min-width: 100%;
+  margin-bottom: 10%;
 }
 
-.profile__form__input:not(:last-child) {
-  margin-bottom: 5%;
-}
+// .profile__form__input:not(:last-child) {
+//   margin-bottom: 5%;
+// }
 
 .channel-members {
   position: relative;

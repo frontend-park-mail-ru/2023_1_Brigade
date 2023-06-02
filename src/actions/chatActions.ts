@@ -339,6 +339,8 @@ export const createSearchChatsAction = (str: string) => {
         const { status, body } = await searchChats(str);
         const jsonBody = await body;
 
+        console.log('json body: ', jsonBody);
+
         switch (status) {
             case 200:
                 dispatch(createSetSearchedChatsAction(jsonBody));

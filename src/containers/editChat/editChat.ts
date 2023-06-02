@@ -7,10 +7,10 @@ import {
     checkNewChatName,
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
-import { createUpdateChatAction } from '@actions/chatActions';
+import { createDeleteSearchedChatsAction, createSearchChatsAction, createUpdateChatAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
-import { createGetContactsAction } from '@/actions/contactsActions';
+import { createGetContactsAction, createSetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
 
@@ -337,8 +337,23 @@ export class SmartEditChat extends Component<Props, State> {
         }
     }
 
+    searchContact(curNickname: string) {
+        const contacts: User[] | undefined = store.getState().contacts;
+        if (curNickname && contacts) {
+            store.dispatch(createSetContactsAction(contacts));
+        }
+
+        console.log('aaaaaaa');
+    }
+
     membersOnChange(e?: Event) {
         e?.preventDefault();
+        // const inputValue = document.querySelector('.channel-members') as HTMLInputElement;
+        // this.searchContact(inputValue.value.trim());
+        // TODO: написать функцию поиска 
+        // создать List как HTMLElement
+        // найти по querySelector-у старый лист
+        // Заменить старый, на новый.
     }
 
     itemOnClick(e?: Event) {

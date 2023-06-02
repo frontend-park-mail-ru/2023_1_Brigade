@@ -314,8 +314,16 @@ button {
     padding-bottom: 150px;
 }
 
+.pb-100 {
+    padding-bottom: 100px;
+}
+
 .w-auto {
     width: auto;
+}
+
+.w-40 {
+    width: 40px;
 }
 
 .position-fixed {
@@ -402,6 +410,9 @@ main {
 
 #dynamic {
     background-color: #131318;
+    display: flex;
+    overflow: hidden;
+    flex-grow: 1;
 }
 
 .flex-grow-1 {
