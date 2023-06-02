@@ -7,12 +7,21 @@ import {
     checkNewChatName,
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
-import { createDeleteSearchedChatsAction, createSearchChatsAction, createUpdateChatAction } from '@actions/chatActions';
+import {
+    createDeleteSearchedChatsAction,
+    createSearchChatsAction,
+    createUpdateChatAction,
+} from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
-import { createGetContactsAction, createSetContactsAction } from '@/actions/contactsActions';
+import {
+    createGetContactsAction,
+    createSetContactsAction,
+} from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
+import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
+import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
@@ -32,6 +41,8 @@ interface State {
     contacts?: User[];
     nameIsValid?: boolean;
     descriptionIsValid?: boolean;
+    updateChatContactList?: InputDropdownList;
+    dropdownItems?: InputDropdownItem[];
 }
 
 export class SmartEditChat extends Component<Props, State> {
@@ -338,23 +349,72 @@ export class SmartEditChat extends Component<Props, State> {
         }
     }
 
-    searchContact(curNickname: string) {
+    searchContact(curNickname: string): User[] {
         const contacts: User[] | undefined = store.getState().contacts;
-        if (curNickname && contacts) {
-            store.dispatch(createSetContactsAction(contacts));
+        const foundUsers: User[] = [];
+        if (contacts) {
+            for (const contact of contacts) {
+                if (contact.nickname.includes(curNickname)) {
+                    foundUsers.push(contact);
+                }
+            }
+        } else {
+            console.error(
+                'Ошибка при поиске контактов. Контактов не существует'
+            );
         }
 
-        console.log('aaaaaaa');
+        return foundUsers;
+    }
+
+    clearContactList(parentElement: HTMLElement) {
+        while (parentElement.firstChild) {
+            parentElement.removeChild(parentElement.firstChild);
+        }
+    }
+
+    drawContacts() {
+        const inputValue = document.querySelector(
+            '.channel-members'
+        ) as HTMLInputElement;
+
+        if (inputValue.value === '') return;
+        const contacts = this.searchContact(inputValue.value.trim());
+
+        const dropdownRoot = document.querySelector(
+            '.group__form__input-members__list'
+        ) as HTMLElement;
+        this.clearContactList(dropdownRoot);
+
+        if (!contacts) {
+            return;
+        }
+
+        this.state.dropdownItems = [];
+
+        if (dropdownRoot) {
+            let i = 0;
+            for (const contact of contacts) {
+                this.state.dropdownItems[i] = new InputDropdownItem({
+                    parent: dropdownRoot,
+                    className: `group__form__input-members__list__item members-item-${contact.id}`,
+                    contact: contact,
+                });
+
+                i++;
+            }
+        }
     }
 
     membersOnChange(e?: Event) {
         e?.preventDefault();
-        // const inputValue = document.querySelector('.channel-members') as HTMLInputElement;
-        // this.searchContact(inputValue.value.trim());
-        // TODO: написать функцию поиска 
-        // создать List как HTMLElement
-        // найти по querySelector-у старый лист
-        // Заменить старый, на новый.
+        const contactPromise = new Promise((resolve) => {
+            resolve(this.drawContacts());
+        });
+
+        contactPromise.then(() => {
+            this.setCheckedLabels();
+        });
     }
 
     itemOnClick(e?: Event) {

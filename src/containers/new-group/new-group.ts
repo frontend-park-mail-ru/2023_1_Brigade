@@ -15,6 +15,8 @@ import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
+import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
+import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
@@ -32,6 +34,8 @@ interface State {
     contacts?: User[];
     nameIsValid?: boolean;
     descriptionIsValid?: boolean;
+    updateChatContactList?: InputDropdownList;
+    dropdownItems?: InputDropdownItem[];
 }
 
 export class SmartCreateGroup extends Component<Props, State> {
@@ -284,8 +288,66 @@ export class SmartCreateGroup extends Component<Props, State> {
         }
     }
 
+    searchContact(curNickname: string): User[] {
+        const contacts: User[] | undefined = store.getState().contacts;
+        const foundUsers: User[] = [];
+        if (contacts) {
+            for (const contact of contacts) {
+                if (contact.nickname.includes(curNickname)) {
+                    foundUsers.push(contact);
+                }
+            }
+        } else {
+            console.error(
+                'Ошибка при поиске контактов. Контактов не существует'
+            );
+        }
+
+        return foundUsers;
+    }
+
+    clearContactList(parentElement: HTMLElement) {
+        while (parentElement.firstChild) {
+            parentElement.removeChild(parentElement.firstChild);
+        }
+    }
+
     membersOnChange(e?: Event) {
         e?.preventDefault();
+
+        const inputValue = document.querySelector(
+            '.channel-members'
+        ) as HTMLInputElement;
+
+        if (inputValue.value === '') return;
+        const contacts = this.searchContact(inputValue.value.trim());
+
+        const dropdownRoot = document.querySelector(
+            '.group__form__input-members__list'
+        ) as HTMLElement;
+        this.clearContactList(dropdownRoot);
+
+        if (!contacts) {
+            return;
+        }
+
+        this.state.dropdownItems = [];
+
+        if (dropdownRoot) {
+            let i = 0;
+            for (const contact of contacts) {
+                this.state.dropdownItems[i] = new InputDropdownItem({
+                    parent: dropdownRoot,
+                    className: `group__form__input-members__list__item members-item-${contact.id}`,
+                    contact: contact,
+                    onClick: this.itemOnClick,
+                });
+
+                i++;
+            }
+        }
+
+        console.log('this.state.dropdownItems', this.state.dropdownItems);
     }
 
     itemOnClick(e?: Event) {

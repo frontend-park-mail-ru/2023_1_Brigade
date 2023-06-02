@@ -207,7 +207,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         ) {
             this.state.avatar = new Avatar({
                 parent: this.wrapperCreateGroup as HTMLElement,
-                className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
+                className:
+                    'group__avatar avatar avatar-border-radius-50 avatar-L',
                 src:
                     this.props.avatar ??
                     this.props.chats[this.props.chatId]?.avatar,
@@ -217,7 +218,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         } else {
             this.state.avatar = new Avatar({
                 parent: this.wrapperCreateGroup as HTMLElement,
-                className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
+                className:
+                    'group__avatar avatar avatar-border-radius-50 avatar-L',
                 src: this.props.avatar ?? this.props.user?.avatar,
                 alt: 'User avatar',
                 onClick: this.props.avatarOnClick,
@@ -257,7 +259,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             resolve(
                 (this.state.membersInput = new Input({
                     parent: this.state.form?.getNode() as HTMLElement,
-                    label: 'Участники',
+                    label: 'Контакты',
                     className:
                         'input-container group__form__input group__form__input-members',
                     placeholder: 'введите имя участника группы',
@@ -265,7 +267,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                     icon: svgButtonUI.renderTemplate({
                         svgClassName: 'search-icon',
                     }),
-                    onChange: this.props.membersOnChange,
+                    onChange: this.props.membersOnChange, // this.props.membersOnChange
                 }))
             );
         });

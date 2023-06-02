@@ -15,6 +15,8 @@ import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
+import { InputDropdownList } from '@/uikit/inputdropdown/inputdropdown';
+import { InputDropdownItem } from '@/uikit/input-dropdown-item/dropdown-item';
 
 interface Props {
     parent: HTMLElement;
@@ -29,6 +31,8 @@ interface State {
     contacts?: User[];
     nameIsValid?: boolean;
     descriptionIsValid?: boolean;
+    updateChatContactList?: InputDropdownList;
+    dropdownItems?: InputDropdownItem[];
 }
 
 export class SmartCreateChannel extends Component<Props, State> {
