@@ -87,19 +87,29 @@ export class Attachment extends Component<Props, State> {
             case 'png':
             case 'gif':
             case 'webp':
-                this.state.attachments?.push(
-                    new Img({
-                        src: this.props.src.url,
-                        borderRadius: '5',
-                        size:
-                            this.props.hookAttachment &&
-                            this.props.isSticker === MessageTypes.notSticker
-                                ? 'XL'
-                                : 'L',
-                        alt: '',
-                        parent: this.node,
-                    })
-                );
+                const img = new Img({
+                    src: this.props.src.url,
+                    borderRadius: '5',
+                    size:
+                        this.props.hookAttachment &&
+                        this.props.isSticker === MessageTypes.notSticker
+                            ? 'XL'
+                            : 'L',
+                    onClick: () => {
+                        const node = img.getNode();
+                        if (!node) {
+                            return;
+                        }
+
+                        const link = document.createElement('a');
+                        link.href = this.props.src.url;
+                        link.download = this.props.src.name;
+                        link.click();
+                    },
+                    alt: '',
+                    parent: this.node,
+                });
+                this.state.attachments.push(img);
                 break;
 
             default:
