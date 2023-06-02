@@ -128,7 +128,7 @@ const createNotificationWs = (url: string) => {
     };
 };
 
-export const getWs = createWs('wss://technogramm.ru/api/v1/message/');
+export const getWs = createWs('wss://quedafoe.ru/api/v1/message/');
 export const getNotificationWs = createNotificationWs(
-    'wss://technogramm.ru/api/v1/notification/'
+    'wss://quedafoe.ru/api/v1/notification/'
 );
