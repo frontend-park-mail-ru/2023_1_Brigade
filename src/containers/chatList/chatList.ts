@@ -43,6 +43,7 @@ interface State {
         dropdownMenu: HTMLElement | null;
     };
 
+    isSearching: boolean;
     currentChat: number;
 }
 
@@ -64,6 +65,7 @@ export class SmartChatList extends Component<Props, State> {
                 dropdownMenu: null,
             },
 
+            isSearching: false,
             currentChat: 0,
         };
 
@@ -313,6 +315,11 @@ export class SmartChatList extends Component<Props, State> {
 
                         this.state.domElements.items.push(chatItem);
                     });
+
+                    if (this.state.isSearching) {
+                        this.state.domElements.input?.focus();
+                        this.state.isSearching = false;
+                    }
                 }
             }
 
@@ -335,6 +342,7 @@ export class SmartChatList extends Component<Props, State> {
 
     handleSearch(e: KeyboardEvent) {
         e.stopPropagation();
+        this.state.isSearching = true;
 
         if (this.state.domElements.input?.value.trim()) {
             store.dispatch(

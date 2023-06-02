@@ -186,6 +186,25 @@ export class DumbMessage extends Component<Props, State> {
             left: event.pageX,
             top: event.pageY,
         });
+
+        this.node?.classList.add('message--pressed');
+        document.addEventListener(
+            'click',
+            () => this.node?.classList.remove('message--pressed'),
+            {
+                once: true,
+            }
+        );
+
+        setTimeout(() => {
+            document.addEventListener(
+                'contextmenu',
+                () => this.node?.classList.remove('message--pressed'),
+                {
+                    once: true,
+                }
+            );
+        });
     }
 
     onDelete() {

@@ -188,6 +188,19 @@ export class MessageInput extends Component<Props, State> {
                                     { url: sticker, name: 'Sticker.webp' },
                                 ],
                             });
+
+                            this.node
+                                ?.querySelector('.view-chat__add-emoji-sticker')
+                                ?.classList.remove(
+                                    'view-chat__add-emoji-sticker--pressed'
+                                );
+                            this.node
+                                ?.querySelector(
+                                    '.message-input__emoji-stickers'
+                                )
+                                ?.classList.add(
+                                    'message-input__emoji-stickers--disabled'
+                                );
                         },
                         parent: stickersContainer,
                         style,
@@ -244,6 +257,21 @@ export class MessageInput extends Component<Props, State> {
             }
         } else if (e.key === 'Enter') {
             this.onSend();
+        } else if (e.key === 'Escape') {
+            if (
+                !this.node
+                    ?.querySelector('.message-input__emoji-stickers')
+                    ?.classList.contains(
+                        'message-input__emoji-stickers--disabled'
+                    )
+            ) {
+                this.node
+                    ?.querySelector('.view-chat__add-emoji-sticker')
+                    ?.classList.remove('view-chat__add-emoji-sticker--pressed');
+                this.node
+                    ?.querySelector('.message-input__emoji-stickers')
+                    ?.classList.add('message-input__emoji-stickers--disabled');
+            }
         }
 
         this.state.input?.focus();
@@ -326,6 +354,9 @@ export class MessageInput extends Component<Props, State> {
     }
 
     onEmoji() {
+        this.node
+            ?.querySelector('.view-chat__add-emoji-sticker')
+            ?.classList.toggle('view-chat__add-emoji-sticker--pressed');
         this.node
             ?.querySelector('.message-input__emoji-stickers')
             ?.classList.toggle('message-input__emoji-stickers--disabled');
@@ -511,6 +542,17 @@ export class MessageInput extends Component<Props, State> {
 
         if (this.state.input) {
             this.state.input.value = message.body;
+
+            const maxlength = this.node?.querySelector(
+                '.message-input__maxlength'
+            );
+            if (!maxlength) {
+                return;
+            }
+
+            setTimeout(() => {
+                maxlength.textContent = `${this.state.input?.value.length}/1000`;
+            });
         }
     }
 

@@ -4,6 +4,13 @@
     width: 100%;
     background-color: transparent;
     margin-bottom: 10px;
+    transition: background-color 0.1;
+    border-radius: 15px;
+
+    &--pressed {
+        background-color: #626161;
+        transition: background-color 0.1;
+    }
 
     &__left {
         justify-content: flex-start;

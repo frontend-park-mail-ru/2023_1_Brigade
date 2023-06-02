@@ -149,7 +149,9 @@ export class ChatItem extends Component<Props, State> {
                 }),
                 title: this.props.chat.title,
                 lastMessage:
-                    this.props.chat.last_message?.body === ''
+                    this.props.chat.last_message?.body === undefined || null
+                        ? ''
+                        : this.props.chat.last_message?.body === ''
                         ? this.props.chat.last_message.type ===
                           MessageTypes.Sticker
                             ? 'Стикер'
