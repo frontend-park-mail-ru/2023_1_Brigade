@@ -378,7 +378,7 @@ export class SmartEditChat extends Component<Props, State> {
             '.channel-members'
         ) as HTMLInputElement;
 
-        if (inputValue.value === '') return;
+        // if (inputValue.value === '') return;
         const contacts = this.searchContact(inputValue.value.trim());
 
         const dropdownRoot = document.querySelector(
@@ -408,13 +408,6 @@ export class SmartEditChat extends Component<Props, State> {
 
     membersOnChange(e?: Event) {
         e?.preventDefault();
-        const contactPromise = new Promise((resolve) => {
-            resolve(this.drawContacts());
-        });
-
-        contactPromise.then(() => {
-            this.setCheckedLabels();
-        });
     }
 
     itemOnClick(e?: Event) {

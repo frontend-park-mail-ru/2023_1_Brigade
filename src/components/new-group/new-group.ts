@@ -103,8 +103,7 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
         }
     }
 
-    drawContacts() {
-        const contacts = store.getState().contacts;
+    drawContacts(contacts: User[] | undefined) {
         const rootMembersDropdown = document.querySelector(
             '.group__form__input-members'
         ) as HTMLElement;
@@ -114,19 +113,22 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                 className: 'group__form__input-members__list',
             });
 
-            let i = 0;
             this.state.dropdownItems = [];
             const dropdownRoot = document.querySelector(
                 '.group__form__input-members__list'
             ) as HTMLElement;
 
-            if (dropdownRoot) {
+            if (dropdownRoot && contacts) {
+                let i = 0;
                 for (const contact of contacts) {
+                    console.log('contact.id', contact.id);
                     this.state.dropdownItems[i] = new InputDropdownItem({
                         parent: dropdownRoot,
                         className: `group__form__input-members__list__item members-item-${contact.id}`,
                         contact: contact,
-                        onClick: this.props.itemOnClick,
+                        onClick: () => {
+                            console.log('hello');
+                        },
                     });
 
                     i++;
@@ -267,14 +269,14 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
                     icon: svgButtonUI.renderTemplate({
                         svgClassName: 'search-icon',
                     }),
-                    onChange: this.props.membersOnChange, // this.props.membersOnChange
+                    onChange: this.membersOnChange.bind(this), // this.props.membersOnChange
                 }))
             );
         });
 
         drawMemberInputPromise.then(() => {
             const contactPromise = new Promise((resolve) => {
-                resolve(this.drawContacts());
+                resolve(this.drawContacts(store.getState().contacts));
             });
 
             contactPromise.then(() => {
@@ -367,5 +369,43 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
     private render() {
         return new DOMParser().parseFromString(template({}), 'text/html').body
             .firstChild;
+    }
+
+    private searchContact(curNickname: string): User[] {
+        const contacts: User[] | undefined = this.props.contacts;
+        const foundUsers: User[] = [];
+        if (contacts) {
+            for (const contact of contacts) {
+                if (contact.nickname.includes(curNickname)) {
+                    foundUsers.push(contact);
+                }
+            }
+        } else {
+            console.error(
+                'Ошибка при поиске контактов. Контактов не существует'
+            );
+        }
+
+        return foundUsers;
+    }
+
+    private clearContactList() {
+        if (this.state.dropdownItems) {
+            for (const item of this.state?.dropdownItems) {
+                item.destroy();
+            }
+        }
+        this.state.membersDropdown?.destroy();
+    }
+
+    private membersOnChange(e?: Event) {
+        e?.preventDefault();
+
+        const inputValue = document.querySelector(
+            '.channel-members'
+        ) as HTMLInputElement;
+
+        this.clearContactList();
+        this.drawContacts(this.searchContact(inputValue.value.trim()));
     }
 }

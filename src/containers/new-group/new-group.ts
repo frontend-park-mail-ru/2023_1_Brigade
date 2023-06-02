@@ -36,6 +36,7 @@ interface State {
     descriptionIsValid?: boolean;
     updateChatContactList?: InputDropdownList;
     dropdownItems?: InputDropdownItem[];
+    dropDownItemLabel?: HTMLLabelElement;
 }
 
 export class SmartCreateGroup extends Component<Props, State> {
@@ -87,23 +88,48 @@ export class SmartCreateGroup extends Component<Props, State> {
             return;
         }
 
-        this.state.node = new DumbGroup({
-            parent: this.node,
-            user: this.props.user,
-            contacts: this.state.contacts,
-            type: store.getState().openedChat?.type,
-            chatActionType: 'Создание',
-            avatar: this.props.user.avatar,
-            hookContacts: this.hookContacts,
-            hookUser: this.hookUser,
-            backOnClick: this.backOnClick.bind(this),
-            avatarOnClick: this.avatarOnClick.bind(this),
-            cancelOnClick: this.cancelOnClick.bind(this),
-            saveOnClick: this.saveOnClick.bind(this),
-            channelNameValidate: this.validateChannelName.bind(this),
-            channelDescriptionValidate:
-                this.validateChannelDescription.bind(this),
-            membersOnChange: this.membersOnChange.bind(this),
+        const groupPromise = new Promise((resolve) => {
+            if (this.node && this.props.user?.avatar) {
+                resolve(
+                    (this.state.node = new DumbGroup({
+                        parent: this.node,
+                        user: this.props.user,
+                        contacts: this.state.contacts,
+                        type: store.getState().openedChat?.type,
+                        chatActionType: 'Создание',
+                        avatar: this.props.user.avatar,
+                        hookContacts: this.hookContacts,
+                        hookUser: this.hookUser,
+                        backOnClick: this.backOnClick.bind(this),
+                        avatarOnClick: this.avatarOnClick.bind(this),
+                        cancelOnClick: this.cancelOnClick.bind(this),
+                        saveOnClick: this.saveOnClick.bind(this),
+                        channelNameValidate:
+                            this.validateChannelName.bind(this),
+                        channelDescriptionValidate:
+                            this.validateChannelDescription.bind(this),
+                    }))
+                );
+            }
+        });
+
+        groupPromise.then(() => {
+            this.state.dropDownItemLabel = document.querySelector(
+                '.input-dropdown__list__item input[type="checkbox"]'
+            ) as HTMLLabelElement;
+            console.log(
+                'this.state.dropDownItemLabel',
+                this.state.dropDownItemLabel
+            );
+            this.state.dropDownItemLabel?.addEventListener('click', () => {
+                console.log(
+                    'this.state.dropDownItemLabel',
+                    this.state.dropDownItemLabel
+                );
+                // if (this.state.dropDownItemLabel) {
+                //     this.state.dropDownItemLabel.checked = true;
+                // }
+            });
         });
     }
 
@@ -201,6 +227,8 @@ export class SmartCreateGroup extends Component<Props, State> {
             );
         }
 
+        console.log('checked members: ', checkedMembersId);
+
         if (this.isValid() && this.props.user) {
             const channel = {
                 type: ChatTypes.Group,
@@ -286,68 +314,6 @@ export class SmartCreateGroup extends Component<Props, State> {
         if (this.state.descriptionIsValid === false) {
             this.state.descriptionIsValid = true;
         }
-    }
-
-    searchContact(curNickname: string): User[] {
-        const contacts: User[] | undefined = store.getState().contacts;
-        const foundUsers: User[] = [];
-        if (contacts) {
-            for (const contact of contacts) {
-                if (contact.nickname.includes(curNickname)) {
-                    foundUsers.push(contact);
-                }
-            }
-        } else {
-            console.error(
-                'Ошибка при поиске контактов. Контактов не существует'
-            );
-        }
-
-        return foundUsers;
-    }
-
-    clearContactList(parentElement: HTMLElement) {
-        while (parentElement.firstChild) {
-            parentElement.removeChild(parentElement.firstChild);
-        }
-    }
-
-    membersOnChange(e?: Event) {
-        e?.preventDefault();
-
-        const inputValue = document.querySelector(
-            '.channel-members'
-        ) as HTMLInputElement;
-
-        if (inputValue.value === '') return;
-        const contacts = this.searchContact(inputValue.value.trim());
-
-        const dropdownRoot = document.querySelector(
-            '.group__form__input-members__list'
-        ) as HTMLElement;
-        this.clearContactList(dropdownRoot);
-
-        if (!contacts) {
-            return;
-        }
-
-        this.state.dropdownItems = [];
-
-        if (dropdownRoot) {
-            let i = 0;
-            for (const contact of contacts) {
-                this.state.dropdownItems[i] = new InputDropdownItem({
-                    parent: dropdownRoot,
-                    className: `group__form__input-members__list__item members-item-${contact.id}`,
-                    contact: contact,
-                    onClick: this.itemOnClick,
-                });
-
-                i++;
-            }
-        }
-
-        console.log('this.state.dropdownItems', this.state.dropdownItems);
     }
 
     itemOnClick(e?: Event) {

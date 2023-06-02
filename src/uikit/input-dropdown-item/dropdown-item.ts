@@ -6,6 +6,7 @@ interface Props {
     parent: HTMLElement;
     className?: string;
     contact?: User;
+    testLabel?: string;
     onClick?: () => void;
     size?: 'S' | 'M' | 'L';
     style?: Record<string, string | number>;
@@ -39,7 +40,11 @@ export class InputDropdownItem extends Component<Props, State> {
         return this.node;
     }
 
-    onClick() {}
+    onClick() {
+        if (this.props.onClick) {
+            this.node?.addEventListener('click', this.props.onClick);
+        }
+    }
 
     componentDidMount() {
         if (!this.node) {
@@ -72,6 +77,7 @@ export class InputDropdownItem extends Component<Props, State> {
                 ImgSrc: this.props.contact?.avatar ?? '',
                 Nickname: this.props.contact?.nickname ?? '',
                 InputId: this.props.contact?.id ?? '',
+                TestLabel: this.props.testLabel ?? '',
             }),
             'text/html'
         ).body.firstChild;
