@@ -1,6 +1,6 @@
 import { AJAX_METHODS } from '@config/ajax';
 
-const BACKEND_URL = 'https://quedafoe.ru'; //'https://technogramm.ru';
+const BACKEND_URL = 'https://technogramm.ru'; //'https://quedafoe.ru';
 // const BACKEND_URL_LOCAL = 'http://127.0.0.1:8081'
 
 /**
