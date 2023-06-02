@@ -16,6 +16,7 @@ import { ChatTypes } from '@/config/enum';
 
 interface Props {
     parent: HTMLElement;
+    chatId?: number;
     user?: User;
     openedChat?: OpenedChat;
     type?: number;
@@ -157,6 +158,13 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             this.props.chatActionType === 'Создание нового'
         ) {
             this.headerText.textContent = 'Создание группы';
+        } else if (
+            this.props.type === ChatTypes.Channel &&
+            this.props.chatActionType === 'Создание'
+        ) {
+            this.headerText.textContent = 'Создание группы';
+        } else {
+            this.headerText.textContent = 'Изменение канала';
         }
 
         this.state.header = new Header({
@@ -173,7 +181,8 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
             onClick: this.props.backOnClick,
         });
         this.state.header.getNode()?.appendChild(this.headerText);
-        const emptyBtn = new Button({
+
+        this.state.backButton = new Button({
             parent: this.state.header.getNode() as HTMLElement,
             className: 'button-transparent channel__header__back-btn flex w-40',
         });
@@ -191,13 +200,29 @@ export class DumbGroup extends Component<Props, State, HTMLElement> {
 
         this.node.appendChild(this.wrapperCreateGroup);
 
-        this.state.avatar = new Avatar({
-            parent: this.wrapperCreateGroup as HTMLElement,
-            className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
-            src: this.props.avatar ?? '',
-            alt: 'User avatar',
-            onClick: this.props.avatarOnClick,
-        });
+        if (
+            this.props.chats &&
+            this.props.chatId &&
+            this.props.chats[this.props.chatId]?.avatar
+        ) {
+            this.state.avatar = new Avatar({
+                parent: this.wrapperCreateGroup as HTMLElement,
+                className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
+                src:
+                    this.props.avatar ??
+                    this.props.chats[this.props.chatId]?.avatar,
+                alt: 'User avatar',
+                onClick: this.props.avatarOnClick,
+            });
+        } else {
+            this.state.avatar = new Avatar({
+                parent: this.wrapperCreateGroup as HTMLElement,
+                className: 'group__avatar avatar avatar-border-radius-50 avatar-L',
+                src: this.props.avatar ?? this.props.user?.avatar,
+                alt: 'User avatar',
+                onClick: this.props.avatarOnClick,
+            });
+        }
 
         this.state.form = new Form({
             parent: this.wrapperCreateGroup as HTMLElement,

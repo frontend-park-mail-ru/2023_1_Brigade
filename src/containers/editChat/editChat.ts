@@ -85,6 +85,7 @@ export class SmartEditChat extends Component<Props, State> {
 
         this.state.node = new DumbGroup({
             parent: this.node,
+            chatId: this.props.chatId,
             type: store.getState().openedChat?.type,
             chatActionType: 'Изменение',
             user: this.props.user,

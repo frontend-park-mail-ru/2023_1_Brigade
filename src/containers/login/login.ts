@@ -54,6 +54,9 @@ export class SmartLogin extends Component<Props, State> {
             aboutUs.innerHTML = '';
         }
 
+        const dynamic = document.getElementById('dynamic');
+        dynamic?.classList.add('flex-grow-0');
+
         this.state = {
             isMounted: false,
             valid: {
@@ -93,6 +96,8 @@ export class SmartLogin extends Component<Props, State> {
     render() {
         if (this.state.isMounted && !LOGIN()) {
             STATIC().innerHTML = DYNAMIC().innerHTML = SIDEBAR().innerHTML = '';
+            const dynamic = document.getElementById('dynamic');
+            dynamic?.classList.add('flex-grow-0');
 
             this.dumbAboutUs = new DumbAboutUs({
                 parent: ROOT(),
