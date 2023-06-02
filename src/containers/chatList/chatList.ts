@@ -295,7 +295,14 @@ export class SmartChatList extends Component<Props, State> {
                         }
 
                         let isCurrent = false;
-                        if (chat.id == this.state.currentChat) {
+                        if (
+                            chat.id ==
+                            parseInt(
+                                window.location.pathname.match(
+                                    /^\/(\d+)$/
+                                )?.[1] ?? ''
+                            )
+                        ) {
                             isCurrent = true;
                         }
                         const chatItem = new ChatItem({

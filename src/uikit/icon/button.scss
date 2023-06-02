@@ -3,11 +3,11 @@
 }
 
 .nav__item__svg__color {
-    fill: #46474C;
-}
+    fill: #0782C7;
 
-.nav__item__svg__color:hover {
-    fill: #166E9D;
+    &:hover {
+        fill: #626161;
+    }
 }
 
 .logout {

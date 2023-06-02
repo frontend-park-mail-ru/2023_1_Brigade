@@ -86,7 +86,7 @@ export class ChatItem extends Component<Props, State> {
     }
 
     onClick(e: Event) {
-        this.state.node?.classList.add('is_current');
+        setTimeout(() => this.state.node?.classList.add('is_current'));
         this.state.onClick(e);
     }
 
@@ -94,11 +94,13 @@ export class ChatItem extends Component<Props, State> {
         if (this.props.isCurrent) {
             this.state.node?.classList.add('is_current');
         } else {
-            setTimeout(() => {
-                if (store.getState().openedChat?.id === this.props.chat.id) {
-                    this.state.node?.classList.add('is_current');
-                }
-            });
+            if (
+                this.props.chat.id ==
+                parseInt(window.location.pathname.match(/^\/(\d+)$/)?.[1] ?? '')
+            ) {
+                this.props.isCurrent = true;
+                this.state.node?.classList.add('is_current');
+            }
         }
         this.state.node?.addEventListener('click', this.onClick);
         this.state.isMounted = true;
