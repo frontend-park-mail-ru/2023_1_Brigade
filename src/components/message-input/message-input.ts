@@ -20,6 +20,7 @@ interface Props {
             name: string;
         }[];
     }) => void;
+    cancelEdit: () => void;
     className?: string;
     style?: Record<string, string | number>;
     parent: HTMLElement;
@@ -31,6 +32,7 @@ interface State {
     emojis: Button[];
     stickers: Img[];
     input: HTMLInputElement | null;
+    bigCross: HTMLElement | null;
     sendButton: HTMLElement | null;
     emojiButton: HTMLElement | null;
     attachmentButton: HTMLElement | null;
@@ -54,6 +56,7 @@ export class MessageInput extends Component<Props, State> {
             icons: [],
             emojis: [],
             stickers: [],
+            bigCross: null,
             sendButton: null,
             emojiButton: null,
             attachmentButton: null,
@@ -68,6 +71,7 @@ export class MessageInput extends Component<Props, State> {
         this.inputFocus = this.inputFocus.bind(this);
         this.update = this.update.bind(this);
         this.onAttachment = this.onAttachment.bind(this);
+        this.cancelEdit = this.cancelEdit.bind(this);
 
         this.node = this.render() as HTMLElement;
         this.componentDidMount();
@@ -120,6 +124,9 @@ export class MessageInput extends Component<Props, State> {
             'click',
             this.onSend.bind(this)
         );
+
+        this.state.bigCross = this.node.querySelector('.big-cross');
+        this.state.bigCross?.addEventListener('click', this.cancelEdit);
 
         const emojiContainer = this.node.querySelector(
             '.message-input__emoji'
@@ -214,6 +221,31 @@ export class MessageInput extends Component<Props, State> {
         this.state.isMounted = true;
     }
 
+    cancelEdit() {
+        this.props.cancelEdit();
+
+        this.node
+            ?.querySelector('.message-input__attachment')
+            ?.classList.add('message-input__attachment--disabled');
+
+        this.node?.querySelector('.pen')?.classList.add('pen--disabled');
+        this.node
+            ?.querySelector('.big-cross')
+            ?.classList.add('big-cross--disabled');
+        this.node?.querySelector('.line')?.classList.add('line--disabled');
+
+        setTimeout(() => {
+            if (this.state.input) {
+                this.state.input.value = '';
+                this.state.attachmentFiles = [];
+                this.state.attachmentUrls = [];
+                this.state.attachments.forEach((attachment) =>
+                    attachment.destroy()
+                );
+            }
+        }, 150);
+    }
+
     onInput(e: KeyboardEvent) {
         if (e.shiftKey && e.key === 'Enter') {
             e.preventDefault();
@@ -294,14 +326,6 @@ export class MessageInput extends Component<Props, State> {
     async onSend() {
         const text = this.state.input?.value ?? '';
 
-        if (
-            !text?.trim() &&
-            this.state.attachmentFiles.length < 1 &&
-            this.state.attachmentUrls.length < 1
-        ) {
-            return;
-        }
-
         const attachments: { url: string; name: string }[] = [];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const promises: Promise<any>[] = [];
@@ -330,22 +354,26 @@ export class MessageInput extends Component<Props, State> {
                     attachments.push(att)
                 );
 
-                if (!text?.trim() && attachments.length < 1) {
-                    new InfoPopup({
-                        parent: ROOT(),
-                        content: 'Ни один из файлов не был загружен',
-                    });
-                } else {
-                    this.props.onSend({
-                        type: MessageTypes.notSticker,
-                        body: text,
-                        attachments,
-                    });
-                }
+                this.props.onSend({
+                    type: MessageTypes.notSticker,
+                    body: text,
+                    attachments,
+                });
 
                 this.node
                     ?.querySelector('.message-input__attachment')
                     ?.classList.add('message-input__attachment--disabled');
+
+                this.node
+                    ?.querySelector('.pen')
+                    ?.classList.add('pen--disabled');
+                this.node
+                    ?.querySelector('.big-cross')
+                    ?.classList.add('big-cross--disabled');
+                this.node
+                    ?.querySelector('.line')
+                    ?.classList.add('line--disabled');
+
                 setTimeout(() => {
                     if (this.state.input) {
                         this.state.input.value = '';
@@ -419,7 +447,10 @@ export class MessageInput extends Component<Props, State> {
                             1
                         );
                         this.state.attachmentUrls.length < 1 &&
-                        this.state.attachmentFiles.length < 1
+                        this.state.attachmentFiles.length < 1 &&
+                        this.node
+                            ?.querySelector('.pen')
+                            ?.classList.contains('pen--disabled')
                             ? this.node
                                   ?.querySelector('.message-input__attachment')
                                   ?.classList.add(
@@ -466,6 +497,7 @@ export class MessageInput extends Component<Props, State> {
             'click',
             this.onSend.bind(this)
         );
+        this.state.bigCross?.removeEventListener('click', this.cancelEdit);
 
         this.state.emojis.forEach((emoji) => emoji.destroy());
         this.state.stickers.forEach((sticker) => sticker.destroy());
@@ -499,6 +531,10 @@ export class MessageInput extends Component<Props, State> {
             template({
                 className,
                 icons: this.state.icons,
+                crossIcon: svgButtonUI.renderTemplate({
+                    svgClassName: 'big-cross',
+                }),
+                penIcon: svgButtonUI.renderTemplate({ svgClassName: 'pen' }),
             }),
             'text/html'
         ).body.firstChild;
@@ -508,6 +544,11 @@ export class MessageInput extends Component<Props, State> {
         this.node
             ?.querySelector('.message-input__attachment')
             ?.classList.add('message-input__attachment--disabled');
+        this.node?.querySelector('.pen')?.classList.remove('pen--disabled');
+        this.node
+            ?.querySelector('.big-cross')
+            ?.classList.remove('big-cross--disabled');
+        this.node?.querySelector('.line')?.classList.remove('line--disabled');
         this.state.attachmentFiles = [];
         this.state.attachmentUrls = [];
         this.state.attachments.forEach((attachment) => attachment.destroy());
@@ -528,8 +569,12 @@ export class MessageInput extends Component<Props, State> {
                         ),
                         1
                     );
+
                     this.state.attachmentUrls.length < 1 &&
-                    this.state.attachmentFiles.length < 1
+                    this.state.attachmentFiles.length < 1 &&
+                    this.node
+                        ?.querySelector('.pen')
+                        ?.classList.contains('pen--disabled')
                         ? this.node
                               ?.querySelector('.message-input__attachment')
                               ?.classList.add(
@@ -547,11 +592,14 @@ export class MessageInput extends Component<Props, State> {
             this.state.attachments.push(addedAttachment);
         });
 
-        if (message.attachments.length > 0) {
-            this.node
-                ?.querySelector('.message-input__attachment')
-                ?.classList.remove('message-input__attachment--disabled');
-        }
+        // if (message.attachments.length > 0) {
+        //     this.node
+        //         ?.querySelector('.message-input__attachment')
+        //         ?.classList.remove('message-input__attachment--disabled');
+        // }
+        this.node
+            ?.querySelector('.message-input__attachment')
+            ?.classList.remove('message-input__attachment--disabled');
 
         if (this.state.input) {
             this.state.input.value = message.body;

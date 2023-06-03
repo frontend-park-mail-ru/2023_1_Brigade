@@ -1,5 +1,8 @@
 .message-input.flex(class=className)
     .message-input__attachment.message-input__attachment--disabled.flex
+        !=penIcon 
+        .line.line--disabled
+        !=crossIcon
     .message-input__text-field
         textarea(type="text" placeholder="Сообщение" maxlength="1000").message-input__text-field__in
         for i in icons 

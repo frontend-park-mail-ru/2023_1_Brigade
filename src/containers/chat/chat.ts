@@ -156,6 +156,7 @@ export class SmartChat extends Component<Props, State> {
                     onDeleteMessage: this.handleDeleteMessage.bind(this),
                     onEditMessage: this.handleEditMessage.bind(this),
                     onSendMessage: this.handleClickSendButton.bind(this),
+                    cancelEditMessage: this.handleCancelEditMessage.bind(this),
                 });
 
                 if (this.node) {
@@ -364,6 +365,10 @@ export class SmartChat extends Component<Props, State> {
         }
     }
 
+    handleCancelEditMessage() {
+        this.state.editingMessage = undefined;
+    }
+
     renderIncomingMessage(message: Message) {
         if (message.chat_id !== this.props.openedChat?.id) {
             return;
@@ -390,19 +395,23 @@ export class SmartChat extends Component<Props, State> {
                 this.state.editingMessage &&
                 message.type !== MessageTypes.Sticker
             ) {
-                getWs().send({
-                    id: this.state.editingMessage?.getMessage().id,
-                    action: MessageActionTypes.Edit,
-                    type: message.type,
-                    attachments: message.attachments,
-                    body: message.body,
-                    author_id: this.props.user.id,
-                    chat_id: this.chatId,
-                    created_at: '',
-                });
+                if (!message.body?.trim() && message.attachments.length < 1) {
+                    this.handleDeleteMessage(this.state.editingMessage);
+                } else {
+                    getWs().send({
+                        id: this.state.editingMessage?.getMessage().id,
+                        action: MessageActionTypes.Edit,
+                        type: message.type,
+                        attachments: message.attachments,
+                        body: message.body,
+                        author_id: this.props.user.id,
+                        chat_id: this.chatId,
+                        created_at: '',
+                    });
 
-                this.state.editingMessage = undefined;
-            } else {
+                    this.state.editingMessage = undefined;
+                }
+            } else if (message.body?.trim() || message.attachments.length > 0) {
                 getWs().send({
                     id: '',
                     action: MessageActionTypes.Create,
@@ -481,6 +490,8 @@ export class SmartChat extends Component<Props, State> {
                 });
             }
         }
+
+        this.state.editingMessage = undefined;
     }
 
     handleEditMessage(message: DumbMessage) {

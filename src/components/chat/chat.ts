@@ -28,6 +28,7 @@ interface Props {
             name: string;
         }[];
     }) => void;
+    cancelEditMessage: () => void;
 }
 
 interface State {
@@ -256,6 +257,7 @@ export class DumbChat extends Component<Props, State> {
 
             this.state.messageInput = new MessageInput({
                 onSend: this.props.onSendMessage,
+                cancelEdit: this.props.cancelEditMessage,
                 parent,
             });
         }

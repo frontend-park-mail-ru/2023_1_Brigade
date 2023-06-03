@@ -17,17 +17,22 @@
     }
 
     &__attachment {
+        position: relative;
         max-height: 30vh;
+        min-height: 50px;
         width: 100%;
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
+        overflow: auto;
+        padding-left: 50px;
 
-        transition: max-height 0.3s;
+        transition: max-height min-height 0.3s;
 
         &--disabled {
             max-height: 0;
-            transition: max-height 0.3s;
+            min-height: 0;
+            transition: max-height min-height 0.3s;
         }
 
         .attachment {
@@ -38,17 +43,9 @@
     &__text-field {
         position: relative;
         min-width: 100%;
-        // resize: vertical;
-        // min-height: 50px;
-        // max-height: 400px;
         min-height: 60px;
 
         &__in {
-            // resize: both;
-            // min-height: 50px;
-            // min-width: 200px;
-            // max-height: 200px;
-            // max-width: 500px;
             resize: none;
             height: 100%;
             width: 100%;
@@ -132,5 +129,43 @@
 
     &--pressed {
         fill: #D9D9D9;
+    }
+}
+
+.pen {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+
+    &--disabled {
+        display: none;
+    }
+}
+
+.line {
+    position: absolute;
+    height: 90%;
+    left: 45px;
+    border: solid 1px #0782C7;
+
+    &--disabled {
+        display: none;
+    }
+}
+
+.big-cross {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+
+    fill: #0782C7;
+
+    &:hover {
+        fill: #626161;
+    }
+
+    &--disabled {
+        display: none;
     }
 }
