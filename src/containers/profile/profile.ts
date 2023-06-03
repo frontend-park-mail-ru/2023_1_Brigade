@@ -26,6 +26,7 @@ import {
 } from '@/utils/validator';
 import { List } from '@/uikit/list/list';
 import { Button } from '@/uikit/button/button';
+import { InfoPopup } from '@/components/info-popup/info-popup';
 
 interface Props {
     parent: HTMLElement;
@@ -403,7 +404,10 @@ export class SmartProfile extends Component<Props, State> {
             }
 
             if (this.image.size > 16 * 1024 * 1024) {
-                console.error('File size > 16MB');
+                new InfoPopup({
+                    parent: ROOT(),
+                    content: 'Объем файла не может превышать 16 МБ',
+                });
                 return;
             }
 

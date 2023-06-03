@@ -1,4 +1,4 @@
-import { DYNAMIC } from '@config/config';
+import { DYNAMIC, ROOT } from '@config/config';
 import { store } from '@store/store';
 import { Component } from '@framework/component';
 import { createMoveToChatsAction } from '@actions/routeActions';
@@ -15,6 +15,7 @@ import { List } from '@/uikit/list/list';
 import { createGetContactsAction } from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
+import { InfoPopup } from '@/components/info-popup/info-popup';
 
 interface Props {
     parent: HTMLElement;
@@ -141,7 +142,10 @@ export class SmartCreateGroup extends Component<Props, State> {
             }
 
             if (this.image.size > 16 * 1024 * 1024) {
-                console.error('File size > 16MB');
+                new InfoPopup({
+                    parent: ROOT(),
+                    content: 'Объем файла не может превышать 16 МБ',
+                });
                 return;
             }
 

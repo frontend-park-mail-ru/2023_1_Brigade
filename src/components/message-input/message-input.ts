@@ -8,6 +8,8 @@ import { Emoji, Stickers } from '@config/images_urls';
 import { Button } from '@uikit/button/button';
 import { sendImage } from '@utils/api';
 import { Attachment } from '@components/attachment/attachment';
+import { InfoPopup } from '../info-popup/info-popup';
+import { ROOT } from '@/config/config';
 
 interface Props {
     onSend: (message: {
@@ -373,7 +375,10 @@ export class MessageInput extends Component<Props, State> {
             }
 
             if (file.size > 16 * 1024 * 1024) {
-                console.error('File size > 16MB');
+                new InfoPopup({
+                    parent: ROOT(),
+                    content: 'Объем файла не может превышать 16 МБ',
+                });
                 return;
             }
 
@@ -382,7 +387,10 @@ export class MessageInput extends Component<Props, State> {
                     this.state.attachmentUrls.length >=
                 10
             ) {
-                console.error('Added 10 attachments');
+                new InfoPopup({
+                    parent: ROOT(),
+                    content: 'Достигнуто максимальное количество файлов 10',
+                });
                 return;
             }
 
