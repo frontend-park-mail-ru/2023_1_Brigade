@@ -319,7 +319,10 @@ export class MessageInput extends Component<Props, State> {
                     if (statuses[index] === 201) {
                         attachments.push(body);
                     } else {
-                        // TODO: ошибка
+                        new InfoPopup({
+                            parent: ROOT(),
+                            content: 'Ошибка загрузки файла',
+                        });
                     }
                 });
 
@@ -328,8 +331,10 @@ export class MessageInput extends Component<Props, State> {
                 );
 
                 if (!text?.trim() && attachments.length < 1) {
-                    // TODO:
-                    console.error('Ошибка загрузки файла');
+                    new InfoPopup({
+                        parent: ROOT(),
+                        content: 'Ни один из файлов не был загружен',
+                    });
                 } else {
                     this.props.onSend({
                         type: MessageTypes.notSticker,
