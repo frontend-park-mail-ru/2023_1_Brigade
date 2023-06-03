@@ -91,7 +91,10 @@ export class DumbMessage extends Component<Props, State> {
             }
         }
 
-        if (this.props.message.attachments.length > 0) {
+        if (
+            this.props.message.attachments?.length &&
+            this.props.message.attachments.length > 0
+        ) {
             const messageImage = this.node.querySelector(
                 '.message__image'
             ) as HTMLElement;
