@@ -142,7 +142,7 @@ export class DumbMessage extends Component<Props, State> {
                 nickname: this.props.user?.nickname ?? '',
                 avatar: this.props.user?.avatar ?? '',
                 body: this.props.message.body,
-                image: this.props.message.attachments.length > 0,
+                image: this.props?.message?.attachments.length > 0,
             }),
             'text/html'
         ).body.firstChild;

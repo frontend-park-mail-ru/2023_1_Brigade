@@ -54,8 +54,7 @@ export class SmartLogin extends Component<Props, State> {
             aboutUs.innerHTML = '';
         }
 
-        const dynamic = document.getElementById('dynamic');
-        dynamic?.classList.add('flex-grow-0');
+        DYNAMIC()?.classList.add('flex-grow-0');
 
         this.state = {
             isMounted: false,
@@ -169,6 +168,7 @@ export class SmartLogin extends Component<Props, State> {
      * Навешивает переданные обработчики на валидацию и кнопки
      */
     componentDidMount() {
+        DYNAMIC()?.classList.add('flex-grow-0');
         if (this.state.isMounted === false) {
             this.unsubscribe = store.subscribe(
                 this.constructor.name,
