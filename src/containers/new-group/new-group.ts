@@ -90,7 +90,7 @@ export class SmartCreateGroup extends Component<Props, State> {
             contacts: this.state.contacts,
             type: store.getState().openedChat?.type,
             chatActionType: 'Создание',
-            avatar: this.props.user.avatar,
+            avatar: this.props.user.avatar, // this.props.user.avatar
             hookContacts: this.hookContacts,
             hookUser: this.hookUser,
             backOnClick: this.backOnClick.bind(this),
