@@ -135,17 +135,24 @@ export class SmartCreateChannel extends Component<Props, State> {
 
         input.addEventListener('change', () => {
             this.image = input?.files?.[0];
-            if (this.image) {
-                const reader = new FileReader();
-                reader.readAsDataURL(this.image);
-                reader.onload = () => {
-                    const imageUrl = reader.result;
-                    const avatar = document.querySelector(
-                        '.channel__avatar'
-                    ) as HTMLImageElement;
-                    avatar.src = imageUrl as string;
-                };
+            if (!this.image) {
+                return;
             }
+
+            if (this.image.size > 16 * 1024 * 1024) {
+                console.error('File size > 16MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.readAsDataURL(this.image);
+            reader.onload = () => {
+                const imageUrl = reader.result;
+                const avatar = document.querySelector(
+                    '.channel__avatar'
+                ) as HTMLImageElement;
+                avatar.src = imageUrl as string;
+            };
         });
 
         input.click();

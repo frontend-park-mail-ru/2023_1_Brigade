@@ -7,10 +7,13 @@ import {
     checkNewChatName,
 } from '@utils/validator';
 import { chatDescriptionErrorTypes, chatNameErrorTypes } from '@config/errors';
-import { createDeleteSearchedChatsAction, createSearchChatsAction, createUpdateChatAction } from '@actions/chatActions';
+import { createUpdateChatAction } from '@actions/chatActions';
 import { Button } from '@/uikit/button/button';
 import { List } from '@/uikit/list/list';
-import { createGetContactsAction, createSetContactsAction } from '@/actions/contactsActions';
+import {
+    createGetContactsAction,
+    createSetContactsAction,
+} from '@/actions/contactsActions';
 import { router } from '@/router/createRouter';
 import { DumbGroup } from '@/components/new-group/new-group';
 
@@ -152,17 +155,24 @@ export class SmartEditChat extends Component<Props, State> {
 
         input.addEventListener('change', () => {
             this.image = input?.files?.[0];
-            if (this.image) {
-                const reader = new FileReader();
-                reader.readAsDataURL(this.image);
-                reader.onload = () => {
-                    const imageUrl = reader.result;
-                    const avatar = document.querySelector(
-                        '.group__avatar'
-                    ) as HTMLImageElement;
-                    avatar.src = imageUrl as string;
-                };
+            if (!this.image) {
+                return;
             }
+
+            if (this.image.size > 16 * 1024 * 1024) {
+                console.error('File size > 16MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.readAsDataURL(this.image);
+            reader.onload = () => {
+                const imageUrl = reader.result;
+                const avatar = document.querySelector(
+                    '.group__avatar'
+                ) as HTMLImageElement;
+                avatar.src = imageUrl as string;
+            };
         });
 
         input.click();
@@ -351,7 +361,7 @@ export class SmartEditChat extends Component<Props, State> {
         e?.preventDefault();
         // const inputValue = document.querySelector('.channel-members') as HTMLInputElement;
         // this.searchContact(inputValue.value.trim());
-        // TODO: написать функцию поиска 
+        // TODO: написать функцию поиска
         // создать List как HTMLElement
         // найти по querySelector-у старый лист
         // Заменить старый, на новый.
