@@ -134,6 +134,11 @@ export class DumbMessage extends Component<Props, State> {
             this.props.place
         } ${this.props.message.body ? '' : 'message--sticker'}`.trim();
 
+        let imageFlag = false;
+        if (this.props?.message?.attachments?.length) {
+            imageFlag = this.props?.message?.attachments?.length > 0;
+        }
+
         return new DOMParser().parseFromString(
             template({
                 id: this.props.message.id,
@@ -142,7 +147,7 @@ export class DumbMessage extends Component<Props, State> {
                 nickname: this.props.user?.nickname ?? '',
                 avatar: this.props.user?.avatar ?? '',
                 body: this.props.message.body,
-                image: this.props?.message?.attachments.length > 0,
+                image: imageFlag,
             }),
             'text/html'
         ).body.firstChild;
