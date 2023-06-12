@@ -21,6 +21,14 @@ export const emailErrorTypes: ErrorTypes[] = [
     },
 ];
 
+export const oldPasswordErrorTypes: ErrorTypes[] = [
+    {
+        param: 'incorrectOldPassword',
+        class: 'incorrect-old-password',
+        message: 'Введен неверный пароль',
+    },
+];
+
 export const passwordErrorTypes: ErrorTypes[] = [
     {
         param: 'emptyPassword',
@@ -76,6 +84,11 @@ export const nicknameErrorTypes: ErrorTypes[] = [
         class: 'invalid-nickname',
         message: 'Никнейм должен быть длиннее двух символов',
     },
+    {
+        param: 'invalidNicknameSymbols',
+        class: 'invalid-nickname-symbols',
+        message: 'Никнейм может содержать буквы и цифры',
+    },
 ];
 
 export const usernameErrorTypes: ErrorTypes[] = [
@@ -91,5 +104,42 @@ export const countingMembersErrorTypes: ErrorTypes[] = [
         param: 'incorrectEmptyCountingMembers',
         class: 'incorrect-emptyCountingMembers',
         message: 'Для создания группы выберите хотя-бы одного участника',
+    },
+];
+
+export const chatNameErrorTypes: ErrorTypes[] = [
+    {
+        param: 'emptyName',
+        class: 'empty-name',
+        message: 'Поле не может быть пустым',
+    },
+    {
+        param: 'invalidName',
+        class: 'invalid-name',
+        message: 'Имя канала должно быть длиннее четырех символов',
+    },
+    {
+        param: 'invalidNameSymbols',
+        class: 'invalid-name-symbols',
+        message: "Имя канала содержит только буквы, цифры и '_'",
+    },
+];
+
+export const chatDescriptionErrorTypes: ErrorTypes[] = [
+    {
+        param: 'emptyDescription',
+        class: 'empty-description',
+        message: 'Поле не может быть пустым',
+    },
+    {
+        param: 'invalidDescription',
+        class: 'invalid-description',
+        message: 'Описание канала должно быть длиннее двух символов',
+    },
+    {
+        param: 'invalidDescriptionSymbols',
+        class: 'invalid-description-symbols',
+        message:
+            'Описание канала может содержать буквы, цифры и некоторые спец. символы [-.,!?_]',
     },
 ];

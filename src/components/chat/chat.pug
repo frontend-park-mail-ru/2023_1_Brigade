@@ -16,8 +16,8 @@ main.main.flex
         .view-chat__message-input
             //- if Input
             //-     !=Input
-        if SubsribeBtnText
+        if SubsribeBtnText && !EditBtn
             button.btn-reset.subscribe-btn.flex!=SubsribeBtnText
-    section.attachments.flex
+    section.attachments.attachments--disabled.flex
         .attachments__heder.flex
             span= 'Вложения'

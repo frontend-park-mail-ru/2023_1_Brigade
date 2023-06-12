@@ -1,3 +1,9 @@
+import {
+    createAddMessageAction,
+    createDeleteMessageAction,
+    createEditMessageAction,
+} from '@/actions/messageActions';
+import { MessageActionTypes } from '@/config/enum';
 import { store } from '@/store/store';
 
 const createWs = (url: string) => {
@@ -14,10 +20,21 @@ const createWs = (url: string) => {
 
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
-                const e = JSON.parse(event.data);
-                const cb = subscribers.get(e.chat_id);
+                const message = JSON.parse(event.data);
+                switch (message.action) {
+                    case MessageActionTypes.Edit:
+                        store.dispatch(createEditMessageAction(message));
+                        break;
+                    case MessageActionTypes.Delete:
+                        store.dispatch(createDeleteMessageAction(message));
+                        break;
+                    case MessageActionTypes.Create:
+                        store.dispatch(createAddMessageAction(message));
+                }
+
+                const cb = subscribers.get(message.chat_id);
                 if (cb) {
-                    cb(e);
+                    cb(message);
                 }
             };
 
@@ -40,7 +57,6 @@ const createWs = (url: string) => {
 
         return {
             send: (message: Message) => {
-                console.log('send:', message);
                 ws?.send(JSON.stringify(message));
             },
             subscribe: (chatId: number, cb: (message: Message) => void) => {
@@ -72,8 +88,6 @@ const createNotificationWs = (url: string) => {
             // Обработчик события получения сообщения от сервера
             ws.onmessage = (event) => {
                 const e = JSON.parse(event.data);
-
-                console.log('message:', e);
 
                 if (
                     Notification.permission !== 'granted' ||
@@ -114,7 +128,7 @@ const createNotificationWs = (url: string) => {
     };
 };
 
-export const getWs = createWs('wss://technogramm.ru/api/v1/message/');
+export const getWs = createWs('wss://quedafoe.ru/api/v1/message/');
 export const getNotificationWs = createNotificationWs(
-    'wss://technogramm.ru/api/v1/notification/'
+    'wss://quedafoe.ru/api/v1/notification/'
 );

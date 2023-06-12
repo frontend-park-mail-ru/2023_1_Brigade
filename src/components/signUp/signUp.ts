@@ -22,7 +22,7 @@ interface Props {
 interface State {
     isMounted: boolean;
     parent?: HTMLElement | undefined;
-    avatar: Avatar;
+    avatar?: Avatar;
     email: Input;
     nickname: Input;
     password: Input;
@@ -125,6 +125,8 @@ export class DumbSignUp extends Component<Props, State, HTMLElement> {
         if (this.props.onClick) {
             this.node.addEventListener('click', this.props.onClick);
         }
+
+        this.state.isMounted = true;
     }
 
     componentWillUnmount() {
@@ -132,9 +134,13 @@ export class DumbSignUp extends Component<Props, State, HTMLElement> {
             return;
         }
 
+        // this.node.remove();
+
         if (this.props.onClick) {
             this.node.removeEventListener('click', this.props.onClick);
         }
+
+        this.state.isMounted = false;
     }
 
     private render() {

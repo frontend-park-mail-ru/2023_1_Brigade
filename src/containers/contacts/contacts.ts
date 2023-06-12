@@ -2,19 +2,34 @@ import { Component } from '@framework/component';
 import { store } from '@store/store';
 import { createGetContactsAction } from '@actions/contactsActions';
 import { DumbContacts } from '@components/contacts/contacts';
-import { createCreateDialogAction } from '@actions/chatActions';
+import {
+    createCreateDialogAction,
+    createDeleteSearchedChatsAction,
+    createSearchChatsAction,
+} from '@actions/chatActions';
 import { STATIC } from '@config/config';
+import { List } from '@/uikit/list/list';
+import { ContactItem } from '@/components/contact-item/contact-item';
+import {
+    createMoveToCreateChannelAction,
+    createMoveToCreateGroupAction,
+} from '@/actions/routeActions';
 
 interface Props {
     user?: User;
     contacts?: User[];
+    founded_contacts?: User[];
 }
 
 interface State {
     isMounted: boolean;
     domElements: {
-        headContacts: HTMLElement | null;
+        list: List | null;
+        items: ContactItem[];
+        input: HTMLInputElement | null;
+        inputValue: string;
         contacts: HTMLElement | null;
+        headContacts: HTMLElement | null;
         addContactButton: HTMLElement | null;
     };
 }
@@ -26,6 +41,10 @@ export class SmartContacts extends Component<Props, State> {
         this.state = {
             isMounted: false,
             domElements: {
+                list: null,
+                items: [],
+                input: null,
+                inputValue: '',
                 headContacts: null,
                 contacts: null,
                 addContactButton: null,
@@ -49,28 +68,130 @@ export class SmartContacts extends Component<Props, State> {
                 this.props.contacts = [];
             }
 
+            this.state.domElements.inputValue =
+                this.state.domElements.input?.value ?? '';
+
+            this.state.domElements.items?.forEach((item) => {
+                item.componentWillUnmount();
+            });
+            if (this.state.domElements.items) {
+                this.state.domElements.items = [];
+            }
+
+            this.state.domElements.list?.componentWillUnmount();
+
             const ContactsUI = new DumbContacts({
-                contacts: this.props?.contacts,
+                contacts: [],
             });
 
             if (this.node) {
                 this.node.innerHTML = ContactsUI.render();
             }
 
+            this.state.domElements.input = document.querySelector(
+                '.contacts__header__input'
+            );
+            if (this.state.domElements.input) {
+                this.state.domElements.input.value =
+                    this.state.domElements.inputValue;
+            }
+
+            this.state.domElements.input?.addEventListener('keyup', (e) => {
+                this.handleSearch(e);
+            });
+
             this.state.domElements.contacts = document.querySelector(
                 '.contacts__contacts'
             );
-            this.state.domElements.contacts?.addEventListener('click', (e) => {
-                let contact = e?.target as HTMLElement | null | undefined;
-                contact = contact?.closest('.contact');
+            if (this.state.domElements.contacts) {
+                this.state.domElements.contacts.innerHTML = '';
 
-                if (contact) {
-                    this.handleClickCreateDialog(contact);
-                    e.preventDefault();
+                this.state.domElements.list = new List({
+                    parent: this.state.domElements.contacts,
+                });
+
+                this.state.domElements.list?.componentDidMount();
+
+                if (this.props.founded_contacts) {
+                    this.props.founded_contacts.forEach((contact) => {
+                        const contactItem = new ContactItem({
+                            contact,
+                            onClick: () => {
+                                store.dispatch(
+                                    createCreateDialogAction(contact)
+                                );
+
+                                if (this.state.domElements.input) {
+                                    this.state.domElements.input.value = '';
+                                }
+                                store.dispatch(
+                                    createDeleteSearchedChatsAction()
+                                );
+                            },
+                            parent: this.state.domElements.list?.getNode(),
+                            observe: ['founded_contacts'],
+                        });
+
+                        contactItem.componentDidMount();
+
+                        this.state.domElements.items.push(contactItem);
+                    });
+
+                    this.state.domElements.input?.focus();
+                } else {
+                    this.props.contacts.forEach((contact) => {
+                        const contactItem = new ContactItem({
+                            contact,
+                            onClick: () => {
+                                store.dispatch(
+                                    createCreateDialogAction(contact)
+                                );
+
+                                if (this.state.domElements.input) {
+                                    this.state.domElements.input.value = '';
+                                }
+                                store.dispatch(
+                                    createDeleteSearchedChatsAction()
+                                );
+                            },
+                            parent: this.state.domElements.list?.getNode(),
+                            observe: ['contacts'],
+                        });
+
+                        contactItem.componentDidMount();
+
+                        this.state.domElements.items.push(contactItem);
+                    });
                 }
+            }
+            const group = window.document.querySelector(
+                '.dropdown-menu__item-group'
+            );
+            const channel = window.document.querySelector(
+                '.dropdown-menu__item-channel'
+            );
+
+            group?.addEventListener('click', () => {
+                store.dispatch(createMoveToCreateGroupAction());
             });
 
-            // TODO: навесить обработчик на добавление контакта
+            channel?.addEventListener('click', () => {
+                store.dispatch(createMoveToCreateChannelAction());
+            });
+        }
+    }
+
+    handleSearch(e: KeyboardEvent) {
+        e.stopPropagation();
+
+        if (this.state.domElements.input?.value.trim()) {
+            store.dispatch(
+                createSearchChatsAction(
+                    this.state.domElements.input?.value.trim()
+                )
+            );
+        } else {
+            store.dispatch(createDeleteSearchedChatsAction());
         }
     }
 

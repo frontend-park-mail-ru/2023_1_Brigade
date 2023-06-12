@@ -1,8 +1,8 @@
 import { Component } from '@framework/component';
-import { store } from '@/store/store';
+import { store } from '@store/store';
 import template from '@components/contact-item/contact-item.pug';
 import '@components/contact-item/contact-item.scss';
-import { smallEllipseIconUI } from '@components/ui/small-ellipse-icon/small-ellipse-icon';
+import { smallEllipseIconUI } from '@uikit/small-ellipse-icon/small-ellipse-icon';
 
 interface Props {
     user?: User; //TODO: убрать
@@ -62,9 +62,14 @@ export class ContactItem extends Component<Props, State> {
                     });
 
                     const contacts = prop as User[];
-                    const index = contacts.findIndex((contact) => {
+                    const index = contacts?.findIndex((contact) => {
                         return contact.id === this.state.contactId;
                     });
+
+                    if (index === -1 || (!index && index !== 0)) {
+                        this.destroy();
+                        return;
+                    }
 
                     if (this.props.contact != contacts[index]) {
                         this.props.contact = contacts[index];

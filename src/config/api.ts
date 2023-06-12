@@ -9,5 +9,6 @@ export const config = {
     searchChats: '/chats/search/',
     chats: '/chats/',
     uploadAvatar: '/images/user/',
+    chatAvatar: '/images/chat/',
     sendImage: '/images/chat/images/',
 };

@@ -4,6 +4,9 @@
     align-items: center;
     height: 100%;
     width: 100%; 
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    animation-delay: 0.3s;
 }
 
 .hello-message {
@@ -12,6 +15,6 @@
     align-items: center;
     min-height: 48px;
     min-width: 352px;
-    border: 2px solid #69686D;
-    border-radius: 100px;
+    // border: 2px solid #69686D;
+    // border-radius: 100px;
 }

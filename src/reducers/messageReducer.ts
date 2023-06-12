@@ -7,24 +7,66 @@ export const reduceMessage = (state: StoreState, action: Action) => {
         (message) => message.id === payload.id
     );
 
+    const i = state.chats?.findIndex((chat) => chat.id === payload.chat_id);
+
     switch (action.type) {
         case constantsOfActions.addMessage:
-            state.openedChat?.messages.unshift(action.payload as Message);
+            if (payload.chat_id === state.openedChat?.id) {
+                state.openedChat?.messages.unshift(payload as Message);
+            }
+
+            if ((i || i === 0) && i !== -1 && state.chats) {
+                state.chats[i].last_message = payload;
+            }
+
+            state.chats?.sort((a, b) => {
+                if (a.last_message.created_at < b.last_message.created_at) {
+                    return 1;
+                }
+                if (a.last_message.created_at > b.last_message.created_at) {
+                    return -1;
+                }
+                return 0;
+            });
 
             return {
                 ...state,
             };
         case constantsOfActions.editMessage:
-            if ((index && index !== -1) || index === 0) {
+            if (
+                payload.chat_id === state.openedChat?.id &&
+                ((index && index !== -1) || index === 0)
+            ) {
                 state.openedChat?.messages.splice(index, 1, payload);
+            }
+
+            if (
+                (i || i === 0) &&
+                i !== -1 &&
+                state.chats &&
+                payload.id === state.chats[i].last_message.id
+            ) {
+                state.chats[i].last_message = payload;
             }
 
             return {
                 ...state,
             };
         case constantsOfActions.deleteMessage:
-            if ((index && index !== -1) || index === 0) {
+            if (
+                payload.chat_id === state.openedChat?.id &&
+                ((index && index !== -1) || index === 0)
+            ) {
                 state.openedChat?.messages.splice(index, 1);
+            }
+
+            if (
+                (i || i === 0) &&
+                i !== -1 &&
+                state.chats &&
+                payload.id === state.chats[i].last_message.id
+            ) {
+                state.chats[i].last_message.body = 'Удалено';
             }
 
             return {

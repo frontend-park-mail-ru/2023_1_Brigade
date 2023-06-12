@@ -4,6 +4,13 @@
     width: 100%;
     background-color: transparent;
     margin-bottom: 10px;
+    transition: background-color 0.2s;
+    border-radius: 15px;
+
+    &--pressed {
+        background-color: #626161;
+        transition: background-color 0.2s;
+    }
 
     &__left {
         justify-content: flex-start;
@@ -22,6 +29,11 @@
     }
 
     &__nickname {
+        font-family: 'SF Pro Display', sans-serif;
+        color: #6147c1;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 1.2rem;
         margin-bottom: 10px;
     }
 
@@ -29,14 +41,14 @@
         margin-bottom: 10px;
     }
 
-    &--sticker {
-        .message__content {
-            background-color: inherit;
-        }
-    }
+    // &--sticker {
+    //     .message__content {
+    //         background-color: inherit;
+    //     }
+    // }
 
     &__content {
-        max-width: 60%;
+        max-width: 350px;
         flex-direction: column;
         justify-content: end;
         padding: 10px;
@@ -45,16 +57,16 @@
     }
 
     &__body {
-        font-family: 'SF Pro Display';
+        font-family: 'SF Pro Display', sans-serif;
         font-style: normal;
         font-weight: 400;
         font-size: 1.2em;
-        line-height: 19px;
+        line-height: 30px;
         color: #FFFFFF;
 
         max-width: 100%;
         word-wrap: break-word;
-        word-break: normal;
-        white-space: normal;
+        word-break: break-word;
+        white-space: break-spaces;
     }
 }

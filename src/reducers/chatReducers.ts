@@ -144,11 +144,14 @@ export const reduceEditChat = (state: StoreState, action: Action) => {
                 return chat.id == payload.id;
             });
 
+            console.log('reduceEditChat action payload: ', action.payload);
+
             if ((index && index !== -1) || index === 0) {
                 state.chats?.splice(index, 1, {
                     ...state.chats[index],
                     title: payload.title,
                     members: payload.members,
+                    avatar: payload.avatar,
                 });
             }
 

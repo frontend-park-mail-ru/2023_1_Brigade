@@ -1,22 +1,28 @@
 .attachments {
     flex-direction: column;
-    width: 25%;
-    min-width: 300px;
+    min-width: 25%;
     background: #181B23;
+
+    transition: min-width 0.3s;
 
     &__heder {
         justify-content: center;
         align-items: center;
         height: 115px;
-        font-family: 'Actor';
+        font-family: 'SF Pro Display', sans-serif;
+        overflow: hidden;
         font-style: normal;
         font-weight: 400;
         font-size: 24px;
         line-height: 30px;
 
-        font-feature-settings: 'pnum' on, 'lnum' on;
-
         color: #FFFFFF;
+    }
+
+    &--disabled {
+        width: 0;
+        min-width: 0;
+        transition: min-width 0.3s;
     }
 }
 
@@ -38,8 +44,9 @@
 
 .view-chat__header__companion {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: flex-start; // center
     justify-content: space-between;
+    cursor: pointer;
 }
 
 .view-chat__messages {
@@ -75,7 +82,7 @@ p {
     background-color: rgba(25, 26, 31, 0.7);
     align-items: center;
     justify-content: center;
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
@@ -84,7 +91,7 @@ p {
 }
 
 .channel__subscribers {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -99,7 +106,7 @@ p {
 }
 
 .view-chat__header__icons__leave-group {
-    font-family: 'SF Pro Display';
+    font-family: 'SF Pro Display', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

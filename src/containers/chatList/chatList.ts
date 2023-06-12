@@ -43,6 +43,7 @@ interface State {
         dropdownMenu: HTMLElement | null;
     };
 
+    isSearching: boolean;
     currentChat: number;
 }
 
@@ -64,6 +65,7 @@ export class SmartChatList extends Component<Props, State> {
                 dropdownMenu: null,
             },
 
+            isSearching: false,
             currentChat: 0,
         };
 
@@ -118,14 +120,6 @@ export class SmartChatList extends Component<Props, State> {
 
             this.state.domElements.input?.addEventListener('keyup', (e) => {
                 this.handleSearch(e);
-            });
-
-            this.state.domElements.input?.addEventListener('focus', () => {
-                this.handleInputFocus();
-            });
-
-            this.state.domElements.input?.addEventListener('blur', () => {
-                this.handleInputBlur();
             });
 
             this.state.domElements.chats =
@@ -207,8 +201,6 @@ export class SmartChatList extends Component<Props, State> {
                             isCurrent,
                         });
 
-                        chatItem.componentDidMount();
-
                         this.state.domElements.items.push(chatItem);
                     });
 
@@ -249,8 +241,6 @@ export class SmartChatList extends Component<Props, State> {
                             observe: ['founded_channels'],
                             isCurrent,
                         });
-
-                        chatItem.componentDidMount();
 
                         this.state.domElements.items.push(chatItem);
                     });
@@ -293,8 +283,6 @@ export class SmartChatList extends Component<Props, State> {
                             isCurrent,
                         });
 
-                        chatItem.componentDidMount();
-
                         this.state.domElements.items.push(chatItem);
                     });
 
@@ -307,7 +295,14 @@ export class SmartChatList extends Component<Props, State> {
                         }
 
                         let isCurrent = false;
-                        if (chat.id == this.state.currentChat) {
+                        if (
+                            chat.id ==
+                            parseInt(
+                                window.location.pathname.match(
+                                    /^\/(\d+)$/
+                                )?.[1] ?? ''
+                            )
+                        ) {
                             isCurrent = true;
                         }
                         const chatItem = new ChatItem({
@@ -325,10 +320,13 @@ export class SmartChatList extends Component<Props, State> {
                             isCurrent,
                         });
 
-                        chatItem.componentDidMount();
-
                         this.state.domElements.items.push(chatItem);
                     });
+
+                    if (this.state.isSearching) {
+                        this.state.domElements.input?.focus();
+                        this.state.isSearching = false;
+                    }
                 }
             }
 
@@ -349,12 +347,9 @@ export class SmartChatList extends Component<Props, State> {
         }
     }
 
-    handleInputFocus() {}
-
-    handleInputBlur() {}
-
     handleSearch(e: KeyboardEvent) {
         e.stopPropagation();
+        this.state.isSearching = true;
 
         if (this.state.domElements.input?.value.trim()) {
             store.dispatch(

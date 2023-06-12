@@ -5,6 +5,7 @@ import { Component } from '@framework/component';
 interface Props {
     label?: string;
     icon?: string;
+    iconPosition?: 'left' | 'right';
     type?: 'primary' | 'secondary';
     className?: string;
     size?: 'S' | 'M' | 'L';
@@ -25,6 +26,10 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
             this.componentDidMount();
             this.props.parent.appendChild(this.node);
         }
+    }
+
+    getNode() {
+        return this.node;
     }
 
     destroy() {
@@ -56,16 +61,15 @@ export class Button extends Component<Props, State, HTMLButtonElement> {
     render() {
         const className = `${this.props.className ?? ''} ${
             this.props.size ? 'button-' + this.props.size : ''
-        }`.trim();
+        } ${this.props.type ? 'button-' + this.props.type : ''}`.trim();
 
         return new DOMParser().parseFromString(
             template({
                 className,
                 label: this.props.label ?? '',
                 style: this.props.style ?? '',
-                type: this.props.type ?? '',
-                size: this.props.size ?? '',
                 icon: this.props.icon ?? '',
+                iconPosition: this.props.iconPosition ?? '',
             }),
             'text/html'
         ).body.firstChild;

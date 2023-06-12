@@ -1,4 +1,7 @@
 .attachment {
-    padding: 18px 18px 18px 18px; 
-    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px; 
+    position: relative;
+    width: fit-content;
 }

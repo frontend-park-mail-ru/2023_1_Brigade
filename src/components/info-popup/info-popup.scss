@@ -1,0 +1,22 @@
+.info-popup {
+    position: absolute;
+    z-index: 1;
+    top: 10%;
+    min-height: 70px;
+    min-width: 400px;
+    max-height: 150px;
+    max-width: 500px;
+    border-radius: 5px;
+    background-color: #FF5252;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #ffffff;
+    opacity: 1;
+    transition: opacity 0.6s ease-in-out;
+
+    &--disabled {
+        opacity: 0;
+        transition: opacity 0.6s ease-in-out;
+    }
+}

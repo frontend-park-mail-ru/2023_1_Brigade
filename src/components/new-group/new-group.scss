@@ -1,0 +1,96 @@
+.group {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    animation-delay: 0.3s;
+    overflow: hidden;
+    flex-grow: 1;
+
+    &__header {
+        min-height: 100px; // 80
+        align-items: center;
+        justify-content: center;
+        background-color: #181B23;
+        color: #ffffff;
+        font-family: 'SF Pro Display', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 30px;
+        margin-bottom: 30px;
+    }
+
+    &__back-btn {
+        margin: 0px;
+        align-self: center;
+        justify-content: center;
+        font-family: 'SF Pro Display', sans-serif;
+        font-style: normal;
+        letter-spacing: 0.08rem;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 30px;
+        background: none;
+        color: #ffffff;
+        transition: color 0.3s ease-in-out;
+    }
+
+    &__avatar {
+        padding: 0px;
+        margin-bottom: 50px;
+        cursor: pointer;
+        &__container{
+            max-width: 200px;
+        }
+    }
+
+    &__form {
+        width: 50%;
+        padding: 0px 20px;
+        max-width: 460px;
+        // min-height: 700px;
+        // overflow-y: auto;
+
+        &__input {
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            min-width: 100%;
+            &__errors {
+                top: 105%;
+                font-size: 1.2rem;
+            }
+        }
+
+        &__input:not(:last-child) {
+            margin-bottom: 50px;
+        }
+        
+        &__list {
+            justify-content: space-between;
+            align-items: center;
+            min-width: 100%;
+            padding-top: 20px;
+        }
+
+        &__btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 15px;
+            gap: 10px;
+            margin: 0px;
+            width: 150px;
+            height: 40px;
+            background: #004DE6;
+            border-radius: 4px;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+    }
+}

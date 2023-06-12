@@ -77,6 +77,7 @@ export const createLoginAction = (
 
                 getSidebar();
                 Chats.componentDidMount();
+                DYNAMIC().classList.remove('flex-grow-0');
                 DYNAMIC().classList.add('flex-grow-1');
 
                 router.route('/');
@@ -118,6 +119,7 @@ export const createSignUpAction = (
 
                 getSidebar();
                 Chats.componentDidMount();
+                DYNAMIC().classList.remove('flex-grow-0');
                 DYNAMIC().classList.add('flex-grow-1');
 
                 router.route('/');
@@ -156,6 +158,7 @@ export const createLogoutAction = (): AsyncAction => {
                 getNotificationWs().close();
 
                 DYNAMIC().classList.remove('flex-grow-1');
+                DYNAMIC().classList.add('flex-grow-0');
 
                 router.route('/login');
 

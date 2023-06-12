@@ -2,7 +2,7 @@ import { Component } from '@/framework/component';
 import template from '@components/new-sidebar/sidebar.pug';
 import '@components/new-sidebar/sidebar.scss';
 import { Button } from '@uikit/button/button';
-import { svgButtonUI } from '../ui/icon/button';
+import { svgButtonUI } from '@uikit/icon/button';
 import { store } from '@store/store';
 import { Img } from '@/uikit/img/img';
 import { List } from '@uikit/list/list';
@@ -28,7 +28,7 @@ interface State {
 }
 
 export class DumbSidebar extends Component<Props, State, HTMLElement> {
-    private prevProps: any;
+    private prevProps: Props | null;
 
     constructor(props: Props) {
         super(props);
@@ -40,15 +40,6 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         this.props.parent.appendChild(this.node);
 
         this.componentDidMount();
-
-        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
-            this.prevProps = { ...this.props };
-            this.props.avatar = this.props.hookAvatar(state);
-
-            if (this.props.avatar !== this.prevProps.avatar) {
-                this.update();
-            }
-        });
     }
 
     destroy() {
@@ -122,7 +113,8 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
 
         this.state.logoutButton = new Button({
             parent: this.node,
-            className: 'sidebar-header__logout-btn button-transparent',
+            className:
+                'sidebar-header__logout-btn sidebar-header__list__item button-transparent',
             icon: svgButtonUI.renderTemplate({
                 svgClassName: 'logout-btn' ?? '',
             }),
@@ -130,6 +122,15 @@ export class DumbSidebar extends Component<Props, State, HTMLElement> {
         });
 
         this.state.isMounted = true;
+
+        this.unsubscribe = store.subscribe(this.constructor.name, (state) => {
+            this.prevProps = { ...this.props };
+            this.props.avatar = this.props.hookAvatar(state);
+
+            if (this.props.avatar !== this.prevProps.avatar) {
+                this.update();
+            }
+        });
     }
 
     componentWillUnmount() {

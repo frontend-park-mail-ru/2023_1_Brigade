@@ -1,0 +1,76 @@
+.svg-button {
+    margin-right: 10px;
+}
+
+.nav__item__svg__color {
+    fill: #0782C7;
+
+    &:hover {
+        fill: #626161;
+    }
+}
+
+.logout {
+    fill: #ffffff;
+    padding-bottom: 50px;
+}
+
+.create-btn {
+    fill: #3E9AE3;
+}
+
+.create-btn:hover {
+    fill: red;
+}
+
+.leave-group {
+    fill: #46474C;
+}
+
+.icon {
+    fill: #ffffff;
+}
+
+.back-btn {
+    // margin-right: 20px;
+    fill: #ffffff;
+    transition: fill 0.3s ease-in-out;
+}
+
+.back-btn:hover {
+    fill: #0782C7;
+}
+
+.back-btn:hover:active {
+    fill: #095581;
+}
+
+.back-btn:hover:focus {
+    fill: #166490;
+}
+
+.back-btn__text {
+    font-family: 'SF Pro Display', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    font-feature-settings: 'pnum' on, 'lnum' on;
+    color: #FFFFFF;
+    margin-right: 50%;
+}
+
+.back-btn__container {
+    align-items: center;
+    justify-content: space-between;
+    max-width: 50%;
+    padding: 0px 10px;
+}
+
+.search-icon {
+    position: absolute;
+    top: 16%;
+    left: 92%;
+}

@@ -11,10 +11,11 @@ $input-font-size: 16px;
   margin: 0 auto;
   background: #12131A;
   border-radius: 4px;
-  margin-bottom: 7%;
+  // margin-bottom: 7%;
+  margin-bottom: 12%;
 
   &__label {
-    font-family: 'Manrope';
+    font-family: 'SF Pro Display', sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 1.4rem;
@@ -51,10 +52,10 @@ input {
 }
 
 .login-reg__error {
-  font-family: 'SF Pro Display';
+  font-family: 'SF Pro Display', sans-serif;
   color: #FF0000;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 17px;
   padding-left: 16px;
 }
@@ -71,12 +72,31 @@ input {
   top: 47px;
 }
 
-.login-reg__input {
-
+.login-reg__input_error {
+  top: 100px;
+  border: 0.8px solid red;
+  &:focus {
+    outline: none;
+    border: 0.8px solid rgb(154, 7, 7);
+  }
 }
 
-.login-reg__input_error {
-  filter: drop-shadow(0px 4px 20px #4d89d1);
+.default-error {
+  top: 100px;
+  border: 0.8px solid red;
+  &:focus {
+    outline: none;
+    border: 0.8px solid rgb(154, 7, 7);
+  }
+}
+
+.profile__input__errors {
+  top: 100%;
+  font-size: 1.2rem;
+}
+
+.input_error {
+  border: 0.8px solid red;
 }
 
 .profile__form__input {
@@ -84,8 +104,23 @@ input {
   align-items: flex-start;
   justify-content: flex-start;
   min-width: 100%;
+  margin-bottom: 10%;
 }
 
-.profile__form__input:not(:last-child) {
-  margin-bottom: 5%;
+// .profile__form__input:not(:last-child) {
+//   margin-bottom: 5%;
+// }
+
+.channel-members {
+  position: relative;
 }
+
+.channel__form__input-members {
+  position: relative;
+}
+
+// .channel__form__input-members:focus + .input-dropdown__list{
+//   opacity: 1;
+//   height: 200px !important;
+//   max-height: 200px !important;
+// }

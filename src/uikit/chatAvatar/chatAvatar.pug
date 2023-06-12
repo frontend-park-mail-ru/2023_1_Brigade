@@ -1,0 +1,10 @@
+img(src=PathToUserImage, alt="User avatar")(class=ClassName).small-ellipse-icon
+div.header__avatar.flex
+    h4.header__avatar__username
+        =UserName
+    span.header__avatar__status
+        =UserStatus
+if Online
+    <svg class="user-photo__online-status" width="13" height="13" viewBox="0 0 13 13" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="6.5" cy="6.5" r="5.75" fill="#5FD641" stroke="#282828" stroke-width="1.5"/>
+    </svg>

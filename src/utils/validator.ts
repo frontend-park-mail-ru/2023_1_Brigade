@@ -137,7 +137,8 @@ export const checkConfirmPassword = (
  */
 export const checkNickname = (nickname: string) => {
     const isNotEmpty = nickname.length > 0;
-    const hasValidLength = nickname.length > 1;
+    const hasValidLength = nickname.length > 2;
+    const isValid = /^[/^[a-zA-Zа-яА-Я0-9_-]{3,16}$/.test(nickname);
 
     if (!isNotEmpty) {
         return {
@@ -150,6 +151,87 @@ export const checkNickname = (nickname: string) => {
         return {
             isError: true,
             errorClass: 'invalid-nickname',
+        };
+    }
+
+    if (!isValid) {
+        return {
+            isError: true,
+            errorClass: 'invalid-nickname-symbols',
+        };
+    }
+
+    return {
+        isError: false,
+        errorClass: '',
+    };
+};
+
+/**
+ * Проверяет корректность имени нового чата.
+ * @param {string} name - Имя чата, который будет проверен.
+ * @returns {Object} - Объект с параметрами isError и errorClass.
+ */
+export const checkNewChatName = (name: string) => {
+    const isNotEmpty = name.length > 0;
+    const hasValidLength = name.length > 4;
+    const isValid = /^[а-яА-Яa-zA-Z0-9_ ]{5,32}$/.test(name);
+
+    if (!isNotEmpty) {
+        return {
+            isError: true,
+            errorClass: 'empty-name',
+        };
+    }
+
+    if (!hasValidLength) {
+        return {
+            isError: true,
+            errorClass: 'invalid-name',
+        };
+    }
+
+    if (!isValid) {
+        return {
+            isError: true,
+            errorClass: 'invalid-name-symbols',
+        };
+    }
+
+    return {
+        isError: false,
+        errorClass: '',
+    };
+};
+
+/**
+ * Проверяет корректность описания нового чата.
+ * @param {string} description - Описание чата, который будет проверен.
+ * @returns {Object} - Объект с параметрами isError и errorClass.
+ */
+export const checkNewChatDescription = (description: string) => {
+    const isNotEmpty = description.length > 0;
+    const hasValidLength = description.length > 1;
+    const isValid = /^[а-яА-Яa-zA-Z0-9_\-.,!? ]{1,255}$/.test(description);
+
+    if (!isNotEmpty) {
+        return {
+            isError: true,
+            errorClass: 'empty-description',
+        };
+    }
+
+    if (!hasValidLength) {
+        return {
+            isError: true,
+            errorClass: 'invalid-description',
+        };
+    }
+
+    if (!isValid) {
+        return {
+            isError: true,
+            errorClass: 'invalid-description-symbols',
         };
     }
 

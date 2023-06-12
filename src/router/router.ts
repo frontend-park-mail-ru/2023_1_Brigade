@@ -68,6 +68,11 @@ export class Router {
             return;
         }
 
+        // if (this.currentComponent && this.currentComponent instanceof this.currentRoute.component) {
+        //     this.currentComponent.update(this.currentDynamicParams);
+        //     return;
+        // }
+
         this.currentComponent?.destroy();
         this.currentComponent = this.currentRoute.component(
             this.currentDynamicParams

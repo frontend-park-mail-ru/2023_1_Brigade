@@ -1,7 +1,6 @@
 import { Component } from '@framework/component';
 import template from '@components/chatList/chatList.pug';
 import '@components/chatList/chatList.scss';
-import { DumbChatCard } from '@components/chatCard/chatCard';
 import { searchUi } from '@components/search/search';
 import { Dropdown } from '@components/dropdown/dropdown';
 
@@ -28,21 +27,8 @@ export class DumbChatList extends Component<Props, State> {
         //TODO
     }
 
-    getChatList() {
-        const chatsList: string[] = [];
-
-        this.props?.chats.forEach((chat) => {
-            const chatCardUI = new DumbChatCard({ chat });
-
-            chatsList.push(chatCardUI.render());
-        });
-
-        return chatsList;
-    }
-
     render() {
         return template({
-            headChats: 'Чаты',
             dropdown: new Dropdown({
                 icon: 'create-btn',
                 list: [
@@ -60,7 +46,6 @@ export class DumbChatList extends Component<Props, State> {
                 inputClassName: 'chats__header__input',
                 placeholder: 'Поиск',
             }).render(),
-            chats: this.getChatList(),
         });
     }
 }
